@@ -1,4 +1,20 @@
-# TS-Kalkulator
-TS-Kalkulator omgjør vinkel-tall avlest på tommestokk til grader.
-Brukes til å finne riktige grader fra vinkel tatt med tommestokk. 
-Knekk tommestokken (Hultafors 2m eller liknende) knekk den på 20cm leddet og finn rett vinkel. Knekk så 40cm leddet og bøy dette helt over til enden treffer kanten på tommestokken. Les av tallet og legg det inn i kalkulatoren. VOILA!
+# TS-Kalkulator (Lister Blikk)
+
+Statisk PWA for tommestokk-vinkel (Hultafors 2 m, 20 cm-ledd).
+Kalibrert mot målepunktene deres. Cyan profilfarge og tlf i footer.
+
+## Hurtigoppsett på GitHub Pages
+1. Opprett repo (f.eks. `TS-Kalkulator`) på GitHub.
+2. Last opp **alle filene i denne mappen** til repo-roten (`index.html` må ligge i rot).
+3. Gå til **Settings → Pages**:
+   - Source: **Deploy from a branch**
+   - Branch: **main** og folder: **/** (root)
+4. Vent et lite øyeblikk, åpne: `https://<brukernavn>.github.io/<repo>/`
+5. På mobil: **Legg til på Hjem-skjerm** for app-opplevelse (offline).
+
+## Oppdateringer
+- Når du endrer filer, committer du til `main`. GitHub Pages bygger automatisk på nytt.
+- PWA cache styres i `sw.js` (endrer du noe stort, bump `CACHE`-navnet).
+
+## QR-kode
+- Åpne `qr.html` lokalt, lim inn den publiserte URL-en, og last ned PNG.
