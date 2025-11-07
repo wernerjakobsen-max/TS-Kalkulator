@@ -1,233 +1,226 @@
 <!doctype html>
 <html lang="no">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TS-kalkulator – Lister Blikk</title>
-    <meta name="description" content="Tommestokk-vinkelkalkulator (Hultafors 2 m, 20 cm-ledd). Vinkel fra mm-avlesning med kalibrering.">
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#00FFFF">
-    <link rel="icon" href="icon-192.png">
-    <style>
-      :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
-      *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
-      .wrap{max-width:980px;margin:0 auto;padding:16px 20px}
-      .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
-      .muted{color:var(--muted);font-size:14px}
-      .grid{display:grid;gap:16px}
-      @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
-      .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-      label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-      input,button{font:inherit}
-      input,select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:16px}
-      input[type=range]{padding:0}
-      .out{display:grid;gap:16px}
-      @media(min-width:900px){.out{grid-template-columns:repeat(3,1fr)}}
-      .big{font-size:28px;font-weight:700;margin-top:4px}
-      .miniangle{margin-top:8px; font-size:13px; color:#0f172a; background:#e6ffff; display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid #a0fefe}
-      table{width:100%;border-collapse:collapse;font-size:14px}
-      th,td{padding:8px 10px;border-bottom:1px solid var(--ring)}
-      thead th{position:sticky;top:0;background:#e6ffff}
-      .hi{background:#fffbea}
-      .footer{margin-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
-      .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
-      .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-      .brand{display:flex;align-items:center;gap:12px}
-      .brand img{height:44px}
-      .badge{display:inline-block;background:var(--brand);color:#000;border:1px solid #a0fefe;padding:4px 8px;border-radius:999px;font-size:12px}
-      details summary{cursor:pointer;font-weight:600}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TS-kalkulator – Lister Blikk</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#00FFFF">
+<link rel="icon" href="icon-192.png">
+<style>
+  :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 20px}
+  .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
+  .muted{color:var(--muted);font-size:14px}
+  .grid{display:grid;gap:16px}
+  @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+  .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+  label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+  input,button{font:inherit}
+  input,select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:16px}
+  input[type=range]{padding:0}
+  .out{display:grid;gap:16px}
+  @media(min-width:900px){.out{grid-template-columns:repeat(2,1fr)}}
+  .big{font-size:28px;font-weight:700;margin-top:4px}
+  .miniangle{margin-top:8px;font-size:13px;color:#0f172a;background:#e6ffff;display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #a0fefe}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--ring)}
+  thead th{position:sticky;top:0;background:#e6ffff}
+  .hi{background:#fffbea}
+  .footer{margin-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
+  .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{height:44px}
+  .badge{display:inline-block;background:var(--brand);color:#000;border:1px solid #a0fefe;padding:4px 8px;border-radius:999px;font-size:12px}
 
-      /* Responsive angle placement in table */
-      .angle-inline { display:none; font-size:13px; color:var(--muted); }
-      @media(max-width:700px){
-        .col-angle { display:none; }
-        .angle-inline { display:block; }
-        thead { display:none; }
-        table, tbody, tr, td { display:block; width:100%; }
-        tr { border-bottom:1px solid var(--ring); padding:6px 0; }
-        td { display:flex; justify-content:space-between; align-items:baseline; border:none; padding:4px 0; }
-        td:first-child { display:block; }
-      }
-
-      /* Modal for QR */
-      .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
-      .modal{background:#fff;border:1px solid var(--ring);border-radius:16px;max-width:560px;width:100%;padding:16px}
-      .modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-      .modal h3{margin:0;font-size:18px}
-      .close{background:#fff;border:1px solid var(--ring);border-radius:10px;padding:6px 10px;cursor:pointer}
-      .qr-canvas{display:block;margin:12px auto;border:1px solid var(--ring);}
-      .row-tight{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-      .url-input{flex:1;min-width:200px}
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-        <div class="brand">
-          <img src="logo-lister-blikk.png" srcset="logo-lister-blikk.png 1x, logo-lister-blikk@2x.png 2x" alt="Lister Blikk">
-          <div>
-            <div class="h1">TS-kalkulator <span class="badge">Lister Blikk</span></div>
-            <div class="muted">Tommestokk-vinkler fra mm-avlesning (kalibrert)</div>
-          </div>
-        </div>
-        <div class="row">
-          <button class="btn" id="qrBtn">QR</button>
-          <button class="btn" id="installBtn" hidden>Installer</button>
-        </div>
-      </header>
-
-      <section class="grid" style="margin-top:16px">
-        <div class="card">
-          <label>Avlest D (mm)</label>
-          <input id="D" inputmode="decimal" value="795">
-          <input id="sliderD" type="range" min="500" max="800" value="795" style="margin-top:12px">
-          <div class="muted" style="margin-top:6px">Anbefalt område 500–800 mm</div>
-          <div id="miniAngleD" class="miniangle">Vinkel nå: –</div>
-        </div>
-
-        <div class="card">
-          <label>Tabellbredde (mm rundt D)</label>
-          <input id="SPAN" inputmode="numeric" value="60">
-          <div id="miniAngleSpan" class="miniangle">Vinkel nå: –</div>
-        </div>
-
-        <div class="card">
-          <label>Kalibrering (a, b)</label>
-          <div class="row">
-            <input id="A" value="0.974414" style="width:160px">
-            <input id="B" value="21.754" style="width:160px">
-          </div>
-          <button class="btn" id="apply" style="margin-top:8px">Bruk</button>
-          <div class="muted" style="margin-top:6px">Default er flerpunkts-fit fra deres referanser.</div>
-          <div id="miniAngleCal" class="miniangle">Vinkel nå: –</div>
-        </div>
-
-        <div class="card">
-          <label>Kort bruksanvisning</label>
-          <details open>
-            <summary>Slik bruker du TS-kalkulatoren</summary>
-            <ol class="muted">
-              <li><b>Vinkelen er på 20 cm-leddet</b> (første ledd = 200 mm). Knekk dette til ønsket vinkel.</li>
-              <li><b>Knekk 40 cm-leddet</b> og bøy det over til endehjørnet treffer kanten av stokken.</li>
-              <li><b>Les av D i mm</b> langs kanten – skriv tallet inn her.</li>
-              <li>Appen viser <b>vinkel (°)</b>, <b>grader per mm</b> og en <b>tabell</b> rundt verdien.</li>
-            </ol>
-            <p class="muted" style="margin-top:8px">
-              <b>Forutsetning/TS-type:</b> Hultafors 2 m tommestokk, 10 ledd à 200 mm (ca. 15 mm bredde). Avlesning langs stokkens sidekant. 90° ligger hos dere rundt 678 mm. Modellen bruker korde-geometri og lineær avlesningskorreksjon.
-            </p>
-            <p class="muted"><b>Tips:</b> Nær 180° endrer graden seg raskere per mm. Se “Grader/mm”.</p>
-          </details>
-        </div>
-      </section>
-
-      <section class="card" style="margin-top:12px">
-        <div style="font-weight:600;margin-bottom:8px">Tabell pr mm rundt D</div>
-        <div style="max-height:420px;overflow:auto">
-          <table>
-            <thead>
-              <tr><th style="text-align:left">D (mm)</th><th style="text-align:right">Vinkel (°)</th><th style="text-align:right">D_true (mm)</th><th style="text-align:right">Grader/mm</th></tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <div class="footer muted">
-        <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
-        <div>Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+  .angle-inline { display:none; font-size:13px; color:var(--muted); }
+  @media(max-width:700px){
+    .col-angle { display:none; }
+    .angle-inline { display:block; }
+    thead { display:none; }
+    table, tbody, tr, td { display:block; width:100%; }
+    tr { border-bottom:1px solid var(--ring); padding:6px 0; }
+    td { display:flex; justify-content:space-between; align-items:baseline; border:none; padding:4px 0; }
+    td:first-child { display:block; }
+  }
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+  .modal{background:#fff;border:1px solid var(--ring);border-radius:16px;max-width:560px;width:100%;padding:16px}
+  .modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .modal h3{margin:0;font-size:18px}
+  .close{background:#fff;border:1px solid var(--ring);border-radius:10px;padding:6px 10px;cursor:pointer}
+  .qr-canvas{display:block;margin:12px auto;border:1px solid var(--ring);}
+  .row-tight{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .url-input{flex:1;min-width:200px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div class="brand">
+      <img src="logo-lister-blikk.png" srcset="logo-lister-blikk.png 1x, logo-lister-blikk@2x.png 2x" alt="Lister Blikk">
+      <div>
+        <div class="h1">TS-kalkulator <span class="badge">Lister Blikk</span></div>
+        <div class="muted">Tommestokk-vinkler fra mm-avlesning (kalibrert)</div>
       </div>
     </div>
+    <div class="row">
+      <button class="btn" id="qrBtn">QR</button>
+      <button class="btn" id="installBtn" hidden>Installer</button>
+    </div>
+  </header>
 
-    <!-- QR MODAL -->
-    <div id="qrModal" class="modal-backdrop">
-      <div class="modal">
-        <header>
-          <h3>QR-kode for lenke</h3>
-          <button class="close" id="qrClose">Lukk</button>
-        </header>
-        <div class="row-tight">
-          <input id="qrUrl" class="url-input" placeholder="https://">
-          <button class="btn" id="qrMake">Lag QR</button>
-          <a class="btn" id="qrDownload" download="ts-kalkulator-qr.png" href="#">Last ned PNG</a>
-        </div>
-        <canvas id="qrCanvas" class="qr-canvas" width="0" height="0"></canvas>
-      </div>
+  <section class="grid" style="margin-top:16px">
+    <div class="card">
+      <label>Avlest D (mm)</label>
+      <input id="D" inputmode="decimal" value="760">
+      <input id="sliderD" type="range" min="500" max="800" value="760" style="margin-top:12px">
+      <div class="muted" style="margin-top:6px">Anbefalt område 500–800 mm</div>
+      <div id="miniAngleD" class="miniangle">Vinkel nå: –</div>
     </div>
 
-    <script>
-      const $ = (id) => document.getElementById(id);
-      let A = {a:0.974414, b:21.754};
-      function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
-      function Dtrue(D) { return A.a*D + A.b; }
-      function theta(D) { const Dt=Dtrue(D); const x=(Dt-400)/400; const xx=Math.max(-1, Math.min(1, x)); return 2*Math.asin(xx)*180/Math.PI; }
-      function slope(D) { const Dt=Dtrue(D); const x=Dt-400; const cl=Math.max(-399.999999, Math.min(399.999999, x)); const rad=Math.sqrt(400*400 - cl*cl); return (180/Math.PI)*(1/rad); }
+    <div class="card">
+      <div class="muted">Vinkel (grader)</div>
+      <div class="big" id="thetaTop">–</div>
+    </div>
 
-      function updateMiniAngles(Dval){
-        const t = theta(Dval);
-        const txt = 'Vinkel nå: ' + (Number.isFinite(t) ? t.toFixed(3) + '°' : '–');
-        ;['miniAngleD','miniAngleSpan','miniAngleCal'].forEach(id => { const el = $(id); if (el) el.textContent = txt; });
-      }
+    <div class="card">
+      <label>Tabellbredde (mm rundt D)</label>
+      <input id="SPAN" inputmode="numeric" value="60">
+      <div id="miniAngleSpan" class="miniangle">Vinkel nå: –</div>
+    </div>
 
-      function render() {
-        const D = toNumber($('D').value, 795);
-        const SPAN = Math.max(10, toNumber($('SPAN').value, 60));
-        $('sliderD').value = String(Math.max(500, Math.min(800, D)));
-        updateMiniAngles(D);
+    <div class="card">
+      <label>Kalibrering (a, b)</label>
+      <div class="row">
+        <input id="A" value="0.974414" style="width:160px">
+        <input id="B" value="21.754" style="width:160px">
+      </div>
+      <button class="btn" id="apply" style="margin-top:8px">Bruk</button>
+      <div class="muted" style="margin-top:6px">Default er flerpunkts-fit fra deres referanser.</div>
+      <div id="miniAngleCal" class="miniangle">Vinkel nå: –</div>
+    </div>
+  </section>
 
-        const tbody = $('rows'); tbody.innerHTML='';
-        const start = Math.max(500, Math.round(D - SPAN/2));
-        const end   = Math.min(800, Math.round(D + SPAN/2));
-        for (let x = start; x <= end; x++) {
-          const t = theta(x), s = slope(x), Dt = Dtrue(x);
-          const tr = document.createElement('tr');
-          if (x === Math.round(D)) tr.className = 'hi';
+  <section class="card" style="margin-top:12px">
+    <div style="font-weight:600;margin-bottom:8px">Tabell pr mm rundt D</div>
+    <div style="max-height:420px;overflow:auto">
+      <table>
+        <thead>
+          <tr><th style="text-align:left">D (mm)</th><th style="text-align:right">Vinkel (°)</th><th style="text-align:right">D_true (mm)</th><th style="text-align:right">Grader/mm</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
 
-          const tdD = document.createElement('td');
-          tdD.style.textAlign = 'left';
-          const dTitle = document.createElement('div'); dTitle.textContent = x + ' mm';
-          const dAngleInline = document.createElement('div'); dAngleInline.className = 'angle-inline'; dAngleInline.textContent = 'Vinkel: ' + t.toFixed(3) + '°';
-          tdD.appendChild(dTitle); tdD.appendChild(dAngleInline);
+  <section class="out" style="margin-top:12px">
+    <div class="card">
+      <div class="muted">Grader per mm ved D</div>
+      <div class="big" id="slope">–</div>
+    </div>
+    <div class="card">
+      <div class="muted">Justert D_true (mm)</div>
+      <div class="big" id="Dtrue">–</div>
+    </div>
+  </section>
 
-          const tdAngle = document.createElement('td'); tdAngle.className = 'col-angle'; tdAngle.style.textAlign = 'right'; tdAngle.textContent = t.toFixed(3);
-          const tdDt = document.createElement('td'); tdDt.style.textAlign = 'right'; tdDt.textContent = Dt.toFixed(3);
-          const tdSlope = document.createElement('td'); tdSlope.style.textAlign = 'right'; tdSlope.textContent = s.toFixed(5);
+  <div class="footer muted">
+    <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
+    <div>Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+  </div>
+</div>
 
-          tr.appendChild(tdD); tr.appendChild(tdAngle); tr.appendChild(tdDt); tr.appendChild(tdSlope);
-          tbody.appendChild(tr);
-        }
-      }
+<!-- QR MODAL -->
+<div id="qrModal" class="modal-backdrop">
+  <div class="modal">
+    <header>
+      <h3>QR-kode for lenke</h3>
+      <button class="close" id="qrClose">Lukk</button>
+    </header>
+    <div class="row-tight">
+      <input id="qrUrl" class="url-input" placeholder="https://">
+      <button class="btn" id="qrMake">Lag QR</button>
+      <a class="btn" id="qrDownload" download="ts-kalkulator-qr.png" href="#">Last ned PNG</a>
+    </div>
+    <canvas id="qrCanvas" class="qr-canvas" width="0" height="0"></canvas>
+  </div>
+</div>
 
-      $('apply').addEventListener('click', () => { const aa=toNumber($('A').value, A.a); const bb=toNumber($('B').value, A.b); A={a:aa,b:bb}; render(); });
-      $('D').addEventListener('input', render);
-      $('SPAN').addEventListener('input', render);
-      $('sliderD').addEventListener('input', (e) => { $('D').value = e.target.value; render(); });
-      render();
+<script>
+  const $ = (id) => document.getElementById(id);
+  let A = {a:0.974414, b:21.754};
+  function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
+  function Dtrue(D) { return A.a*D + A.b; }
+  function theta(D) { const Dt=Dtrue(D); const x=(Dt-400)/400; const xx=Math.max(-1, Math.min(1, x)); return 2*Math.asin(xx)*180/Math.PI; }
+  function slope(D) { const Dt=Dtrue(D); const x=Dt-400; const cl=Math.max(-399.999999, Math.min(399.999999, x)); const rad=Math.sqrt(400*400 - cl*cl); return (180/Math.PI)*(1/rad); }
 
-      if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; const btn = document.getElementById('installBtn'); btn.hidden = false; btn.addEventListener('click', async () => { btn.hidden = true; await deferredPrompt.prompt(); deferredPrompt = null; }); });
+  function updateMiniAngles(Dval){
+    const t = theta(Dval);
+    const txt = 'Vinkel nå: ' + (Number.isFinite(t) ? t.toFixed(3) + '°' : '–');
+    ['miniAngleD','miniAngleSpan','miniAngleCal'].forEach(id => { const el = $(id); if (el) el.textContent = txt; });
+    const top = $('thetaTop'); if (top) top.textContent = Number.isFinite(t) ? t.toFixed(3) : '–';
+  }
 
-      // --- QR modal logic ---
-      /*! qrcode.js - MIT License - https://davidshimjs.github.io/qrcodejs/ */
-!function(o){function t(o){this.mode=n.MODE_8BIT_BYTE,this.data=o}function e(o,t){this.typeNumber=o,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.rsBlocks=null,this.dataList=[]}var n={};t.prototype={getLength:function(o){return this.data.length},write:function(o){for(var t=0;t<this.data.length;t++)o.put(this.data.charCodeAt(t),8)}};var r={L:1,M:0,Q:3,H:2};e.prototype={addData:function(o){this.dataList.push(new t(o)),this.dataCache=null},isDark:function(o,t){if(null==this.modules[o][t])throw new Error(o+","+t);return this.modules[o][t]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(o,t){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var e=0;e<this.modules.length;e++){this.modules[e]=new Array(this.moduleCount);for(var n=0;n<this.modules[e].length;n++)this.modules[e][n]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(o,t),this.typeNumber>=7&&this.setupTypeNumber(o),null==this.dataCache&&(this.dataCache=e.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,t)},setupPositionProbePattern:function(o,t){for(var e=-1;e<=7;e++)if(!(o+e<=-1||this.moduleCount<=o+e))for(var n=-1;n<=7;n++)t+n<=-1||this.moduleCount<=t+n||(this.modules[o+e][t+n]=e>=0&&e<=6&&(0==n||6==n)||n>=0&&n<=6&&(0==e||6==e)||e>=2&&e<=4&&n>=2&&n<=4)},getBestMaskPattern:function(){for(var o=0,t=0,e=0;e<8;e++){this.makeImpl(!0,e);var n=a.getLostPoint(this);(0==e||n<t)&&(t=n,o=e)}return o},createMovieClip:function(o,t,e){var n=o.createEmptyMovieClip(t,e),r=1;this.make();for(var i=0;i<this.modules.length;i++)for(var s=1;s<this.modules[i].length;s++){var u=n.createEmptyMovieClip(t+i+"_"+s,e);u.moveTo(s*r,i*r),u.beginFill(this.isDark(i,s)?"0":"0xffffff"),u.lineTo(s*r,(i+1)*r),u.lineTo((s+1)*r,(i+1)*r),u.lineTo((s+1)*r,i*r),u.endFill()}return n},setupTimingPattern:function(){for(var o=8;o<this.moduleCount-8;o++)null==this.modules[o][6]&&(this.modules[o][6]=o%2==0),null==this.modules[6][o]&&(this.modules[6][o]=o%2==0)},setupPositionAdjustPattern:function(){for(var o=a.getPatternPosition(this.typeNumber),t=0;t<o.length;t++)for(var e=0;e<o.length;e++){var n=o[t],r=o[e];if(null==this.modules[n][r])for(var i=-2;i<=2;i++)for(var s=-2;s<=2;s++)this.modules[n+i][r+s]=-2==i||2==i||-2==s||2==s||0==i&&0==s}},setupTypeNumber:function(o){for(var t=a.getBCHTypeNumber(this.typeNumber),e=0;e<18;e++){var n=!o&&(1&t>>e&1);this.modules[Math.floor(e/3)][e%3+this.moduleCount-8-3]=n}for(e=0;e<18;e++){n=!o&&(1&t>>e&1);this.modules[e%3+this.moduleCount-8-3][Math.floor(e/3)]=n}},setupTypeInfo:function(o,t){for(var e=this.errorCorrectLevel<<3|t,n=a.getBCHTypeInfo(e),r=0;r<15;r++){var i=!o&&(1&n>>r);r<6?this.modules[r][8]=i:r<8?this.modules[r+1][8]=i:this.modules[this.moduleCount-15+r][8]=i}for(r=0;r<15;r++){i=!o&&(1&n>>r);r<8?this.modules[8][this.moduleCount-1-r]=i:r<9?this.modules[8][15-r-1+1]=i:this.modules[8][15-r-1]=i}this.modules[this.moduleCount-8][8]=!o},mapData:function(o,t){for(var e=-1,n=this.moduleCount-1,r=7,i=0,s=this.moduleCount-1;s>0;s-=2)for(6==s&&s--;;){for(var u=0;u<2;u++)if(null==this.modules[n][s-u]){var l=!1;i<o.length&&(l=1==(o[i]>>>r&1)),a.getMask(t,n,s-u)&&(l=!l),this.modules[n][s-u]=l,r--,-1==r&&(i++,r=7)}if(n+=e,n<0||this.moduleCount<=n){n-=e,e=-e;break}}},setupTypeInfoPattern:function(){},setupPositionAdjustPatternHelper:function(){}};var a={};e.createData=function(o,t,e){var n,i=new u;for(n=0;n<e.length;n++)i.put(4,4),i.put(e[n].getLength(),8),e[n].write(i);for(var s=0,a=0;a<i.getLengthInBits()&&s<8*19;s++)i.buffer[a>>>3]|=128>>>a%8,a++;return i.buffer};var u=function(){this.buffer=[],this.length=0};u.prototype={getLengthInBits:function(){return this.length},put:function(o,t){for(var e=0;e<t;e++)this.putBit(1==(o>>>t-e-1&1))},putBit:function(o){var t=this.length>>>3;this.buffer.length<=t&&this.buffer.push(0),o&&(this.buffer[t]|=128>>>this.length%8),this.length++}};o.QRCode=e,o.QRErrorCorrectLevel=r}(window);
+  function render(){
+    const D = toNumber($('D').value, 760);
+    const SPAN = Math.max(10, toNumber($('SPAN').value, 60));
+    $('sliderD').value = String(Math.max(500, Math.min(800, D)));
+    updateMiniAngles(D);
 
-      function showModal(show) { $('qrModal').style.display = show ? 'flex' : 'none'; }
-      function drawQR(url) {
-        const qr = new QRCode(4, QRErrorCorrectLevel.M); // type 4
-        qr.addData(url); qr.make();
-        const count = qr.getModuleCount();
-        const scale = 6;
-        const canvas = $('qrCanvas');
-        canvas.width = canvas.height = count * scale;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = '#000';
-        for (let r=0;r<count;r++) for (let c=0;c<count;c++) if (qr.isDark(r,c)) ctx.fillRect(c*scale, r*scale, scale, scale);
-        $('qrDownload').href = canvas.toDataURL('image/png');
-      }
-      $('qrBtn').addEventListener('click', () => { $('qrUrl').value = location.href; drawQR($('qrUrl').value); showModal(true); });
-      $('qrClose').addEventListener('click', () => showModal(false));
-      $('qrMake').addEventListener('click', () => drawQR(($('qrUrl').value || '').trim()));
-    </script>
-  </body>
+    const tbody = $('rows'); tbody.innerHTML='';
+    const start = Math.max(500, Math.round(D - SPAN/2));
+    const end   = Math.min(800, Math.round(D + SPAN/2));
+    for (let x = start; x <= end; x++) {
+      const t = theta(x), s = slope(x), Dt = Dtrue(x);
+      const tr = document.createElement('tr');
+      if (x === Math.round(D)) tr.className = 'hi';
+
+      const tdD = document.createElement('td'); tdD.style.textAlign='left';
+      const dTitle = document.createElement('div'); dTitle.textContent = x + ' mm';
+      const dAngleInline = document.createElement('div'); dAngleInline.className='angle-inline'; dAngleInline.textContent='Vinkel: ' + t.toFixed(3) + '°';
+      tdD.appendChild(dTitle); tdD.appendChild(dAngleInline);
+
+      const tdAngle = document.createElement('td'); tdAngle.className='col-angle'; tdAngle.style.textAlign='right'; tdAngle.textContent=t.toFixed(3);
+      const tdDt = document.createElement('td'); tdDt.style.textAlign='right'; tdDt.textContent=Dt.toFixed(3);
+      const tdSlope = document.createElement('td'); tdSlope.style.textAlign='right'; tdSlope.textContent=s.toFixed(5);
+
+      tr.appendChild(tdD); tr.appendChild(tdAngle); tr.appendChild(tdDt); tr.appendChild(tdSlope);
+      tbody.appendChild(tr);
+    }
+
+    $('slope').textContent = slope(D).toFixed(5);
+    $('Dtrue').textContent = Dtrue(D).toFixed(3);
+  }
+
+  $('apply').addEventListener('click', () => { const aa=toNumber($('A').value, A.a); const bb=toNumber($('B').value, A.b); A={a:aa,b:bb}; render(); });
+  $('D').addEventListener('input', render);
+  $('SPAN').addEventListener('input', render);
+  $('sliderD').addEventListener('input', (e)=>{ $('D').value=e.target.value; render(); });
+  render();
+
+  if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredPrompt=e; const btn=$('installBtn'); btn.hidden=false; btn.addEventListener('click', async()=>{ btn.hidden=true; await deferredPrompt.prompt(); deferredPrompt=null; }); });
+
+  // QR code (embedded minimal lib)
+  !function(o){function t(o){this.mode=n.MODE_8BIT_BYTE,this.data=o}function e(o,t){this.typeNumber=o,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.rsBlocks=null,this.dataList=[]}var n={};t.prototype={getLength:function(o){return this.data.length},write:function(o){for(var t=0;t<this.data.length;t++)o.put(this.data.charCodeAt(t),8)}};var r={L:1,M:0,Q:3,H:2};e.prototype={addData:function(o){this.dataList.push(new t(o)),this.dataCache=null},isDark:function(o,t){if(null==this.modules[o][t])throw new Error(o+","+t);return this.modules[o][t]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(o,t){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var e=0;e<this.modules.length;e++){this.modules[e]=new Array(this.moduleCount);for(var n=0;n<this.modules[e].length;n++)this.modules[e][n]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(o,t),this.typeNumber>=7&&this.setupTypeNumber(o),null==this.dataCache&&(this.dataCache=e.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,t)},getBestMaskPattern:function(){return 0},createData:function(o,t,e){var n,i={buffer:[],length:0,put:function(o,t){for(var e=0;e<t;e++)this.putBit(1==(o>>>t-e-1&1))},putBit:function(o){var t=this.length>>>3;this.buffer.length<=t&&this.buffer.push(0),o&&(this.buffer[t]|=128>>>this.length%8),this.length++},getLengthInBits:function(){return this.length}};for(n=0;n<e.length;n++)i.put(4,4),i.put(e[n].getLength(),8),e[n].write(i);return i.buffer},o.QRCode=e,o.QRErrorCorrectLevel=r}(window);
+  function drawQR(url){
+    const QRCode = window.QRCode; const qr = new QRCode(4, QRErrorCorrectLevel.M);
+    qr.addData(url); qr.make();
+    const count = qr.getModuleCount(), scale = 6;
+    const canvas = document.getElementById('qrCanvas');
+    canvas.width = canvas.height = count*scale;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#000';
+    for(let r=0;r<count;r++) for(let c=0;c<count;c++) if(qr.isDark(r,c)) ctx.fillRect(c*scale, r*scale, scale, scale);
+    document.getElementById('qrDownload').href = canvas.toDataURL('image/png');
+  }
+  document.getElementById('qrBtn').addEventListener('click', ()=>{ document.getElementById('qrUrl').value=location.href; drawQR(location.href); document.getElementById('qrModal').style.display='flex'; });
+  document.getElementById('qrClose').addEventListener('click', ()=>{ document.getElementById('qrModal').style.display='none'; });
+  document.getElementById('qrMake').addEventListener('click', ()=>{ drawQR((document.getElementById('qrUrl').value||'').trim()); });
+</script>
+</body>
 </html>
