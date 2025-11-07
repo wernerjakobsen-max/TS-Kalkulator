@@ -1,177 +1,111 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="no">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TS-kalkulator – Lister Blikk</title>
-    <meta name="description" content="Tommestokk-vinkelkalkulator (Hultafors 2 m, 20 cm-ledd). Vinkel fra mm-avlesning med kalibrering.">
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#00FFFF">
-    <link rel="icon" href="icon-192.png">
-    <style>
-      :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
-      *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
-      .wrap{max-width:980px;margin:0 auto;padding:16px 20px}
-      .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
-      .muted{color:var(--muted);font-size:14px}
-      .grid{display:grid;gap:16px}
-      @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
-      .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-      label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-      input,button{font:inherit}
-      input,select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:16px}
-      input[type=range]{padding:0}
-      .out{display:grid;gap:16px}
-      @media(min-width:900px){.out{grid-template-columns:repeat(3,1fr)}}
-      .big{font-size:28px;font-weight:700;margin-top:4px}
-      table{width:100%;border-collapse:collapse;font-size:14px}
-      th,td{padding:8px 10px;border-bottom:1px solid var(--ring)}
-      thead th{position:sticky;top:0;background:#e6ffff}
-      .hi{background:#fffbea}
-      .footer{margin-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
-      .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
-      .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-      .brand{display:flex;align-items:center;gap:12px}
-      .brand img{height:44px}
-      .badge{display:inline-block;background:var(--brand);color:#000;border:1px solid #a0fefe;padding:4px 8px;border-radius:999px;font-size:12px}
-      details summary{cursor:pointer;font-weight:600}
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-        <div class="brand">
-          <img src="logo-lister-blikk.png" srcset="logo-lister-blikk.png 1x, logo-lister-blikk@2x.png 2x" alt="Lister Blikk">
-          <div>
-            <div class="h1">TS-kalkulator <span class="badge">Lister Blikk</span></div>
-            <div class="muted">Tommestokk-vinkler fra mm-avlesning (kalibrert)</div>
-          </div>
-        </div>
-        <button class="btn" id="installBtn" hidden>Installer</button>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TS-Kalkulator</title>
+  <style>
+    :root { --bg:#f5f5f5; --fg:#333; --muted:#666; --accent:#0a66c2; }
+    body { font-family: system-ui, Arial, sans-serif; margin: 20px; background: var(--bg); color: var(--fg); }
+    h1 { text-align:center; margin-bottom: 18px; }
+    .card { max-width: 480px; margin: 0 auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.08);}
+    .row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+    label { flex:1 0 100%; color: var(--muted); font-size: .95rem; }
+    input[type="number"] { flex:1 0 58%; padding:10px 12px; border:1px solid #ddd; border-radius:10px; font-size:1.05rem; }
+    .result { flex:1 0 35%; text-align:right; font-weight:700; font-size:1.25rem; color: var(--accent); }
+    .hint { margin-top:10px; font-size:.88rem; color: var(--muted); }
+    .small { font-size:.85rem; color: var(--muted); margin-top:6px; }
+    @media (max-width: 520px){
+      .result{ text-align:left; margin-top:6px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>TS-Kalkulator</h1>
 
-      <section class="grid" style="margin-top:16px">
-        <div class="card">
-          <label>Avlest D (mm)</label>
-          <input id="D" inputmode="decimal" value="795">
-          <input id="sliderD" type="range" min="500" max="800" value="795" style="margin-top:12px">
-          <div class="muted" style="margin-top:6px">Anbefalt område 500–800 mm</div>
-        </div>
-
-        <div class="card">
-          <label>Tabellbredde (mm rundt D)</label>
-          <input id="SPAN" inputmode="numeric" value="60">
-        </div>
-
-        <div class="card">
-          <label>Kalibrering (a, b)</label>
-          <div class="row">
-            <input id="A" value="0.974414" style="width:160px">
-            <input id="B" value="21.754" style="width:160px">
-          </div>
-          <button class="btn" id="apply" style="margin-top:8px">Bruk</button>
-          <div class="muted" style="margin-top:6px">Default er flerpunkts-fit fra deres referanser.</div>
-        </div>
-
-        <div class="card">
-          <label>Kort bruksanvisning</label>
-          <details open>
-            <summary>Slik bruker du TS-kalkulatoren</summary>
-            <ol class="muted">
-              <li><b>Vinkelen er på 20 cm-leddet</b> (første ledd = 200 mm). Knekk dette til ønsket vinkel.</li>
-              <li><b>Knekk 40 cm-leddet</b> og bøy det over til endehjørnet treffer kanten av stokken.</li>
-              <li><b>Les av D i mm</b> langs kanten – skriv tallet inn her.</li>
-              <li>Appen viser <b>vinkel (°)</b>, <b>grader per mm</b> og en <b>tabell</b> rundt verdien.</li>
-            </ol>
-            <p class="muted" style="margin-top:8px">
-              <b>Forutsetning/TS-type:</b> Hultafors 2 m tommestokk, 10 ledd à 200 mm (ca. 15 mm bredde). Avlesning langs stokkens sidekant. 90° ligger hos dere rundt 678 mm. Modellen bruker korde-geometri og lineær avlesningskorreksjon.
-            </p>
-            <p class="muted"><b>Tips:</b> Nær 180° endrer graden seg raskere per mm. Se “Grader/mm”.</p>
-          </details>
-        </div>
-      </section>
-
-      <section class="out" style="margin-top:12px">
-        <div class="card">
-          <div class="muted">Vinkel (grader)</div>
-          <div class="big" id="theta">–</div>
-        </div>
-        <div class="card">
-          <div class="muted">Grader per mm ved D</div>
-          <div class="big" id="slope">–</div>
-        </div>
-        <div class="card">
-          <div class="muted">Justert D_true (mm)</div>
-          <div class="big" id="Dtrue">–</div>
-        </div>
-      </section>
-
-      <section class="card" style="margin-top:12px">
-        <div style="font-weight:600;margin-bottom:8px">Tabell pr mm rundt D</div>
-        <div style="max-height:420px;overflow:auto">
-          <table>
-            <thead>
-              <tr><th style="text-align:left">D (mm)</th><th style="text-align:right">D_true (mm)</th><th style="text-align:right">Vinkel (°)</th><th style="text-align:right">Grader/mm</th></tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <div class="footer muted">
-        <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
-        <div>Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
-      </div>
+  <div class="card">
+    <div class="row">
+      <label for="mm">Høydeforskjell (mm)</label>
+      <input id="mm" type="number" inputmode="decimal" placeholder="Skriv mm, f.eks. 85" step="0.01" />
+      <div class="result" id="deg">–</div>
     </div>
+    <div class="hint" id="modeHint">Klar til beregning …</div>
+    <div class="small">
+      Tips: Verdien oppdateres mens du skriver. På mobil vises grader rett under feltet.
+    </div>
+  </div>
 
-    <script>
-      const $ = (id) => document.getElementById(id);
-      let A = {a:0.974414, b:21.754};
-      function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
-      function Dtrue(D) { return A.a*D + A.b; }
-      function theta(D) { const Dt=Dtrue(D); const x=(Dt-400)/400; const xx=Math.max(-1, Math.min(1, x)); return 2*Math.asin(xx)*180/Math.PI; }
-      function slope(D) { const Dt=Dtrue(D); const x=Dt-400; const cl=Math.max(-399.999999, Math.min(399.999999, x)); const rad=Math.sqrt(400*400 - cl*cl); return (180/Math.PI)*(1/rad); }
-      function render() {
-        const D = toNumber($('D').value, 795);
-        const SPAN = Math.max(10, toNumber($('SPAN').value, 60));
-        $('sliderD').value = String(Math.max(500, Math.min(800, D)));
-        const t = theta(D), s = slope(D), Dt = Dtrue(D);
-        $('theta').textContent = t.toFixed(3);
-        $('slope').textContent = s.toFixed(5);
-        $('Dtrue').textContent = Dt.toFixed(3);
-        const tbody = $('rows'); tbody.innerHTML='';
-        const start = Math.max(500, Math.round(D - SPAN/2));
-        const end   = Math.min(800, Math.round(D + SPAN/2));
-        for (let x = start; x <= end; x++) {
-          const t = theta(x), s = slope(x), Dt = Dtrue(x);
-          const tr = document.createElement('tr');
-          if (x === Math.round(D)) tr.className = 'hi';
-          const td1 = document.createElement('td'); td1.textContent = x; td1.style.textAlign = 'left';
-          const td2 = document.createElement('td'); td2.textContent = Dt.toFixed(3); td2.style.textAlign = 'right';
-          const td3 = document.createElement('td'); td3.textContent = t.toFixed(3); td3.style.textAlign = 'right';
-          const td4 = document.createElement('td'); td4.textContent = s.toFixed(5); td4.style.textAlign = 'right';
-          tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4);
-          tbody.appendChild(tr);
+  <script>
+    /*** LEGG INN DINE KALIBRERINGSPUNKTER HER (mm ↔︎ grader)
+     *  Minst to punkter for interpolering. Eksempel (slett eksemplene når du legger inn dine):
+     *  { mm: 20, deg: 1.15 }, { mm: 40, deg: 2.30 }, { mm: 60, deg: 3.45 }, { mm: 80, deg: 4.60 }
+     */
+    const calibration = [
+      // Eksempel – bytt til dine faktiske punkter:
+      // { mm: 20, deg: 1.15 },
+      // { mm: 40, deg: 2.30 },
+      // { mm: 60, deg: 3.45 },
+      // { mm: 80, deg: 4.60 },
+    ];
+
+    // Fallback-faktor (brukes bare hvis du ikke har lagt inn minst 2 kalibreringspunkter)
+    const fallbackFactor = 17.53; // grader = mm / 17.53  ← juster ved behov
+
+    const mmInput   = document.getElementById("mm");
+    const degOutput = document.getElementById("deg");
+    const hint      = document.getElementById("modeHint");
+
+    // Sorter kalibrering én gang
+    calibration.sort((a,b) => a.mm - b.mm);
+
+    function mmToDegInterpolated(mm) {
+      // Forutsetter calibration.length >= 2
+      if (mm <= calibration[0].mm) {
+        // Ekstrapoler med første segment
+        const a = calibration[0], b = calibration[1];
+        return a.deg + (mm - a.mm) * (b.deg - a.deg) / (b.mm - a.mm);
+      }
+      if (mm >= calibration[calibration.length-1].mm) {
+        // Ekstrapoler med siste segment
+        const a = calibration[calibration.length-2], b = calibration[calibration.length-1];
+        return a.deg + (mm - a.mm) * (b.deg - a.deg) / (b.mm - a.mm);
+      }
+      // Finn segmentet mm ligger i
+      for (let i = 0; i < calibration.length - 1; i++) {
+        const a = calibration[i], b = calibration[i+1];
+        if (mm >= a.mm && mm <= b.mm) {
+          return a.deg + (mm - a.mm) * (b.deg - a.deg) / (b.mm - a.mm);
         }
       }
-      $('apply').addEventListener('click', () => { const aa=toNumber($('A').value, A.a); const bb=toNumber($('B').value, A.b); A={a:aa,b:bb}; render(); });
-      $('D').addEventListener('input', render);
-      $('SPAN').addEventListener('input', render);
-      $('sliderD').addEventListener('input', (e) => { $('D').value = e.target.value; render(); });
-      render();
-      if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        const btn = document.getElementById('installBtn');
-        btn.hidden = false;
-        btn.addEventListener('click', async () => {
-          btn.hidden = true;
-          await deferredPrompt.prompt();
-          deferredPrompt = null;
-        });
-      });
-    </script>
-  </body>
+      return NaN; // skal ikke skje
+    }
+
+    function formatDeg(x){
+      if (!isFinite(x)) return "–";
+      // 2 desimaler, fjerner unødvendige nuller
+      const s = x.toFixed(2);
+      return (s.indexOf(".") >= 0) ? s.replace(/\.?0+$/, "") + "°" : s + "°";
+    }
+
+    function recalc() {
+      const mm = parseFloat(mmInput.value);
+      if (isNaN(mm) || mm < 0) { degOutput.textContent = "–"; hint.textContent = "Skriv inn en mm-verdi."; return; }
+
+      let deg;
+      if (calibration.length >= 2) {
+        deg = mmToDegInterpolated(mm);
+        degOutput.textContent = formatDeg(deg);
+        hint.textContent = `Interpolert fra ${calibration.length} kalibreringspunkt${calibration.length>1?"er":""}.`;
+      } else {
+        deg = mm / fallbackFactor;
+        degOutput.textContent = formatDeg(deg);
+        hint.textContent = `Beregnet med enkel faktor (1 / ${fallbackFactor}). Legg inn kalibreringspunkter for 100% nøyaktighet.`;
+      }
+    }
+
+    mmInput.addEventListener("input", recalc);
+    // Kjør én gang ved innlasting
+    recalc();
+  </script>
+</body>
 </html>
