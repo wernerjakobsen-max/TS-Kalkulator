@@ -3,55 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lag QR-kode for TS-kalkulator</title>
+  <title>QR – TS-kalkulator</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif;margin:20px}
-    input{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:10px}
-    #q{margin-top:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-    .btn{display:inline-block;background:#00FFFF;color:#000;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer;text-decoration:none}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif;margin:0;padding:16px;background:#f8fafc;color:#0f172a}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;max-width:700px;margin:0 auto}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input{flex:1;min-width:240px;padding:10px 12px;border-radius:12px;border:1px solid #e2e8f0;font:inherit}
+    .btn{background:#00FFFF;border:1px solid #a0fefe;border-radius:10px;padding:10px 14px;cursor:pointer}
+    canvas{display:block;margin:16px auto;border:1px solid #e2e8f0}
   </style>
 </head>
 <body>
-  <h1>QR-kode – TS-kalkulator</h1>
-  <p>Skriv inn den publiserte URL-en (f.eks. <code>https://brukernavn.github.io/TS-Kalkulator/</code>) og trykk “Lag QR”.</p>
-  <input id="url" placeholder="https://brukernavn.github.io/TS-Kalkulator/">
-  <div style="margin-top:8px">
-    <button class="btn" onclick="make()">Lag QR</button>
+  <div class="card">
+    <h2>Lag QR-kode</h2>
+    <div class="row">
+      <input id="url" placeholder="https://" />
+      <button class="btn" id="make">Lag QR</button>
+      <a class="btn" id="dl" href="#" download="ts-kalkulator-qr.png">Last ned PNG</a>
+    </div>
+    <canvas id="c" width="0" height="0"></canvas>
+    <p style="color:#64748b">Tips: URL er forhåndsutfylt fra siden du kom fra.</p>
   </div>
-  <div id="q"></div>
-  <script>/*! qrcode.js - MIT License - https://davidshimjs.github.io/qrcodejs/ */
-!function(o){function t(o){this.mode=n.MODE_8BIT_BYTE,this.data=o}function e(o,t){this.typeNumber=o,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.rsBlocks=null,this.dataList=[]}var n={};t.prototype={getLength:function(o){return this.data.length},write:function(o){for(var t=0;t<this.data.length;t++)o.put(this.data.charCodeAt(t),8)}};var r={L:1,M:0,Q:3,H:2};e.prototype={addData:function(o){this.dataList.push(new t(o)),this.dataCache=null},isDark:function(o,t){if(null==this.modules[o][t])throw new Error(o+","+t);return this.modules[o][t]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(o,t){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var e=0;e<this.modules.length;e++){this.modules[e]=new Array(this.moduleCount);for(var n=0;n<this.modules[e].length;n++)this.modules[e][n]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(o,t),this.typeNumber>=7&&this.setupTypeNumber(o),null==this.dataCache&&(this.dataCache=e.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,t)},setupPositionProbePattern:function(o,t){for(var e=-1;e<=7;e++)if(!(o+e<=-1||this.moduleCount<=o+e))for(var n=-1;n<=7;n++)t+n<=-1||this.moduleCount<=t+n||(this.modules[o+e][t+n]=e>=0&&e<=6&&(0==n||6==n)||n>=0&&n<=6&&(0==e||6==e)||e>=2&&e<=4&&n>=2&&n<=4)},getBestMaskPattern:function(){for(var o=0,t=0,e=0;e<8;e++){this.makeImpl(!0,e);var n=a.getLostPoint(this);(0==e||n<t)&&(t=n,o=e)}return o},createMovieClip:function(o,t,e){var n=o.createEmptyMovieClip(t,e),r=1;this.make();for(var i=0;i<this.modules.length;i++)for(var s=1;s<this.modules[i].length;s++){var u=n.createEmptyMovieClip(t+i+"_"+s,e);u.moveTo(s*r,i*r),u.beginFill(this.isDark(i,s)?"0":"0xffffff"),u.lineTo(s*r,(i+1)*r),u.lineTo((s+1)*r,(i+1)*r),u.lineTo((s+1)*r,i*r),u.endFill()}return n},setupTimingPattern:function(){for(var o=8;o<this.moduleCount-8;o++)null==this.modules[o][6]&&(this.modules[o][6]=o%2==0),null==this.modules[6][o]&&(this.modules[6][o]=o%2==0)},setupPositionAdjustPattern:function(){for(var o=a.getPatternPosition(this.typeNumber),t=0;t<o.length;t++)for(var e=0;e<o.length;e++){var n=o[t],r=o[e];if(null==this.modules[n][r])for(var i=-2;i<=2;i++)for(var s=-2;s<=2;s++)this.modules[n+i][r+s]=-2==i||2==i||-2==s||2==s||0==i&&0==s}},setupTypeNumber:function(o){for(var t=a.getBCHTypeNumber(this.typeNumber),e=0;e<18;e++){var n=!o&&(1&t>>e&1);this.modules[Math.floor(e/3)][e%3+this.moduleCount-8-3]=n}for(e=0;e<18;e++){n=!o&&(1&t>>e&1);this.modules[e%3+this.moduleCount-8-3][Math.floor(e/3)]=n}},setupTypeInfo:function(o,t){for(var e=this.errorCorrectLevel<<3|t,n=a.getBCHTypeInfo(e),r=0;r<15;r++){var i=!o&&(1&n>>r);r<6?this.modules[r][8]=i:r<8?this.modules[r+1][8]=i:this.modules[this.moduleCount-15+r][8]=i}for(r=0;r<15;r++){i=!o&&(1&n>>r);r<8?this.modules[8][this.moduleCount-1-r]=i:r<9?this.modules[8][15-r-1+1]=i:this.modules[8][15-r-1]=i}this.modules[this.moduleCount-8][8]=!o},mapData:function(o,t){for(var e=-1,n=this.moduleCount-1,r=7,i=0,s=this.moduleCount-1;s>0;s-=2)for(6==s&&s--;;){for(var u=0;u<2;u++)if(null==this.modules[n][s-u]){var l=!1;i<o.length&&(l=1==(o[i]>>>r&1)),a.getMask(t,n,s-u)&&(l=!l),this.modules[n][s-u]=l,r--,-1==r&&(i++,r=7)}if(n+=e,n<0||this.moduleCount<=n){n-=e,e=-e;break}}},setupTypeInfoPattern:function(){},setupPositionAdjustPatternHelper:function(){}};var a={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54]],G15:1335,G18:7973,G15_MASK:21522,getBCHTypeInfo:function(o){for(var t=o<<10;a.getBCHDigit(t)-a.getBCHDigit(a.G15)>=0;)t^=a.G15<<a.getBCHDigit(t)-a.getBCHDigit(a.G15);return(o<<10|t)^a.G15_MASK},getBCHTypeNumber:function(o){for(var t=o<<12;a.getBCHDigit(t)-a.getBCHDigit(a.G18)>=0;)t^=a.G18<<a.getBCHDigit(t)-a.getBCHDigit(a.G18);return o<<12|t},getBCHDigit:function(o){var t=0;for(;0!=o;)t++,o>>>=1;return t},getPatternPosition:function(o){return a.PATTERN_POSITION_TABLE[o-1]},getMask:function(o,t,e){switch(o){case 0:return(t+e)%2==0;case 1:return t%2==0;case 2:return e%3==0;case 3:return(t+e)%3==0;case 4:return(Math.floor(t/2)+Math.floor(e/3))%2==0;case 5:return t*e%2+ t*e%3==0;case 6:return(t*e%2+t*e%3)%2==0;case 7:return(t*e%3+t+e)%2==0;default:throw new Error("bad maskPattern:"+o)}},getErrorCorrectPolynomial:function(o){for(var t=new i([1],0),e=0;e<o;e++)t=t.multiply(new i([1,s.gexp(e)],0));return t},glog:function(o){if(o<1)throw new Error("glog("+o+")");return c[o]},gexp:function(o){for(;o<0;)o+=255;for(;o>=256;)o-=255;return l[o]},getLostPoint:function(o){for(var t=o.getModuleCount(),e=0,n=0;n<t;n++)for(var r=0;r<t;r++){for(var i=0,s=o.isDark(n,r),u=-1;u<=1;u++)if(!(n+u<0||t<=n+u))for(var l=-1;l<=1;l++)r+l<0||t<=r+l||0==u&&0==l||s==o.isDark(n+u,r+l)&&i++;i>5&&(e+=3+i-5)}for(n=0;n<t-1;n++)for(r=0;r<t-1;r++){var h=0;o.isDark(n,r)&&h++,o.isDark(n+1,r)&&h++,o.isDark(n,r+1)&&h++,o.isDark(n+1,r+1)&&h++,0!=h&&4!=h||(e+=3)}for(n=0;n<t;n++)for(r=0;r<t-6;r++)o.isDark(n,r)&&!o.isDark(n,r+1)&&o.isDark(n,r+2)&&o.isDark(n,r+3)&&o.isDark(n,r+4)&&!o.isDark(n,r+5)&&o.isDark(n,r+6)&&(e+=40);for(r=0;r<t;r++)for(n=0;n<t-6;n++)o.isDark(n,r)&&!o.isDark(n+1,r)&&o.isDark(n+2,r)&&o.isDark(n+3,r)&&o.isDark(n+4,r)&&!o.isDark(n+5,r)&&o.isDark(n+6,r)&&(e+=40);for(var f=0,d=0,r=0;r<t;r++)for(n=0;n<t;n++)o.isDark(n,r)&&f++;var g=Math.abs(100*f/t/t-50)/5;e+=10*g;return e}},i=function(o,t){if(null==o.length)throw new Error(o.length+"/"+t);for(var e=0;e<o.length&&0==o[e];)e++;this.num=new Array(o.length-e+t);for(var n=0;n<o.length-e;n++)this.num[n]=o[n+e]};i.prototype={get:function(o){return this.num[o]},getLength:function(){return this.num.length},multiply:function(o){for(var t=new Array(this.getLength()+o.getLength()-1),e=0;e<this.getLength();e++)for(var n=0;n<o.getLength();n++)t[e+n]^=s.gexp(s.glog(this.get(e))+s.glog(o.get(n)));return new i(t,0)},mod:function(o){if(this.getLength()-o.getLength()<0)return this;for(var t=s.glog(this.get(0))-s.glog(o.get(0)),e=new Array(this.getLength()),n=0;n<this.getLength();n++)e[n]=this.get(n);for(n=0;n<o.getLength();n++)e[n]^=s.gexp(s.glog(o.get(n))+t);return new i(e,0).mod(o)}};var s={glog:function(o){if(o<1)throw new Error("glog("+o+")");return c[o]},gexp:function(o){for(;o<0;)o+=255;for(;o>=256;)o-=255;return l[o]}};for(var u=0;u<8;u++)e.getRSBlocks=function(o,t){var n=[[1,26,19],[1,26,16],[1,26,13],[1,26,9]];return[{totalCount:n[t][1],dataCount:n[t][2]}]};e.createData=function(o,t,e){var n,i=new u;for(n=0;n<e.length;n++)i.put(4,4),i.put(e[n].getLength(),8),e[n].write(i);for(var s=0,a=0;a<i.getLengthInBits()&&s<8*19;s++)i.buffer[a>>>3]|=128>>>a%8,a++;return i.buffer};var u=function(){this.buffer=[],this.length=0};u.prototype={getLengthInBits:function(){return this.length},put:function(o,t){for(var e=0;e<t;e++)this.putBit(1==(o>>>t-e-1&1))},putBit:function(o){var t=this.length>>>3;this.buffer.length<=t&&this.buffer.push(0),o&&(this.buffer[t]|=128>>>this.length%8),this.length++}};var c=Array(256),l=Array(256);for(u=0;u<8;u++)l[u]=1;for(u=8;u<256;u++)l[u]=l[u-4]^l[u-5]^l[u-6]^l[u-8];for(u=0;u<256;u++)c[l[u]]=u;o.QRCode=e,o.QRErrorCorrectLevel=r}(window);
-</script>
+
   <script>
-    function make(){
-      const url = document.getElementById('url').value.trim();
-      const q = document.getElementById('q');
-      q.innerHTML='';
-      if(!url) return;
-      const wrap = document.createElement('div');
-      const canvas = document.createElement('canvas');
-      wrap.appendChild(canvas);
-      q.appendChild(wrap);
-      // Minimal draw
-      const qr = new QRCode(4, QRErrorCorrectLevel.M); // typeNumber 4
-      qr.addData(url);
-      qr.make();
-      const count = qr.getModuleCount();
-      const scale = 6;
-      canvas.width = canvas.height = count*scale;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = '#000';
-      for(let r=0;r<count;r++) for(let c=0;c<count;c++){
-        if(qr.isDark(r,c)) ctx.fillRect(c*scale, r*scale, scale, scale);
-      }
-      const a = document.createElement('a');
-      a.textContent = 'Last ned PNG';
-      a.className = 'btn';
-      a.download = 'ts-kalkulator-qr.png';
-      a.href = canvas.toDataURL('image/png');
-      q.appendChild(a);
-    }
+  /*! qrcode.js - MIT License - https://davidshimjs.github.io/qrcodejs/ */
+  !function(o){function t(o){this.mode=n.MODE_8BIT_BYTE,this.data=o}function e(o,t){this.typeNumber=o,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.rsBlocks=null,this.dataList=[]}var n={};t.prototype={getLength:function(o){return this.data.length},write:function(o){for(var t=0;t<this.data.length;t++)o.put(this.data.charCodeAt(t),8)}};var r={L:1,M:0,Q:3,H:2};e.prototype={addData:function(o){this.dataList.push(new t(o)),this.dataCache=null},isDark:function(o,t){if(null==this.modules[o][t])throw new Error(o+","+t);return this.modules[o][t]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,0)},makeImpl:function(o,t){this.moduleCount=33,this.modules=new Array(this.moduleCount);for(var e=0;e<this.modules.length;e++){this.modules[e]=new Array(this.moduleCount);for(var n=0;n<this.modules[e].length;n++)this.modules[e][n]=null}this.dataCache=e.createData(this.typeNumber,this.errorCorrectLevel,this.dataList),this.mapData(this.dataCache,t)},mapData:function(o){var t=-1,e=this.moduleCount-1,n=7,r=0;for(this.modules.forEach((o,t)=>o.fill(!1));e>0;e-=2)for(6==e&&e--;;){for(var i=0;i<2;i++)null==this.modules[e-i][t]&&(this.modules[e-i][t]=1==(o[r>>>3]>>>7-r%8&1),r++);if(t+=n,t<0||t>=this.moduleCount){t-=n,n=-n;break}}}};o.QRCode=e,o.QRErrorCorrectLevel=r}(window);
+
+  const $ = (id) => document.getElementById(id);
+  function makeQR(u){
+    const qr = new QRCode(4, QRErrorCorrectLevel.M);
+    qr.addData(u); qr.make();
+    const N = qr.getModuleCount(), scale = 8;
+    const c = $('c'); c.width = c.height = N*scale;
+    const ctx = c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle='#000';
+    for(let r=0;r<N;r++) for(let c0=0;c0<N;c0++) if(qr.isDark(r,c0)) ctx.fillRect(c0*scale, r*scale, scale, scale);
+    $('dl').href = c.toDataURL('image/png');
+  }
+  $('make').addEventListener('click', ()=> makeQR(($('url').value||'').trim()));
+  (function init(){
+    const u = new URLSearchParams(location.search).get('u') || '';
+    $('url').value = u;
+    if(u) makeQR(u);
+  })();
   </script>
 </body>
 </html>
