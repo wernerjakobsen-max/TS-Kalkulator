@@ -1,50 +1,43 @@
 <!doctype html>
 <html lang="no">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QR – TS-kalkulator</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif;margin:0;padding:16px;background:#f8fafc;color:#0f172a}
-    .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;max-width:700px;margin:0 auto}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    input{flex:1;min-width:240px;padding:10px 12px;border-radius:12px;border:1px solid #e2e8f0;font:inherit}
-    .btn{background:#00FFFF;border:1px solid #a0fefe;border-radius:10px;padding:10px 14px;cursor:pointer}
-    canvas{display:block;margin:16px auto;border:1px solid #e2e8f0}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR – TS-kalkulator</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif;margin:0;padding:16px;background:#f8fafc;color:#0f172a}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;max-width:700px;margin:0 auto}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  input{flex:1;min-width:240px;padding:10px 12px;border-radius:12px;border:1px solid #e2e8f0;font:inherit}
+  .btn{background:#00FFFF;border:1px solid #a0fefe;border-radius:10px;padding:10px 14px;cursor:pointer}
+  img{display:block;margin:16px auto;border:1px solid #e2e8f0}
+  .muted{color:#64748b}
+</style>
 </head>
 <body>
   <div class="card">
     <h2>Lag QR-kode</h2>
     <div class="row">
-      <input id="url" placeholder="https://" />
+      <input id="url" placeholder="https://">
       <button class="btn" id="make">Lag QR</button>
-      <a class="btn" id="dl" href="#" download="ts-kalkulator-qr.png">Last ned PNG</a>
+      <a class="btn" id="dl" download="ts-kalkulator-qr.png">Last ned PNG</a>
     </div>
-    <canvas id="c" width="0" height="0"></canvas>
-    <p style="color:#64748b">Tips: URL er forhåndsutfylt fra siden du kom fra.</p>
+    <img id="qr" width="0" height="0" alt="QR">
+    <p class="muted">Tips: URL fylles automatisk fra siden du kom fra.</p>
   </div>
-
-  <script>
-  /*! qrcode.js - MIT License - https://davidshimjs.github.io/qrcodejs/ */
-  !function(o){function t(o){this.mode=n.MODE_8BIT_BYTE,this.data=o}function e(o,t){this.typeNumber=o,this.errorCorrectLevel=t,this.modules=null,this.moduleCount=0,this.dataCache=null,this.rsBlocks=null,this.dataList=[]}var n={};t.prototype={getLength:function(o){return this.data.length},write:function(o){for(var t=0;t<this.data.length;t++)o.put(this.data.charCodeAt(t),8)}};var r={L:1,M:0,Q:3,H:2};e.prototype={addData:function(o){this.dataList.push(new t(o)),this.dataCache=null},isDark:function(o,t){if(null==this.modules[o][t])throw new Error(o+","+t);return this.modules[o][t]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,0)},makeImpl:function(o,t){this.moduleCount=33,this.modules=new Array(this.moduleCount);for(var e=0;e<this.modules.length;e++){this.modules[e]=new Array(this.moduleCount);for(var n=0;n<this.modules[e].length;n++)this.modules[e][n]=null}this.dataCache=e.createData(this.typeNumber,this.errorCorrectLevel,this.dataList),this.mapData(this.dataCache,t)},mapData:function(o){var t=-1,e=this.moduleCount-1,n=7,r=0;for(this.modules.forEach((o,t)=>o.fill(!1));e>0;e-=2)for(6==e&&e--;;){for(var i=0;i<2;i++)null==this.modules[e-i][t]&&(this.modules[e-i][t]=1==(o[r>>>3]>>>7-r%8&1),r++);if(t+=n,t<0||t>=this.moduleCount){t-=n,n=-n;break}}}};o.QRCode=e,o.QRErrorCorrectLevel=r}(window);
-
+<script>
   const $ = (id) => document.getElementById(id);
-  function makeQR(u){
-    const qr = new QRCode(4, QRErrorCorrectLevel.M);
-    qr.addData(u); qr.make();
-    const N = qr.getModuleCount(), scale = 8;
-    const c = $('c'); c.width = c.height = N*scale;
-    const ctx = c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle='#000';
-    for(let r=0;r<N;r++) for(let c0=0;c0<N;c0++) if(qr.isDark(r,c0)) ctx.fillRect(c0*scale, r*scale, scale, scale);
-    $('dl').href = c.toDataURL('image/png');
+  function build(u){ 
+    const enc = encodeURIComponent(u.trim());
+    const src = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
+    $('qr').src = src; $('qr').width = 256; $('qr').height = 256;
+    $('dl').href = src;
   }
-  $('make').addEventListener('click', ()=> makeQR(($('url').value||'').trim()));
+  $('make').addEventListener('click', ()=>{ if($('url').value) build($('url').value); });
   (function init(){
-    const u = new URLSearchParams(location.search).get('u') || '';
-    $('url').value = u;
-    if(u) makeQR(u);
+    const u = new URLSearchParams(location.search).get('u') || document.referrer || '';
+    $('url').value = u; if(u) build(u);
   })();
-  </script>
+</script>
 </body>
 </html>
