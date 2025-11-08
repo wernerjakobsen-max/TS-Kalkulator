@@ -10,176 +10,176 @@
   <style>
     :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
-    .wrap{max-width:980px;margin:0 auto;padding:16px 20px}
+    .wrap{max-width:720px;margin:0 auto;padding:16px 20px}
     .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
     .muted{color:var(--muted);font-size:14px}
-    .grid{display:grid;gap:16px}
-    @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
-    .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);margin-top:12px}
     label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-    input,button{font:inherit}
-    input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:16px}
+    input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:18px}
     input[type=range]{padding:0}
-    .out{display:grid;gap:16px}
-    @media(min-width:900px){.out{grid-template-columns:repeat(2,1fr)}}
     .big{font-size:28px;font-weight:700;margin-top:4px}
     .miniangle{margin-top:8px;font-size:13px;color:#0f172a;background:#e6ffff;display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #a0fefe}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:8px 10px;border-bottom:1px solid var(--ring)}
-    thead th{position:sticky;top:0;background:#e6ffff}
-    .hi{background:#fffbea}
-    .footer{margin-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
     .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:12px}
-    .brand img{height:44px}
-    .badge{display:inline-block;background:var(--brand);color:#000;border:1px solid #a0fefe;padding:4px 8px;border-radius:999px;font-size:12px}
-    .angle-inline { display:none; font-size:13px; color:var(--muted); }
-    @media(max-width:700px){
-      .col-angle { display:none; }
-      .angle-inline { display:block; }
-      thead { display:none; }
-      table, tbody, tr, td { display:block; width:100%; }
-      tr { border-bottom:1px solid var(--ring); padding:6px 0; }
-      td { display:flex; justify-content:space-between; align-items:baseline; border:none; padding:4px 0; }
-      td:first-child { display:block; }
-    }
+    details{margin-top:8px}
+    details>summary{cursor:pointer;user-select:none;font-weight:600;list-style:none}
+    details>summary::-webkit-details-marker{display:none}
+    .hide-on-mobile{display:none}
+    @media(min-width:780px){ .hide-on-mobile{display:block} }
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:6px 10px;border-bottom:1px solid var(--ring)}
+    .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
   </style>
 </head>
 <body>
-<div class="wrap">
-  <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-    <div class="brand">
-      <img src="logo-lister-blikk.png" srcset="logo-lister-blikk.png 1x, logo-lister-blikk@2x.png 2x" alt="Lister Blikk">
-      <div>
-        <div class="h1">TS-kalkulator <span class="badge">Lister Blikk</span></div>
-        <div class="muted">Tommestokk-vinkler fra mm-avlesning (kalibrert)</div>
+  <div class="wrap">
+    <header class="row" style="justify-content:space-between">
+      <div class="row">
+        <img src="logo-lister-blikk.png" alt="Lister Blikk" style="height:44px">
+        <div>
+          <div class="h1">TS-kalkulator <span class="muted">— Lister Blikk</span></div>
+          <div class="muted">Tommestokk-vinkel fra mm-avlesning (kalibrert)</div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <button class="btn" id="qrBtn">QR</button>
-      <button class="btn" id="installBtn" hidden>Installer</button>
-    </div>
-  </header>
+      <div class="row">
+        <button class="btn" id="qrBtn">QR</button>
+        <button class="btn" id="installBtn" hidden>Installer</button>
+      </div>
+    </header>
 
-  <section class="grid" style="margin-top:16px">
-    <div class="card">
+    <section class="card">
       <label>Avlest D (mm)</label>
-      <input id="D" inputmode="decimal" value="760">
+      <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
       <input id="sliderD" type="range" min="500" max="800" value="760" style="margin-top:12px">
       <div class="muted" style="margin-top:6px">Anbefalt område 500–800 mm</div>
-      <div id="miniAngleD" class="miniangle">Vinkel nå: –</div>
-    </div>
+      <div class="miniangle" id="miniAngle">Oppdatert vinkel vises under</div>
 
-    
-    <div class="card">
-      <label>Tabellbredde (mm rundt D)</label>
-      <input id="SPAN" inputmode="numeric" value="60">
-      <div id="miniAngleSpan" class="miniangle">Vinkel nå: –</div>
-    </div>
+      <div class="muted" style="margin-top:10px">Vinkel (grader)</div>
+      <div class="big" id="thetaTop">–</div>
+    </section>
 
-    <div class="card">
-      <label>Kalibrering (a, b)</label>
-      <div class="row">
-        <input id="A" value="0.974414" style="width:160px">
-        <input id="B" value="21.754" style="width:160px">
-      </div>
-      <button class="btn" id="apply" style="margin-top:8px">Bruk</button>
-      <div class="muted" style="margin-top:6px">Default er flerpunkts-fit fra deres referanser.</div>
-      <div id="miniAngleCal" class="miniangle">Vinkel nå: –</div>
-      <div class="muted" style="margin-top:8px">Vinkel (grader)</div>
-<div class="big" id="thetaTop">–</div>
+    <details>
+      <summary>Avansert</summary>
+      <section class="card">
+        <div class="muted">Kalibrering (a, b)</div>
+        <div class="row" style="margin-top:6px">
+          <input id="A" value="0.974414" style="width:160px">
+          <input id="B" value="21.754" style="width:160px">
+          <button id="apply" class="btn">Bruk</button>
+        </div>
+      </section>
 
-    </div>
-  </section>
+      <section class="card hide-on-mobile">
+        <div style="font-weight:600;margin-bottom:8px">Tabell pr mm rundt D</div>
+        <div class="row" style="margin-bottom:8px">
+          <label for="SPAN" style="margin:0">Bredde (mm)</label>
+          <input id="SPAN" value="60" style="width:120px">
+        </div>
+        <div style="max-height:360px;overflow:auto">
+          <table>
+            <thead><tr><th style="text-align:left">D (mm)</th><th style="text-align:right">Vinkel (°)</th><th style="text-align:right">D_true</th><th style="text-align:right">Grader/mm</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
 
-  <section class="card" style="margin-top:12px">
-    <div style="font-weight:600;margin-bottom:8px">Tabell pr mm rundt D</div>
-    <div style="max-height:420px;overflow:auto">
-      <table>
-        <thead>
-          <tr><th style="text-align:left">D (mm)</th><th style="text-align:right">Vinkel (°)</th><th style="text-align:right">D_true (mm)</th><th style="text-align:right">Grader/mm</th></tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
-  </section>
+      <section class="card">
+        <div class="muted">Grader per mm ved D</div>
+        <div class="big" id="slope">–</div>
+        <div class="muted" style="margin-top:6px">Justert D_true (mm)</div>
+        <div id="Dtrue" class="big">–</div>
+      </section>
+    </details>
 
-  <section class="out" style="margin-top:12px">
-    <div class="card">
-      <div class="muted">Grader per mm ved D</div>
-      <div class="big" id="slope">–</div>
+    <div class="footer muted">
+      <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
+      <div>Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
     </div>
-    <div class="card">
-      <div class="muted">Justert D_true (mm)</div>
-      <div class="big" id="Dtrue">–</div>
-    </div>
-  </section>
-
-  <div class="footer muted">
-    <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
-    <div>Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
   </div>
-</div>
 
 <script>
-  // --- Core app (no QR code here to avoid breaking render) ---
   const $ = (id) => document.getElementById(id);
   let A = { a: 0.974414, b: 21.754 };
 
-  function toNumber(v, fb){ const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
-  function Dtrue(D){ return A.a*D + A.b; }
-  function theta(D){ const Dt=Dtrue(D); const x=(Dt-400)/400; const xx=Math.max(-1, Math.min(1, x)); return 2*Math.asin(xx)*180/Math.PI; }
-  function slope(D){ const Dt=Dtrue(D); const x=Dt-400; const cl=Math.max(-399.999999, Math.min(399.999999, x)); const rad=Math.sqrt(400*400 - cl*cl); return (180/Math.PI)*(1/rad); }
-
-  function updateMiniAngles(Dval){
-    const t = theta(Dval);
-    const txt = 'Vinkel nå: ' + (Number.isFinite(t) ? t.toFixed(3) + '°' : '–');
-    ['miniAngleD','miniAngleSpan','miniAngleCal'].forEach(id => { const el = $(id); if (el) el.textContent = txt; });
-    const top = $('thetaTop'); if (top) top.textContent = Number.isFinite(t) ? t.toFixed(3) : '–';
+  function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
+  function Dtrue(D) { return A.a * D + A.b; }
+  function theta(D) {
+    const Dt = Dtrue(D);
+    const x = (Dt - 400) / 400;
+    const xx = Math.max(-1, Math.min(1, x));
+    return 2 * Math.asin(xx) * 180 / Math.PI;
+  }
+  function slope(D) {
+    const Dt = Dtrue(D);
+    const x = Dt - 400;
+    const cl = Math.max(-399.999999, Math.min(399.999999, x));
+    const rad = Math.sqrt(400*400 - cl*cl);
+    return (180/Math.PI) * (1 / rad);
   }
 
-  function render(){
-    const D = toNumber($('D').value, 760);
-    const SPAN = Math.max(10, toNumber($('SPAN').value, 60));
-    $('sliderD').value = String(Math.max(500, Math.min(800, D)));
-    updateMiniAngles(D);
-
-    const tbody = $('rows'); tbody.innerHTML='';
+  function renderTable(D, SPAN) {
+    const tbody = $('rows'); if (!tbody) return;
+    tbody.innerHTML='';
     const start = Math.max(500, Math.round(D - SPAN/2));
     const end   = Math.min(800, Math.round(D + SPAN/2));
     for (let x = start; x <= end; x++) {
       const t = theta(x), s = slope(x), Dt = Dtrue(x);
       const tr = document.createElement('tr');
-      if (x === Math.round(D)) tr.className = 'hi';
-
-      const tdD = document.createElement('td'); tdD.style.textAlign='left';
-      const dTitle = document.createElement('div'); dTitle.textContent = x + ' mm';
-      const dAngleInline = document.createElement('div'); dAngleInline.className='angle-inline'; dAngleInline.textContent='Vinkel: ' + t.toFixed(3) + '°';
-      tdD.appendChild(dTitle); tdD.appendChild(dAngleInline);
-
-      const tdAngle = document.createElement('td'); tdAngle.className='col-angle'; tdAngle.style.textAlign='right'; tdAngle.textContent=t.toFixed(3);
-      const tdDt = document.createElement('td'); tdDt.style.textAlign='right'; tdDt.textContent=Dt.toFixed(3);
-      const tdSlope = document.createElement('td'); tdSlope.style.textAlign='right'; tdSlope.textContent=s.toFixed(5);
-
-      tr.appendChild(tdD); tr.appendChild(tdAngle); tr.appendChild(tdDt); tr.appendChild(tdSlope);
+      if (x === Math.round(D)) tr.style.background = '#fffbea';
+      tr.innerHTML = `<td style="text-align:left">${x} mm</td>
+                      <td style="text-align:right">${t.toFixed(3)}</td>
+                      <td style="text-align:right">${Dt.toFixed(3)}</td>
+                      <td style="text-align:right">${s.toFixed(5)}</td>`;
       tbody.appendChild(tr);
     }
-    $('slope').textContent = slope(D).toFixed(5);
-    $('Dtrue').textContent = Dtrue(D).toFixed(3);
   }
 
-  $('apply').addEventListener('click', () => { const aa=toNumber($('A').value, A.a); const bb=toNumber($('B').value, A.b); A={a:aa,b:bb}; render(); });
+  function render() {
+    const D = toNumber($('D').value, 760);
+    const SPAN = Math.max(10, toNumber(($('SPAN')||{value:60}).value, 60));
+    $('sliderD').value = String(Math.max(500, Math.min(800, D)));
+
+    const t = theta(D);
+    const txt = Number.isFinite(t) ? t.toFixed(3) + '°' : '–';
+    $('thetaTop').textContent = txt;
+    $('miniAngle').textContent = 'Vinkel nå: ' + txt;
+
+    const s = slope(D);
+    const Dt = Dtrue(D);
+    if ($('slope')) $('slope').textContent = s.toFixed(5);
+    if ($('Dtrue')) $('Dtrue').textContent = Dt.toFixed(3);
+
+    renderTable(D, SPAN);
+  }
+
+  document.addEventListener('DOMContentLoaded', render);
+  document.getElementById('apply').addEventListener('click', () => { 
+    const aa = toNumber($('A').value, A.a);
+    const bb = toNumber($('B').value, A.b);
+    A = { a: aa, b: bb }; 
+    render(); 
+  });
   $('D').addEventListener('input', render);
-  $('SPAN').addEventListener('input', render);
-  $('sliderD').addEventListener('input', (e)=>{ $('D').value=e.target.value; render(); });
+  $('sliderD').addEventListener('input', (e)=>{ $('D').value = e.target.value; render(); });
+  const spanEl = $('SPAN'); if (spanEl) spanEl.addEventListener('input', render);
 
-  // PWA install (safe)
-  if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); render(); }); }
-  else { render(); }
+  // PWA Install
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = $('installBtn');
+    btn.hidden = false;
+    btn.addEventListener('click', async () => {
+      btn.hidden = true;
+      await deferredPrompt.prompt();
+      deferredPrompt = null;
+    });
+  });
+  if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
 
-  // QR opens separate page (isolated)
-  document.getElementById('qrBtn').addEventListener('click', () => {
+  // QR separate side
+  $('qrBtn').addEventListener('click', () => {
     const u = encodeURIComponent(location.href);
     window.open('qr.html?u=' + u, '_blank');
   });
