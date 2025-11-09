@@ -27,8 +27,8 @@
   </div>
 <script>
   const $ = (id) => document.getElementById(id);
-  function build(u){ 
-    const enc = encodeURIComponent(u.trim());
+  function build(u){
+    const enc = encodeURIComponent((u||'').trim());
     const src = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
     $('qr').src = src; $('qr').width = 256; $('qr').height = 256;
     $('dl').href = src;
