@@ -29,24 +29,27 @@
     table{width:100%;border-collapse:collapse;font-size:14px}
     th,td{padding:6px 10px;border-bottom:1px solid var(--ring)}
     .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
+    .logo{height:44px; background:#00FFFF; border-radius:12px; padding:6px 10px; font-weight:800; display:flex; align-items:center}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="row" style="justify-content:space-between">
       <div class="row">
-        <img src="logo-lister-blikk.png" alt="Lister Blikk" style="height:44px">
+        <!-- Lettvekts "logo" uten bildefil (kan byttes til PNG senere) -->
+        <div class="logo">Lister&nbsp;Blikk</div>
         <div>
           <div class="h1">TS-kalkulator <span class="muted">— Lister Blikk</span></div>
           <div class="muted">Tommestokk-vinkel fra mm-avlesning (kalibrert)</div>
         </div>
       </div>
       <div class="row">
-        <button class="btn" id="qrBtn">QR</button>
+        <a class="btn" id="qrBtn" href="#" target="_blank" rel="noopener">QR</a>
         <button class="btn" id="installBtn" hidden>Installer</button>
       </div>
     </header>
 
+    <!-- Minimal: bare avlest + vinkel -->
     <section class="card">
       <label>Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
@@ -58,6 +61,7 @@
       <div class="big" id="thetaTop">–</div>
     </section>
 
+    <!-- Avansert (skjult) -->
     <details>
       <summary>Avansert</summary>
       <section class="card">
@@ -101,15 +105,15 @@
   const $ = (id) => document.getElementById(id);
   let A = { a: 0.974414, b: 21.754 };
 
-  function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
-  function Dtrue(D) { return A.a * D + A.b; }
-  function theta(D) {
+  function toNumber(v, fb){ const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
+  function Dtrue(D){ return A.a * D + A.b; }
+  function theta(D){
     const Dt = Dtrue(D);
     const x = (Dt - 400) / 400;
     const xx = Math.max(-1, Math.min(1, x));
     return 2 * Math.asin(xx) * 180 / Math.PI;
   }
-  function slope(D) {
+  function slope(D){
     const Dt = Dtrue(D);
     const x = Dt - 400;
     const cl = Math.max(-399.999999, Math.min(399.999999, x));
@@ -117,7 +121,7 @@
     return (180/Math.PI) * (1 / rad);
   }
 
-  function renderTable(D, SPAN) {
+  function renderTable(D, SPAN){
     const tbody = $('rows'); if (!tbody) return;
     tbody.innerHTML='';
     const start = Math.max(500, Math.round(D - SPAN/2));
@@ -134,7 +138,7 @@
     }
   }
 
-  function render() {
+  function render(){
     const D = toNumber($('D').value, 760);
     const SPAN = Math.max(10, toNumber(($('SPAN')||{value:60}).value, 60));
     $('sliderD').value = String(Math.max(500, Math.min(800, D)));
@@ -152,37 +156,40 @@
     renderTable(D, SPAN);
   }
 
-  document.addEventListener('DOMContentLoaded', render);
-  document.getElementById('apply').addEventListener('click', () => { 
+  document.addEventListener('DOMContentLoaded', () => {
+    render();
+
+    // PWA Installer
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = $('installBtn');
+      btn.hidden = false;
+      btn.addEventListener('click', async () => {
+        btn.hidden = true;
+        await deferredPrompt.prompt();
+        deferredPrompt = null;
+      });
+    });
+
+    // QR-knapp -> absolutt lenke til qr.html
+    const qr = $('qrBtn');
+    const base = new URL('./qr.html', location.href).toString();
+    const href = base + '?u=' + encodeURIComponent(location.href);
+    qr.setAttribute('href', href);
+  });
+
+  $('apply').addEventListener('click', () => {
     const aa = toNumber($('A').value, A.a);
     const bb = toNumber($('B').value, A.b);
-    A = { a: aa, b: bb }; 
-    render(); 
+    A = { a: aa, b: bb };
+    render();
   });
   $('D').addEventListener('input', render);
   $('sliderD').addEventListener('input', (e)=>{ $('D').value = e.target.value; render(); });
-  const spanEl = $('SPAN'); if (spanEl) spanEl.addEventListener('input', render);
 
-  // PWA Install
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btn = $('installBtn');
-    btn.hidden = false;
-    btn.addEventListener('click', async () => {
-      btn.hidden = true;
-      await deferredPrompt.prompt();
-      deferredPrompt = null;
-    });
-  });
   if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
-
-  // QR separate side
-  $('qrBtn').addEventListener('click', () => {
-    const u = encodeURIComponent(location.href);
-    window.open('qr.html?u=' + u, '_blank');
-  });
 </script>
 </body>
 </html>
