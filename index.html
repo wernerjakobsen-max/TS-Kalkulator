@@ -19,22 +19,10 @@
     })();
   </script>
   <style>
-    :root {
-      --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF;
-      --chip-bg:#e6ffff; --chip-fg:#0f172a; --chip-border:#a0fefe;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; 
-               --chip-bg:#073b3b; --chip-fg:#ebf0f7; --chip-border:#046e6e; }
-    }
-    [data-theme="dark"] {
-      --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937;
-      --chip-bg:#073b3b; --chip-fg:#ebf0f7; --chip-border:#046e6e;
-    }
-    [data-theme="light"] {
-      --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0;
-      --chip-bg:#e6ffff; --chip-fg:#0f172a; --chip-border:#a0fefe;
-    }
+    :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; } }
+    [data-theme="dark"] { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }
+    [data-theme="light"] { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; }
 
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
     .wrap{max-width:720px;margin:0 auto;padding:16px 20px}
@@ -56,6 +44,7 @@
     .modal img{display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto}
     .modal .btn-close{background:var(--card);color:var(--text);border:1px solid var(--ring);border-radius:10px;padding:8px 12px;cursor:pointer}
     .urlbox{background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px}
+    .warn{color:#b91c1c} /* rød tekst for hint */
   </style>
 </head>
 <body>
@@ -76,14 +65,15 @@
     <section class="card">
       <label>Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
-      <input id="sliderD" type="range" min="500" max="800" value="760" style="margin-top:12px">
+      <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
+      <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
       <div class="muted" style="margin-top:10px">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
     </section>
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div>v3.7.6</div>
+      <div>v3.7.8</div>
     </div>
   </div>
 
@@ -93,7 +83,7 @@
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.6</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.8</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -106,7 +96,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.6";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.8";
   let A = { a: 0.974414, b: 21.754 };
 
   const themeEl = document.documentElement;
@@ -149,10 +139,17 @@
   }
   function render() {
     const D = toNumber($('D').value, 760);
-    $('sliderD').value = String(Math.max(500, Math.min(800, D)));
-    const t = Math.round(theta(D));
-    const txt = Number.isFinite(t) ? t + '°' : '–';
-    $('thetaTop').textContent = txt;
+    $('sliderD').value = String(Math.max(400, Math.min(800, D)));
+    const outOfRange = (D < 400 || D > 800);
+    if (outOfRange) {
+      $('thetaTop').textContent = '–';
+      $('rangeText').classList.add('warn');
+    } else {
+      $('rangeText').classList.remove('warn');
+      const t = Math.round(theta(D));
+      const txt = Number.isFinite(t) ? t + '°' : '–';
+      $('thetaTop').textContent = txt;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
