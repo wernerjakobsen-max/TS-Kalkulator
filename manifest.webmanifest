@@ -1,9 +1,11 @@
 {
-  "name": "TS-kalkulator – Lister Blikk",
+  "id": "/TS-Kalkulator/min-v3-7-4",
+  "name": "TS-kalkulator",
   "short_name": "TS-kalk",
-  "start_url": ".",
+  "start_url": "/TS-Kalkulator/",
+  "scope": "/TS-Kalkulator/",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#0b1220",
   "theme_color": "#00FFFF",
   "icons": [
     {

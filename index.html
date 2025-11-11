@@ -1,14 +1,18 @@
 <!doctype html>
-<html lang="no">
+<html lang="no" data-theme="auto">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TS-kalkulator – Lister Blikk</title>
+  <title>TS-kalkulator</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#00FFFF">
+  <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <style>
     :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }
+    }
+    [data-theme="dark"] { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
     .wrap{max-width:720px;margin:0 auto;padding:16px 20px}
     .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
@@ -16,35 +20,36 @@
     .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);margin-top:12px}
     label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-    input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:18px}
+    input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:18px;background:var(--card);color:var(--text)}
     input[type=range]{padding:0}
     .big{font-size:28px;font-weight:700;margin-top:4px}
-    .miniangle{margin-top:8px;font-size:13px;color:#0f172a;background:#e6ffff;display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #a0fefe}
+    .miniangle{margin-top:8px;font-size:13px;color:var(--text);background:#e6ffff;display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #a0fefe}
+    [data-theme="dark"] .miniangle{ background:#073b3b; border-color:#046e6e; }
     .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
     .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
+    .ghost{background:transparent;border:1px solid var(--ring)}
 
     /* QR modal */
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9999}
-    .modal{background:#fff;border-radius:16px;border:1px solid #e2e8f0;max-width:92vw;padding:16px}
+    .modal{background:var(--card);color:var(--text);border-radius:16px;border:1px solid var(--ring);max-width:92vw;padding:16px}
     .modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-    .modal img{display:block;margin:12px auto;border:1px solid #e2e8f0;max-width:72vw;height:auto}
-    .modal .btn-close{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:8px 12px;cursor:pointer}
-    .urlbox{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px}
+    .modal img{display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto}
+    .modal .btn-close{background:var(--card);color:var(--text);border:1px solid var(--ring);border-radius:10px;padding:8px 12px;cursor:pointer}
+    .urlbox{background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="row" style="justify-content:space-between">
       <div class="row">
-        <img src="logo-lister-blikk.svg" alt="Lister Blikk" style="height:44px">
-        <div>
-          <div class="h1">TS-kalkulator <span class="muted">— Lister Blikk</span></div>
-          <div class="muted">Tommestokk-vinkel fra mm-avlesning (kalibrert)</div>
-        </div>
+        <div class="h1">TS-kalkulator</div>
+        <div class="muted" style="width:100%">Tommestokk-vinkel fra mm-avlesning (kalibrert)</div>
       </div>
       <div class="row">
+        <button type="button" class="btn ghost" id="themeBtn" title="Bytt lys/mørk">🌓</button>
         <button type="button" class="btn" id="qrBtn">QR</button>
         <button class="btn" id="installBtn" hidden>Installer</button>
+        <button class="btn ghost" id="hardRefreshBtn" title="Tøm cache og last siden på nytt">Hard refresh</button>
       </div>
     </header>
 
@@ -61,8 +66,8 @@
     </section>
 
     <div class="footer muted">
-      <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
-      <div>v3.7.0 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+      <div>© Stymparen</div>
+      <div>v3.7.4 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
     </div>
   </div>
 
@@ -73,7 +78,7 @@
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.0</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.4</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -86,9 +91,30 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.0";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.4";
   let A = { a: 0.974414, b: 21.754 };
 
+  // Tema
+  const themeEl = document.documentElement;
+  const themeKey = 'ts_theme';
+  function applyTheme(value) {
+    if (value === 'dark') themeEl.setAttribute('data-theme', 'dark');
+    else if (value === 'light') themeEl.setAttribute('data-theme', 'light');
+    else themeEl.setAttribute('data-theme', 'auto');
+  }
+  function currentTheme() { return themeEl.getAttribute('data-theme') || 'auto'; }
+  function toggleTheme() {
+    const t = currentTheme();
+    const next = t === 'dark' ? 'light' : t === 'light' ? 'auto' : 'dark';
+    localStorage.setItem(themeKey, next);
+    applyTheme(next);
+  }
+  (function initTheme(){
+    const saved = localStorage.getItem(themeKey);
+    applyTheme(saved || 'auto');
+  })();
+
+  // Kalkulasjon
   function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
   function Dtrue(D) { return A.a * D + A.b; }
   function theta(D) {
@@ -97,7 +123,6 @@
     const xx = Math.max(-1, Math.min(1, x));
     return 2 * Math.asin(xx) * 180 / Math.PI;
   }
-
   function render() {
     const D = toNumber($('D').value, 760);
     $('sliderD').value = String(Math.max(500, Math.min(800, D)));
@@ -109,19 +134,39 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     render();
+    $('themeBtn').addEventListener('click', toggleTheme);
 
-    // Installer
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      const btn = $('installBtn');
-      btn.hidden = false;
-      btn.addEventListener('click', async () => {
-        btn.hidden = true;
-        await deferredPrompt.prompt();
-        deferredPrompt = null;
-      });
+    // Installer (auto-hide når allerede installert)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const installBtn = $('installBtn');
+    if (!isStandalone) {
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.hidden = false;
+        installBtn.addEventListener('click', async () => {
+          installBtn.hidden = true;
+          await deferredPrompt.prompt();
+          deferredPrompt = null;
+        });
+      }, { once: true });
+      window.addEventListener('appinstalled', () => { installBtn.hidden = true; });
+    } else {
+      installBtn.hidden = true;
+    }
+
+    // Hard refresh
+    $('hardRefreshBtn').addEventListener('click', async () => {
+      if ('caches' in window) {
+        const names = await caches.keys();
+        await Promise.all(names.map(n => caches.delete(n)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+      location.href = CANONICAL;
     });
 
     // QR modal
@@ -146,7 +191,6 @@
       try { await navigator.clipboard.writeText(CANONICAL); copyBtn.textContent = 'Kopiert!'; setTimeout(()=>copyBtn.textContent='Kopier lenke',1200); }
       catch(e) { /* ignore */ }
     }
-
     btn.addEventListener('click', showQR);
     closeBtn.addEventListener('click', hideQR);
     copyBtn.addEventListener('click', copyUrl);
