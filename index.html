@@ -7,12 +7,35 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('ts_theme') || 'auto';
+        document.documentElement.setAttribute('data-theme', saved);
+        var tc = document.getElementById('themeColor');
+        var dark = saved === 'dark' || (saved === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (tc) tc.setAttribute('content', dark ? '#0b1220' : '#00FFFF');
+      } catch(e) { }
+    })();
+  </script>
   <style>
-    :root { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }
+    :root {
+      --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF;
+      --chip-bg:#e6ffff; --chip-fg:#0f172a; --chip-border:#a0fefe;
     }
-    [data-theme="dark"] { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; 
+               --chip-bg:#073b3b; --chip-fg:#ebf0f7; --chip-border:#046e6e; }
+    }
+    [data-theme="dark"] {
+      --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937;
+      --chip-bg:#073b3b; --chip-fg:#ebf0f7; --chip-border:#046e6e;
+    }
+    [data-theme="light"] {
+      --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0;
+      --chip-bg:#e6ffff; --chip-fg:#0f172a; --chip-border:#a0fefe;
+    }
+
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
     .wrap{max-width:720px;margin:0 auto;padding:16px 20px}
     .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
@@ -23,13 +46,11 @@
     input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:18px;background:var(--card);color:var(--text)}
     input[type=range]{padding:0}
     .big{font-size:28px;font-weight:700;margin-top:4px}
-    .miniangle{margin-top:8px;font-size:13px;color:var(--text);background:#e6ffff;display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #a0fefe}
-    [data-theme="dark"] .miniangle{ background:#073b3b; border-color:#046e6e; }
+    .miniangle{margin-top:8px;font-size:13px;color:var(--chip-fg);background:var(--chip-bg);display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--chip-border)}
     .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
     .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
     .ghost{background:transparent;border:1px solid var(--ring)}
 
-    /* QR modal */
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9999}
     .modal{background:var(--card);color:var(--text);border-radius:16px;border:1px solid var(--ring);max-width:92vw;padding:16px}
     .modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
@@ -53,7 +74,6 @@
       </div>
     </header>
 
-    <!-- MINIMAL UI -->
     <section class="card">
       <label>Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
@@ -67,18 +87,17 @@
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div>v3.7.4 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+      <div>v3.7.5 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
     </div>
   </div>
 
-  <!-- QR modal -->
   <div id="qrModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
     <div class="modal">
       <div class="row">
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.4</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.5</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -91,30 +110,39 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.4";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.5";
   let A = { a: 0.974414, b: 21.754 };
 
-  // Tema
   const themeEl = document.documentElement;
   const themeKey = 'ts_theme';
+  const themeColorTag = document.getElementById('themeColor');
+  function isDarkNow() {
+    const t = themeEl.getAttribute('data-theme') || 'auto';
+    return t === 'dark' || (t === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
   function applyTheme(value) {
-    if (value === 'dark') themeEl.setAttribute('data-theme', 'dark');
-    else if (value === 'light') themeEl.setAttribute('data-theme', 'light');
-    else themeEl.setAttribute('data-theme', 'auto');
+    themeEl.setAttribute('data-theme', value);
+    try { localStorage.setItem(themeKey, value); } catch(e){}
+    if (themeColorTag) themeColorTag.setAttribute('content', isDarkNow() ? '#0b1220' : '#00FFFF');
   }
   function currentTheme() { return themeEl.getAttribute('data-theme') || 'auto'; }
   function toggleTheme() {
     const t = currentTheme();
     const next = t === 'dark' ? 'light' : t === 'light' ? 'auto' : 'dark';
-    localStorage.setItem(themeKey, next);
     applyTheme(next);
   }
   (function initTheme(){
-    const saved = localStorage.getItem(themeKey);
-    applyTheme(saved || 'auto');
+    try {
+      const saved = localStorage.getItem(themeKey) || 'auto';
+      applyTheme(saved);
+    } catch(e){ applyTheme('auto'); }
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (currentTheme() === 'auto') applyTheme('auto');
+      });
+    }
   })();
 
-  // Kalkulasjon
   function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
   function Dtrue(D) { return A.a * D + A.b; }
   function theta(D) {
@@ -136,7 +164,6 @@
     render();
     $('themeBtn').addEventListener('click', toggleTheme);
 
-    // Installer (auto-hide når allerede installert)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const installBtn = $('installBtn');
     if (!isStandalone) {
@@ -156,7 +183,6 @@
       installBtn.hidden = true;
     }
 
-    // Hard refresh
     $('hardRefreshBtn').addEventListener('click', async () => {
       if ('caches' in window) {
         const names = await caches.keys();
@@ -169,7 +195,6 @@
       location.href = CANONICAL;
     });
 
-    // QR modal
     const btn = $('qrBtn');
     const backdrop = $('qrModalBackdrop');
     const img = $('qrImg');
@@ -189,7 +214,7 @@
     function hideQR(){ backdrop.style.display = 'none'; }
     async function copyUrl(){
       try { await navigator.clipboard.writeText(CANONICAL); copyBtn.textContent = 'Kopiert!'; setTimeout(()=>copyBtn.textContent='Kopier lenke',1200); }
-      catch(e) { /* ignore */ }
+      catch(e) { }
     }
     btn.addEventListener('click', showQR);
     closeBtn.addEventListener('click', hideQR);
