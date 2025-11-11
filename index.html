@@ -45,8 +45,7 @@
     label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
     input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--ring);font-size:18px;background:var(--card);color:var(--text)}
     input[type=range]{padding:0}
-    .big{font-size:28px;font-weight:700;margin-top:4px}
-    .miniangle{margin-top:8px;font-size:13px;color:var(--chip-fg);background:var(--chip-bg);display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--chip-border)}
+    .big{font-size:32px;font-weight:800;margin-top:4px}
     .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
     .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
     .ghost{background:transparent;border:1px solid var(--ring)}
@@ -62,9 +61,9 @@
 <body>
   <div class="wrap">
     <header class="row" style="justify-content:space-between">
-      <div class="row">
+      <div>
         <div class="h1">TS-kalkulator</div>
-        <div class="muted" style="width:100%">Tommestokk-vinkel fra mm-avlesning (kalibrert)</div>
+        <div class="muted">Avlest vinkel på tommestokk omregnet til grader</div>
       </div>
       <div class="row">
         <button type="button" class="btn ghost" id="themeBtn" title="Bytt lys/mørk">🌓</button>
@@ -78,16 +77,13 @@
       <label>Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
       <input id="sliderD" type="range" min="500" max="800" value="760" style="margin-top:12px">
-      <div class="muted" style="margin-top:6px">Anbefalt område 500–800 mm</div>
-      <div class="miniangle" id="miniAngle">Oppdatert vinkel vises under</div>
-
       <div class="muted" style="margin-top:10px">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
     </section>
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div>v3.7.5 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+      <div>v3.7.6</div>
     </div>
   </div>
 
@@ -97,7 +93,7 @@
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.5</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.6</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -110,7 +106,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.5";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.6";
   let A = { a: 0.974414, b: 21.754 };
 
   const themeEl = document.documentElement;
@@ -154,10 +150,9 @@
   function render() {
     const D = toNumber($('D').value, 760);
     $('sliderD').value = String(Math.max(500, Math.min(800, D)));
-    const t = theta(D);
-    const txt = Number.isFinite(t) ? t.toFixed(3) + '°' : '–';
+    const t = Math.round(theta(D));
+    const txt = Number.isFinite(t) ? t + '°' : '–';
     $('thetaTop').textContent = txt;
-    $('miniAngle').textContent = 'Vinkel nå: ' + txt;
   }
 
   document.addEventListener('DOMContentLoaded', () => {
