@@ -62,7 +62,7 @@
 
     <div class="footer muted">
       <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
-      <div>v3.6.6 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+      <div>v3.7.0 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
     </div>
   </div>
 
@@ -73,7 +73,7 @@
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.6.6</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.0</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -86,7 +86,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.6.6";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.0";
   let A = { a: 0.974414, b: 21.754 };
 
   function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
@@ -110,7 +110,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     render();
 
-    // Installer (PWA)
+    // Installer
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -124,7 +124,7 @@
       });
     });
 
-    // QR modal (CANONICAL)
+    // QR modal
     const btn = $('qrBtn');
     const backdrop = $('qrModalBackdrop');
     const img = $('qrImg');
