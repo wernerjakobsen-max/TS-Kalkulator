@@ -21,13 +21,6 @@
     .big{font-size:28px;font-weight:700;margin-top:4px}
     .miniangle{margin-top:8px;font-size:13px;color:#0f172a;background:#e6ffff;display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #a0fefe}
     .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
-    details{margin-top:8px}
-    details>summary{cursor:pointer;user-select:none;font-weight:600;list-style:none}
-    details>summary::-webkit-details-marker{display:none}
-    .hide-on-mobile{display:none}
-    @media(min-width:780px){ .hide-on-mobile{display:block} }
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:6px 10px;border-bottom:1px solid var(--ring)}
     .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
 
     /* QR modal */
@@ -36,6 +29,7 @@
     .modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
     .modal img{display:block;margin:12px auto;border:1px solid #e2e8f0;max-width:72vw;height:auto}
     .modal .btn-close{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:8px 12px;cursor:pointer}
+    .urlbox{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px}
   </style>
 </head>
 <body>
@@ -54,6 +48,7 @@
       </div>
     </header>
 
+    <!-- MINIMAL UI -->
     <section class="card">
       <label>Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
@@ -65,42 +60,9 @@
       <div class="big" id="thetaTop">–</div>
     </section>
 
-    <details>
-      <summary>Avansert</summary>
-      <section class="card">
-        <div class="muted">Kalibrering (a, b)</div>
-        <div class="row" style="margin-top:6px">
-          <input id="A" value="0.974414" style="width:160px">
-          <input id="B" value="21.754" style="width:160px">
-          <button id="apply" class="btn">Bruk</button>
-        </div>
-      </section>
-
-      <section class="card hide-on-mobile">
-        <div style="font-weight:600;margin-bottom:8px">Tabell pr mm rundt D</div>
-        <div class="row" style="margin-bottom:8px">
-          <label for="SPAN" style="margin:0">Bredde (mm)</label>
-          <input id="SPAN" value="60" style="width:120px">
-        </div>
-        <div style="max-height:360px;overflow:auto">
-          <table>
-            <thead><tr><th style="text-align:left">D (mm)</th><th style="text-align:right">Vinkel (°)</th><th style="text-align:right">D_true</th><th style="text-align:right">Grader/mm</th></tr></thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="muted">Grader per mm ved D</div>
-        <div class="big" id="slope">–</div>
-        <div class="muted" style="margin-top:6px">Justert D_true (mm)</div>
-        <div id="Dtrue" class="big">–</div>
-      </section>
-    </details>
-
     <div class="footer muted">
       <div><b>Lister Blikk</b> • tlf: 99 44 39 59</div>
-      <div>Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
+      <div>v3.6.6 • Modell: D_true = a·D + b · θ = 2·asin((D_true−400)/400)</div>
     </div>
   </div>
 
@@ -111,73 +73,44 @@
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.6.6</div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="copyUrl">Kopier lenke</button>
+      </div>
       <img id="qrImg" alt="QR-kode">
       <div class="row">
         <a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a>
-        <a id="qrOpenPage" class="btn" href="#" target="_blank" rel="noopener">Åpne i egen side</a>
       </div>
     </div>
   </div>
 
 <script>
   const $ = (id) => document.getElementById(id);
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.6.6";
   let A = { a: 0.974414, b: 21.754 };
 
-  function toNumber(v, fb){ const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
-  function Dtrue(D){ return A.a * D + A.b; }
-  function theta(D){
+  function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
+  function Dtrue(D) { return A.a * D + A.b; }
+  function theta(D) {
     const Dt = Dtrue(D);
     const x = (Dt - 400) / 400;
     const xx = Math.max(-1, Math.min(1, x));
     return 2 * Math.asin(xx) * 180 / Math.PI;
   }
-  function slope(D){
-    const Dt = Dtrue(D);
-    const x = Dt - 400;
-    const cl = Math.max(-399.999999, Math.min(399.999999, x));
-    const rad = Math.sqrt(400*400 - cl*cl);
-    return (180/Math.PI) * (1 / rad);
-  }
 
-  function renderTable(D, SPAN){
-    const tbody = $('rows'); if (!tbody) return;
-    tbody.innerHTML='';
-    const start = Math.max(500, Math.round(D - SPAN/2));
-    const end   = Math.min(800, Math.round(D + SPAN/2));
-    for (let x = start; x <= end; x++) {
-      const t = theta(x), s = slope(x), Dt = Dtrue(x);
-      const tr = document.createElement('tr');
-      if (x === Math.round(D)) tr.style.background = '#fffbea';
-      tr.innerHTML = `<td style="text-align:left">${x} mm</td>
-                      <td style="text-align:right">${t.toFixed(3)}</td>
-                      <td style="text-align:right">${Dt.toFixed(3)}</td>
-                      <td style="text-align:right">${s.toFixed(5)}</td>`;
-      tbody.appendChild(tr);
-    }
-  }
-
-  function render(){
+  function render() {
     const D = toNumber($('D').value, 760);
-    const SPAN = Math.max(10, toNumber(($('SPAN')||{value:60}).value, 60));
     $('sliderD').value = String(Math.max(500, Math.min(800, D)));
-
     const t = theta(D);
     const txt = Number.isFinite(t) ? t.toFixed(3) + '°' : '–';
     $('thetaTop').textContent = txt;
     $('miniAngle').textContent = 'Vinkel nå: ' + txt;
-
-    const s = slope(D);
-    const Dt = Dtrue(D);
-    if ($('slope')) $('slope').textContent = s.toFixed(5);
-    if ($('Dtrue')) $('Dtrue').textContent = Dt.toFixed(3);
-
-    renderTable(D, SPAN);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     render();
 
-    // Installer
+    // Installer (PWA)
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -191,37 +124,35 @@
       });
     });
 
-    // QR modal
+    // QR modal (CANONICAL)
     const btn = $('qrBtn');
     const backdrop = $('qrModalBackdrop');
     const img = $('qrImg');
     const dl = $('qrDownload');
-    const openPage = $('qrOpenPage');
     const closeBtn = $('qrClose');
+    const copyBtn = $('copyUrl');
+    const urlBox = $('qrUrlBox');
 
-    function currentUrl(){ return location.href; }
     function showQR(){
-      const u = encodeURIComponent(currentUrl());
-      const src = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${u}`;
+      const enc = encodeURIComponent(CANONICAL);
+      const src = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
       img.src = src;
       dl.href = src;
-      const absQr = new URL('./qr.html', location.href).toString() + '?u=' + u;
-      openPage.href = absQr;
+      urlBox.textContent = CANONICAL;
       backdrop.style.display = 'flex';
     }
     function hideQR(){ backdrop.style.display = 'none'; }
+    async function copyUrl(){
+      try { await navigator.clipboard.writeText(CANONICAL); copyBtn.textContent = 'Kopiert!'; setTimeout(()=>copyBtn.textContent='Kopier lenke',1200); }
+      catch(e) { /* ignore */ }
+    }
 
     btn.addEventListener('click', showQR);
     closeBtn.addEventListener('click', hideQR);
+    copyBtn.addEventListener('click', copyUrl);
     backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) hideQR(); });
   });
 
-  $('apply').addEventListener('click', () => {
-    const aa = toNumber($('A').value, A.a);
-    const bb = toNumber($('B').value, A.b);
-    A = { a: aa, b: bb };
-    render();
-  });
   $('D').addEventListener('input', render);
   $('sliderD').addEventListener('input', (e)=>{ $('D').value = e.target.value; render(); });
 
