@@ -54,7 +54,7 @@
         <div class="muted">Avlest vinkel på tommestokk omregnet til grader</div>
       </div>
       <div class="row">
-        <button type="button" class="btn ghost" id="infoBtn" title="Kalibreringstabell" style="display:none">ℹ️</button>
+        <button type="button" class="btn ghost" id="decBtn" title="Desimaler av/på">0 des</button>
         <button type="button" class="btn ghost" id="themeBtn" title="Bytt lys/mørk">🌓</button>
         <button type="button" class="btn" id="qrBtn">QR</button>
         <button class="btn" id="installBtn" hidden>Installer</button>
@@ -73,7 +73,7 @@
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div>v3.8.2</div>
+      <div>v3.8.3</div>
     </div>
   </div>
 
@@ -84,7 +84,7 @@
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.2</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.3</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -97,9 +97,9 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.2";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.3";
 
-  // Kombinert kalibrering + 90° ≈ 678 mm
+  // Kombinert kalibrering + 90° ≈ 678 mm (fra v3.8.2)
   const X = [400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y = [  0,  8,10.5, 31, 38, 41, 42, 59, 60, 70, 90,107,120,128,135,145,150,157,166,180];
 
@@ -148,6 +148,31 @@
     return h00*Y[i] + h10*h*M[i] + h01*Y[i+1] + h11*h*M[i+1];
   }
 
+  // --- Desimaler toggle ---
+  const DEC_KEY = 'ts_desimals'; // '0' or '1' for number of decimals
+  function getDecimals() {
+    try { return parseInt(localStorage.getItem(DEC_KEY) || '0', 10); } catch(e) { return 0; }
+  }
+  function setDecimals(n) {
+    try { localStorage.setItem(DEC_KEY, String(n)); } catch(e){}
+    updateDecBtn();
+    render();
+  }
+  function toggleDecimals() {
+    const cur = getDecimals();
+    const next = cur === 0 ? 1 : 0; // toggle 0↔1
+    setDecimals(next);
+  }
+  function formatDeg(v) {
+    const d = getDecimals();
+    return (d === 0 ? Math.round(v) : v.toFixed(d)) + '°';
+  }
+  function updateDecBtn() {
+    const d = getDecimals();
+    const btn = $('decBtn');
+    if (btn) btn.textContent = (d === 0 ? '0 des' : '1 des');
+  }
+
   function render() {
     const inp = $('D');
     const slider = $('sliderD');
@@ -160,7 +185,7 @@
       $('rangeText').classList.add('warn');
     } else {
       $('rangeText').classList.remove('warn');
-      $('thetaTop').textContent = Math.round(deg) + '°';
+      $('thetaTop').textContent = formatDeg(deg);
     }
   }
 
@@ -185,7 +210,10 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    updateDecBtn();
     render();
+
+    $('decBtn').addEventListener('click', toggleDecimals);
     $('themeBtn').addEventListener('click', toggleTheme);
     $('D').addEventListener('input', render);
     $('sliderD').addEventListener('input', (e)=>{ $('D').value = e.target.value; render(); });
