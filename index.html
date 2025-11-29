@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TS-kalkulator</title>
+  <title id="t_app">TS-kalkulator</title>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -25,7 +25,7 @@
     [data-theme="light"] { --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; }
 
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
-    .wrap{max-width:720px;margin:0 auto;padding:16px 20px}
+    .wrap{max-width:760px;margin:0 auto;padding:16px 20px}
     .h1{font-weight:700;font-size:clamp(20px,3.2vw,28px)}
     .muted{color:var(--muted);font-size:14px}
     .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -37,23 +37,30 @@
     .btn{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}
     .footer{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
     .ghost{background:transparent;border:1px solid var(--ring)}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9999}
-    .modal{background:var(--card);color:var(--text);border-radius:16px;border:1px solid var(--ring);max-width:92vw;padding:16px}
-    .modal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-    .modal img{display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto}
-    .modal .btn-close{background:var(--card);color:var(--text);border:1px solid var(--ring);border-radius:10px;padding:8px 12px;cursor:pointer}
-    .urlbox{background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px}
     .warn{color:#b91c1c}
+    ul.guide{margin:8px 0 0 18px;padding:0}
+    ul.guide li{margin:4px 0}
+    details.help > summary{cursor:pointer; user-select:none; font-weight:600}
+    .lang{min-width:96px}
+    .svgbox{background:var(--bg);border:1px solid var(--ring);border-radius:12px;padding:8px;overflow:auto;margin-top:8px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="row" style="justify-content:space-between">
       <div>
-        <div class="h1">TS-kalkulator</div>
-        <div class="muted">Avlest vinkel på tommestokk omregnet til grader</div>
+        <div class="h1" id="h_app">TS-kalkulator</div>
+        <div class="muted" id="h_sub">Avlest vinkel på tommestokk omregnet til grader</div>
       </div>
       <div class="row">
+        <select id="lang" class="btn ghost lang" title="Language">
+          <option value="no">NO</option>
+          <option value="en">EN</option>
+          <option value="sv">SV</option>
+          <option value="dk">DK</option>
+          <option value="fi">FI</option>
+          <option value="de">DE</option>
+        </select>
         <button type="button" class="btn ghost" id="decBtn" title="Desimaler av/på">0 des</button>
         <button type="button" class="btn ghost" id="themeBtn" title="Bytt lys/mørk">🌓</button>
         <button type="button" class="btn" id="qrBtn">QR</button>
@@ -63,33 +70,62 @@
     </header>
 
     <section class="card">
-      <label>Avlest D (mm)</label>
+      <label id="lbl_D">Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
       <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
       <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
-      <div class="muted" style="margin-top:10px">Vinkel (grader)</div>
+      <div class="muted" style="margin-top:10px" id="lbl_angle">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
     </section>
 
+    <section class="card">
+      <div class="h1" style="font-size:18px" id="guide_title">Bruksanvisning (kort)</div>
+      <ul class="guide" id="guide_list"></ul>
+      <details class="help" id="helpBox">
+        <summary id="help_btn">Vis forklaring og illustrasjon</summary>
+        <div id="help_text" class="muted" style="margin-top:8px"></div>
+        <div class="svgbox">
+          <svg id="help_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" width="100%">
+            <rect x="0" y="0" width="860" height="240" fill="none" />
+            <!-- Base stick -->
+            <rect x="40" y="120" width="800" height="18" rx="4" fill="#ddd" stroke="#888"/>
+            <!-- 0 mm end highlight -->
+            <rect x="40" y="120" width="12" height="18" fill="#00FFFF" stroke="#088"/>
+            <text x="46" y="115" font-size="12" text-anchor="middle">0</text>
+            <!-- 200 mm hinged arm -->
+            <g transform="translate(240,129) rotate(-45)">
+              <rect x="0" y="-9" width="200" height="18" rx="4" fill="#ddd" stroke="#888"/>
+              <text x="200" y="-12" font-size="12">200 mm-ledd (vinkel θ)</text>
+            </g>
+            <!-- 400 mm feeler arm -->
+            <g transform="translate(440,129) rotate(-25)">
+              <rect x="0" y="-9" width="400" height="18" rx="4" fill="#eee" stroke="#aaa"/>
+              <text x="400" y="-12" font-size="12">400 mm-ledd bøyes til kanten</text>
+            </g>
+            <!-- Edge for reading D -->
+            <line x1="40" y1="138" x2="40" y2="210" stroke="#444" stroke-dasharray="4 3"/>
+            <text x="60" y="210" font-size="12">Avles D (mm)</text>
+          </svg>
+        </div>
+      </details>
+    </section>
+
     <div class="footer muted">
-      <div>© Stymparen</div>
-      <div>v3.8.3</div>
+      <div id="ft_owner">© Stymparen</div>
+      <div>v3.9.0</div>
     </div>
   </div>
 
-  <!-- QR modal -->
-  <div id="qrModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
-    <div class="modal">
-      <div class="row">
+  <div id="qrModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qrTitle" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999">
+    <div class="card" style="max-width:92vw">
+      <div class="row" style="justify-content:space-between">
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
-        <button class="btn-close" id="qrClose">Lukk</button>
+        <button class="btn ghost" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.3</div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="copyUrl">Kopier lenke</button>
-      </div>
-      <img id="qrImg" alt="QR-kode">
+      <div class="muted" id="qrUrlBox" style="background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px;margin-top:6px">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.0</div>
+      <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row">
+        <button class="btn" id="copyUrl">Kopier lenke</button>
         <a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a>
       </div>
     </div>
@@ -97,186 +133,227 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.3";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.0";
 
-  // Kombinert kalibrering + 90° ≈ 678 mm (fra v3.8.2)
+  // ---- Calibration (combined) ----
   const X = [400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y = [  0,  8,10.5, 31, 38, 41, 42, 59, 60, 70, 90,107,120,128,135,145,150,157,166,180];
 
+  // ---- i18n strings ----
+  const STR = {
+    no: {
+      app:"TS-kalkulator",
+      sub:"Avlest vinkel på tommestokk omregnet til grader",
+      lblD:"Avlest D (mm)",
+      range:"måleområde 400-800mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Bruksanvisning (kort)",
+      guide:[
+        "Utstyr: plast tommestokk 2 m (Hultafors e.l.), leddbredde ca. 15 mm.",
+        "Knekk 200 mm‑leddet til ønsket vinkel.",
+        "Knekk deretter 400 mm‑leddet og bøy helt til hjørnet (0‑mm‑enden) treffer kanten av tommestokken.",
+        "Les av målet i mm langs kanten (inn mot siden av tommestokken).",
+        "Legg inn verdien i feltet «Avlest D (mm)» – kalkulatoren viser vinkelen i grader.",
+        "Måleområde er 400–800 mm (400≈0°, 800≈180°). Utenfor vises –."
+      ],
+      help_btn:"Vis forklaring og illustrasjon",
+      help_text:"Prinsippet: 200 mm‑leddet settes i vinkel θ. 400 mm‑leddet bøyes som følerarm til 0‑mm‑hjørnet i bunnstokken møter kanten. Avstanden D som avleses langs kanten fra 0‑punktet er entydig knyttet til θ via kalibreringskurven (kombinasjonen av dine målepunkt)."
+    },
+    en: {
+      app:"TS Calculator",
+      sub:"Angle from folding ruler reading (mm → degrees)",
+      lblD:"Reading D (mm)",
+      range:"measuring range 400–800 mm",
+      angle:"Angle (degrees)",
+      guide_title:"Quick instructions",
+      guide:[
+        "Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.",
+        "Bend the 200 mm section to the desired angle.",
+        "Then bend the 400 mm section until the 0 mm corner touches the ruler’s edge.",
+        "Read the distance D in mm along the edge (inwards along the ruler’s side).",
+        "Enter D in the field «Reading D (mm)» – the calculator shows the angle.",
+        "Valid range is 400–800 mm (400≈0°, 800≈180°). Outside this, “–” is shown."
+      ],
+      help_btn:"Show explanation and illustration",
+      help_text:"Principle: set the 200 mm section to angle θ. Use the 400 mm section as a feeler until the 0 mm corner meets the base edge. The edge reading D relates uniquely to θ through the calibration curve (merged from your measurements)."
+    },
+    sv: {
+      app:"TS-kalkylator",
+      sub:"Avläst vinkel på tumstock omräknad till grader",
+      lblD:"Avläst D (mm)",
+      range:"mätområde 400–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Kort bruksanvisning",
+      guide:[
+        "Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.",
+        "Vik 200 mm-sektionen till önskad vinkel.",
+        "Vik sedan 400 mm-sektionen tills 0‑mm-hörnet träffar tumstockens kant.",
+        "Läs av D i mm längs kanten (in mot tumstockens sida).",
+        "Mata in D i fältet «Avläst D (mm)» – kalkylatorn visar vinkeln.",
+        "Mätområde 400–800 mm (400≈0°, 800≈180°). Utanför visas –."
+      ],
+      help_btn:"Visa förklaring och illustration",
+      help_text:"Princip: 200 mm‑sektionen ställs i vinkel θ. 400 mm‑sektionen används som kännarm tills 0‑mm‑hörnet möter basens kant. Avståndet D längs kanten är kopplat till θ via kalibreringskurvan (dina mätpunkter)."
+    },
+    dk: {
+      app:"TS-beregner",
+      sub:"Aflæst vinkel på tommestok omregnet til grader",
+      lblD:"Aflæst D (mm)",
+      range:"måleområde 400–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Kort vejledning",
+      guide:[
+        "Udstyr: 2 m plasttommestok (fx Hultafors), led-bredde ca. 15 mm.",
+        "Bøj 200 mm-leddet til den ønskede vinkel.",
+        "Bøj derefter 400 mm-leddet, til 0‑mm‑hjørnet rammer kanten på tommestokken.",
+        "Læs D i mm langs kanten (ind mod siden af tommestokken).",
+        "Indtast D i feltet «Aflæst D (mm)» – beregneren viser vinklen.",
+        "Måleområde 400–800 mm (400≈0°, 800≈180°). Udenfor vises –."
+      ],
+      help_btn:"Vis forklaring og illustration",
+      help_text:"Princip: 200 mm-leddet sættes i vinkel θ. 400 mm-leddet bruges som føler, til 0‑mm‑hjørnet møder basens kant. Aflæsningen D er entydigt relateret til θ via kalibreringskurven (dine målepunkter)."
+    },
+    fi: {
+      app:"TS‑laskin",
+      sub:"Kulma mittatikkulukemasta (mm → astetta)",
+      lblD:"Lukema D (mm)",
+      range:"mittausalue 400–800 mm",
+      angle:"Kulma (astetta)",
+      guide_title:"Lyhyt ohje",
+      guide:[
+        "Väline: 2 m muovinen taittomitta (esim. Hultafors), nivelin leveys n. 15 mm.",
+        "Taivuta 200 mm osaa haluttuun kulmaan.",
+        "Taivuta sitten 400 mm osaa, kunnes 0 mm kulma osuu mitan reunaan.",
+        "Lue D millimetreinä reunaa pitkin (mitan sivun suuntaisesti).",
+        "Syötä D kenttään «Lukema D (mm)» – laskin näyttää kulman.",
+        "Mittausalue on 400–800 mm (400≈0°, 800≈180°). Muuten näytetään –."
+      ],
+      help_btn:"Näytä selitys ja kuva",
+      help_text:"Periaate: 200 mm osa asetetaan kulmaan θ. 400 mm osaa käytetään tuntotappina, kunnes 0 mm kulma kohtaa perusreunan. Reunalukema D liittyy θ:aan kalibrointikäyrän kautta (mittauspisteistäsi)."
+    },
+    de: {
+      app:"TS‑Rechner",
+      sub:"Winkel aus Gliedmaß-Ablesung (mm → Grad)",
+      lblD:"Ablesung D (mm)",
+      range:"Messbereich 400–800 mm",
+      angle:"Winkel (Grad)",
+      guide_title:"Kurzanleitung",
+      guide:[
+        "Werkzeug: 2‑m Kunststoff‑Gliedmaß (z.B. Hultafors), Gelenkbreite ca. 15 mm.",
+        "Das 200‑mm‑Glied auf den gewünschten Winkel biegen.",
+        "Dann das 400‑mm‑Glied so weit biegen, bis die 0‑mm‑Ecke die Kante trifft.",
+        "D in mm entlang der Kante ablesen (an der Seite des Gliedmaßes).",
+        "D im Feld «Ablesung D (mm)» eingeben – der Rechner zeigt den Winkel.",
+        "Messbereich 400–800 mm (400≈0°, 800≈180°). Außerhalb wird – angezeigt."
+      ],
+      help_btn:"Erklärung und Illustration anzeigen",
+      help_text:"Prinzip: Das 200‑mm‑Glied wird auf den Winkel θ gestellt. Das 400‑mm‑Glied dient als Fühler, bis die 0‑mm‑Ecke die Basis‑Kante erreicht. Die Kantenablesung D ist über die Kalibrierkurve (aus deinen Messpunkten) eindeutig mit θ verknüpft."
+    }
+  };
+
+  // ---- PCHIP spline ----
   function pchipSlopes(x, y) {
-    const n = x.length;
-    const h = new Array(n-1), delta = new Array(n-1);
-    for (let i=0;i<n-1;i++) { h[i] = x[i+1]-x[i]; delta[i] = (y[i+1]-y[i]) / h[i]; }
-    const m = new Array(n);
-    m[0] = delta[0];
-    m[n-1] = delta[n-2];
+    const n = x.length, h = new Array(n-1), d = new Array(n-1);
+    for (let i=0;i<n-1;i++) { h[i]=x[i+1]-x[i]; d[i]=(y[i+1]-y[i])/h[i]; }
+    const m = new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
     for (let i=1;i<n-1;i++) {
-      if (delta[i-1]*delta[i] <= 0) m[i] = 0;
-      else {
-        const w1 = 2*h[i]+h[i-1];
-        const w2 = h[i]+2*h[i-1];
-        m[i] = (w1 + w2) / (w1/delta[i-1] + w2/delta[i]);
-      }
+      if (d[i-1]*d[i] <= 0) m[i]=0;
+      else { const w1=2*h[i]+h[i-1], w2=h[i]+2*h[i-1]; m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]); }
     }
-    for (let i=0;i<n-1;i++) {
-      if (delta[i] === 0) { m[i]=0; m[i+1]=0; }
-      else {
-        const a = m[i]/delta[i], b = m[i+1]/delta[i];
-        const s = a*a + b*b;
-        if (s > 9) {
-          const t = 3/Math.sqrt(s);
-          m[i] = t*a*delta[i];
-          m[i+1] = t*b*delta[i];
-        }
-      }
-    }
+    for (let i=0;i<n-1;i++) { if (d[i]===0) { m[i]=0; m[i+1]=0; } else { const a=m[i]/d[i], b=m[i+1]/d[i], s=a*a+b*b; if (s>9) { const t=3/Math.sqrt(s); m[i]=t*a*d[i]; m[i+1]=t*b*d[i]; } } }
     return m;
   }
   const M = pchipSlopes(X, Y);
-
   function pchipEval(xq) {
-    const n = X.length;
-    if (xq < X[0] || xq > X[n-1]) return null;
-    let i=0,j=n-1;
-    while (j-i>1) { const k=(i+j)>>1; if (X[k] <= xq) i=k; else j=k; }
-    const h = X[i+1]-X[i];
-    const t = (xq - X[i])/h;
-    const h00 = (1+2*t)*(1-t)*(1-t);
-    const h10 = t*(1-t)*(1-t);
-    const h01 = t*t*(3-2*t);
-    const h11 = t*t*(t-1);
+    const n=X.length; if (xq<X[0]||xq>X[n-1]) return null;
+    let i=0,j=n-1; while (j-i>1) { const k=(i+j)>>1; if (X[k]<=xq) i=k; else j=k; }
+    const h=X[i+1]-X[i], t=(xq-X[i])/h;
+    const h00=(1+2*t)*(1-t)*(1-t), h10=t*(1-t)*(1-t), h01=t*t*(3-2*t), h11=t*t*(t-1);
     return h00*Y[i] + h10*h*M[i] + h01*Y[i+1] + h11*h*M[i+1];
   }
 
-  // --- Desimaler toggle ---
-  const DEC_KEY = 'ts_desimals'; // '0' or '1' for number of decimals
-  function getDecimals() {
-    try { return parseInt(localStorage.getItem(DEC_KEY) || '0', 10); } catch(e) { return 0; }
-  }
-  function setDecimals(n) {
-    try { localStorage.setItem(DEC_KEY, String(n)); } catch(e){}
-    updateDecBtn();
-    render();
-  }
-  function toggleDecimals() {
-    const cur = getDecimals();
-    const next = cur === 0 ? 1 : 0; // toggle 0↔1
-    setDecimals(next);
-  }
-  function formatDeg(v) {
-    const d = getDecimals();
-    return (d === 0 ? Math.round(v) : v.toFixed(d)) + '°';
-  }
-  function updateDecBtn() {
-    const d = getDecimals();
-    const btn = $('decBtn');
-    if (btn) btn.textContent = (d === 0 ? '0 des' : '1 des');
+  // ---- Desimaler toggle ----
+  const DEC_KEY='ts_desimals';
+  function getDecimals(){ try{return parseInt(localStorage.getItem(DEC_KEY)||'0',10);}catch(e){return 0;} }
+  function setDecimals(n){ try{localStorage.setItem(DEC_KEY,String(n));}catch(e){} updateDecBtn(); render(); }
+  function toggleDecimals(){ setDecimals(getDecimals()===0?1:0); }
+  function formatDeg(v){ const d=getDecimals(); return (d===0?Math.round(v):v.toFixed(d))+'°'; }
+  function updateDecBtn(){ const d=getDecimals(); const b=$('decBtn'); if(b) b.textContent=(d===0?'0 des':'1 des'); }
+
+  // ---- Language ----
+  const LANG_KEY='ts_lang';
+  function getLang(){ try{ return localStorage.getItem(LANG_KEY)||'no'; }catch(e){ return 'no'; } }
+  function setLang(code){ try{ localStorage.setItem(LANG_KEY, code); }catch(e){} applyLang(code); }
+  function applyLang(code){
+    const S = STR[code] || STR.no;
+    $('t_app').textContent = S.app;
+    $('h_app').textContent = S.app;
+    $('h_sub').textContent = S.sub;
+    $('lbl_D').textContent = S.lblD;
+    $('rangeText').textContent = S.range;
+    $('lbl_angle').textContent = S.angle;
+    $('guide_title').textContent = S.guide_title;
+    const ul=$('guide_list'); ul.innerHTML='';
+    S.guide.forEach(line=>{ const li=document.createElement('li'); li.textContent=line; ul.appendChild(li); });
+    $('help_btn').textContent = S.help_btn;
+    $('help_text').textContent = S.help_text;
+    // Update QR modal strings minimal (keep NO buttons text for simplicity)
   }
 
-  function render() {
-    const inp = $('D');
-    const slider = $('sliderD');
-    const D = Number(String(inp.value).replace(',', '.'));
-    if (!Number.isFinite(D)) { $('thetaTop').textContent = '–'; return; }
-    slider.value = String(Math.max(400, Math.min(800, D)));
-    const deg = pchipEval(D);
-    if (deg == null) {
-      $('thetaTop').textContent = '–';
-      $('rangeText').classList.add('warn');
-    } else {
-      $('rangeText').classList.remove('warn');
-      $('thetaTop').textContent = formatDeg(deg);
-    }
+  // ---- Render loop ----
+  function render(){
+    const inp=$('D'), slider=$('sliderD');
+    const D=Number(String(inp.value).replace(',', '.'));
+    if(!Number.isFinite(D)){ $('thetaTop').textContent='–'; return; }
+    slider.value=String(Math.max(400, Math.min(800, D)));
+    const deg=pchipEval(D);
+    if(deg==null){ $('thetaTop').textContent='–'; $('rangeText').classList.add('warn'); }
+    else{ $('rangeText').classList.remove('warn'); $('thetaTop').textContent=formatDeg(deg); }
   }
 
-  // Theme + UI
-  const themeEl = document.documentElement;
-  const themeKey = 'ts_theme';
-  const themeColorTag = document.getElementById('themeColor');
-  function isDarkNow() {
-    const t = themeEl.getAttribute('data-theme') || 'auto';
-    return t === 'dark' || (t === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  }
-  function applyTheme(value) {
-    themeEl.setAttribute('data-theme', value);
-    try { localStorage.setItem(themeKey, value); } catch(e){}
-    if (themeColorTag) themeColorTag.setAttribute('content', isDarkNow() ? '#0b1220' : '#00FFFF');
-  }
-  function currentTheme() { return themeEl.getAttribute('data-theme') || 'auto'; }
-  function toggleTheme() {
-    const t = currentTheme();
-    const next = t === 'dark' ? 'light' : t === 'light' ? 'auto' : 'dark';
-    applyTheme(next);
-  }
+  // ---- Theme ----
+  const themeEl=document.documentElement, themeKey='ts_theme', themeColorTag=document.getElementById('themeColor');
+  function isDarkNow(){ const t=themeEl.getAttribute('data-theme')||'auto'; return t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches); }
+  function applyTheme(v){ themeEl.setAttribute('data-theme',v); try{localStorage.setItem(themeKey,v);}catch(e){} if(themeColorTag) themeColorTag.setAttribute('content', isDarkNow()?'#0b1220':'#00FFFF'); }
+  function currentTheme(){ return themeEl.getAttribute('data-theme')||'auto'; }
+  function toggleTheme(){ const t=currentTheme(); applyTheme(t==='dark'?'light':t==='light'?'auto':'dark'); }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    updateDecBtn();
-    render();
+  // ---- Boot ----
+  document.addEventListener('DOMContentLoaded',()=>{
+    // Language init
+    const sel=$('lang'); sel.value=getLang(); applyLang(sel.value);
+    sel.addEventListener('change', (e)=> setLang(e.target.value));
 
+    updateDecBtn(); render();
     $('decBtn').addEventListener('click', toggleDecimals);
     $('themeBtn').addEventListener('click', toggleTheme);
     $('D').addEventListener('input', render);
-    $('sliderD').addEventListener('input', (e)=>{ $('D').value = e.target.value; render(); });
+    $('sliderD').addEventListener('input',(e)=>{ $('D').value=e.target.value; render(); });
 
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    const installBtn = $('installBtn');
-    if (!isStandalone) {
+    // PWA install
+    const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+    const installBtn=$('installBtn');
+    if(!isStandalone){
       let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBtn.hidden = false;
-        installBtn.addEventListener('click', async () => {
-          installBtn.hidden = true;
-          await deferredPrompt.prompt();
-          deferredPrompt = null;
-        });
-      }, { once: true });
-      window.addEventListener('appinstalled', () => { installBtn.hidden = true; });
-    } else {
-      installBtn.hidden = true;
-    }
+      window.addEventListener('beforeinstallprompt',(e)=>{ e.preventDefault(); deferredPrompt=e; installBtn.hidden=false; installBtn.addEventListener('click', async()=>{ installBtn.hidden=true; await deferredPrompt.prompt(); deferredPrompt=null; }); },{once:true});
+      window.addEventListener('appinstalled',()=>{ installBtn.hidden=true; });
+    } else { installBtn.hidden=true; }
 
-    $('hardRefreshBtn').addEventListener('click', async () => {
-      if ('caches' in window) {
-        const names = await caches.keys();
-        await Promise.all(names.map(n => caches.delete(n)));
-      }
-      if ('serviceWorker' in navigator) {
-        const regs = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(regs.map(r => r.unregister()));
-      }
-      location.href = CANONICAL;
+    $('hardRefreshBtn').addEventListener('click', async()=>{
+      if('caches' in window){ const names=await caches.keys(); await Promise.all(names.map(n=>caches.delete(n))); }
+      if('serviceWorker' in navigator){ const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
+      location.href=CANONICAL;
     });
 
     // QR modal
-    const btn = $('qrBtn');
-    const backdrop = $('qrModalBackdrop');
-    const img = $('qrImg');
-    const dl = $('qrDownload');
-    const closeBtn = $('qrClose');
-    const copyBtn = $('copyUrl');
-    const urlBox = $('qrUrlBox');
-    function showQR(){
-      const enc = encodeURIComponent(CANONICAL);
-      const src = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
-      img.src = src;
-      dl.href = src;
-      urlBox.textContent = CANONICAL;
-      backdrop.style.display = 'flex';
-    }
-    function hideQR(){ backdrop.style.display = 'none'; }
-    async function copyUrl(){
-      try { await navigator.clipboard.writeText(CANONICAL); copyBtn.textContent = 'Kopiert!'; setTimeout(()=>copyBtn.textContent='Kopier lenke',1200); }
-      catch(e) { }
-    }
-    btn.addEventListener('click', showQR);
-    closeBtn.addEventListener('click', hideQR);
-    copyBtn.addEventListener('click', copyUrl);
-    backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) hideQR(); });
+    const btn=$('qrBtn'), backdrop=$('qrModalBackdrop'), img=$('qrImg'), dl=$('qrDownload'), closeBtn=$('qrClose'), copyBtn=$('copyUrl'), urlBox=$('qrUrlBox');
+    function showQR(){ const enc=encodeURIComponent(CANONICAL); const src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`; img.src=src; dl.href=src; backdrop.style.display='flex'; }
+    function hideQR(){ backdrop.style.display='none'; }
+    async function copyUrl(){ try{ await navigator.clipboard.writeText(CANONICAL); copyBtn.textContent='Kopiert!'; setTimeout(()=>copyUrl.textContent='Kopier lenke',1200); }catch(e){} }
+    btn.addEventListener('click', showQR); closeBtn.addEventListener('click', hideQR); copyBtn.addEventListener('click', copyUrl); backdrop.addEventListener('click',(e)=>{ if(e.target===backdrop) hideQR(); });
   });
 
-  if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
+  if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
 </script>
 </body>
 </html>
