@@ -44,7 +44,7 @@
     .modal img{display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto}
     .modal .btn-close{background:var(--card);color:var(--text);border:1px solid var(--ring);border-radius:10px;padding:8px 12px;cursor:pointer}
     .urlbox{background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px}
-    .warn{color:#b91c1c} /* rød tekst for hint */
+    .warn{color:#b91c1c}
   </style>
 </head>
 <body>
@@ -55,6 +55,8 @@
         <div class="muted">Avlest vinkel på tommestokk omregnet til grader</div>
       </div>
       <div class="row">
+        <!-- Info button hidden per request -->
+        <button type="button" class="btn ghost" id="infoBtn" title="Kalibreringstabell" style="display:none">ℹ️</button>
         <button type="button" class="btn ghost" id="themeBtn" title="Bytt lys/mørk">🌓</button>
         <button type="button" class="btn" id="qrBtn">QR</button>
         <button class="btn" id="installBtn" hidden>Installer</button>
@@ -67,23 +69,32 @@
       <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
       <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
       <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
+
+      <!-- Interval toggle kept but default off -->
+      <div class="muted" style="display:none">
+        <input type="checkbox" id="intervalToggle">
+        <label for="intervalToggle" class="muted">Intervall‑modus</label>
+      </div>
+
       <div class="muted" style="margin-top:10px">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
+      <div class="muted" id="intervalNote" style="display:none"></div>
     </section>
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div>v3.7.8</div>
+      <div>v3.8.1</div>
     </div>
   </div>
 
+  <!-- QR modal -->
   <div id="qrModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
     <div class="modal">
       <div class="row">
         <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
         <button class="btn-close" id="qrClose">Lukk</button>
       </div>
-      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.8</div>
+      <div class="urlbox" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.1</div>
       <div class="row" style="margin-top:8px">
         <button class="btn" id="copyUrl">Kopier lenke</button>
       </div>
@@ -94,11 +105,51 @@
     </div>
   </div>
 
+  <!-- Info modal (kept in code; hidden until button made visible again) -->
+  <div id="infoModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="infoTitle" style="display:none">
+    <div class="modal">
+      <div class="row">
+        <h3 id="infoTitle" style="margin:0">Kalibreringstabell</h3>
+        <button class="btn-close" id="infoClose">Lukk</button>
+      </div>
+      <div class="muted">Målepunkter (mm → grader):</div>
+      <div style="max-height:60vh;overflow:auto;margin-top:8px">
+        <table id="calTable"><thead><tr><th>mm</th><th>°</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="copyCsv">Kopier CSV</button>
+      </div>
+    </div>
+  </div>
+
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.7.8";
-  let A = { a: 0.974414, b: 21.754 };
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.8.1";
 
+  // Calibration points (as provided)
+  const CAL_D = [400, 420, 430, 500, 525, 536, 594, 718, 756, 779, 791, 796, 800];
+  const CAL_T = [  0,   8, 10.5, 31,  38,  42,  60, 107, 128, 145, 157, 166, 180];
+
+  function interpDeg(D) {
+    if (D < CAL_D[0] || D > CAL_D[CAL_D.length-1]) return null;
+    for (let i=0;i<CAL_D.length;i++) if (Math.abs(D - CAL_D[i]) < 1e-9) return CAL_T[i];
+    let lo = 0, hi = CAL_D.length-1;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >> 1;
+      if (CAL_D[mid] <= D) lo = mid; else hi = mid;
+    }
+    const x0 = CAL_D[lo], x1 = CAL_D[hi];
+    const y0 = CAL_T[lo], y1 = CAL_T[hi];
+    const t = (D - x0) / (x1 - x0);
+    return y0 + t * (y1 - y0);
+  }
+  function findSegment(D) {
+    if (D < CAL_D[0] || D > CAL_D[CAL_D.length-1]) return null;
+    for (let i=1;i<CAL_D.length;i++) if (D <= CAL_D[i]) return { i0:i-1, i1:i };
+    return { i0: CAL_D.length-2, i1: CAL_D.length-1 };
+  }
+
+  // Theme
   const themeEl = document.documentElement;
   const themeKey = 'ts_theme';
   const themeColorTag = document.getElementById('themeColor');
@@ -130,31 +181,35 @@
   })();
 
   function toNumber(v, fb) { const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fb; }
-  function Dtrue(D) { return A.a * D + A.b; }
-  function theta(D) {
-    const Dt = Dtrue(D);
-    const x = (Dt - 400) / 400;
-    const xx = Math.max(-1, Math.min(1, x));
-    return 2 * Math.asin(xx) * 180 / Math.PI;
-  }
+
   function render() {
     const D = toNumber($('D').value, 760);
     $('sliderD').value = String(Math.max(400, Math.min(800, D)));
-    const outOfRange = (D < 400 || D > 800);
-    if (outOfRange) {
+    const deg = interpDeg(D);
+    if (deg == null) {
       $('thetaTop').textContent = '–';
       $('rangeText').classList.add('warn');
+      $('intervalNote').style.display = 'none';
     } else {
       $('rangeText').classList.remove('warn');
-      const t = Math.round(theta(D));
-      const txt = Number.isFinite(t) ? t + '°' : '–';
-      $('thetaTop').textContent = txt;
+      $('thetaTop').textContent = Math.round(deg) + '°';
+      const seg = findSegment(D);
+      if (seg && $('intervalToggle').checked) {
+        const g0 = CAL_T[seg.i0], g1 = CAL_T[seg.i1];
+        const mm0 = CAL_D[seg.i0], mm1 = CAL_D[seg.i1];
+        $('intervalNote').style.display = 'block';
+        $('intervalNote').textContent = `({${g0}}–{${g1}}° mellom {${mm0}}–{${mm1}} mm)`
+          .replace('{g0}', g0).replace('{g1}', g1).replace('{mm0}', mm0).replace('{mm1}', mm1);
+      } else {
+        $('intervalNote').style.display = 'none';
+      }
     }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     render();
     $('themeBtn').addEventListener('click', toggleTheme);
+    const toggle = $('intervalToggle'); if (toggle) toggle.addEventListener('change', render);
 
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     const installBtn = $('installBtn');
@@ -187,6 +242,7 @@
       location.href = CANONICAL;
     });
 
+    // QR modal
     const btn = $('qrBtn');
     const backdrop = $('qrModalBackdrop');
     const img = $('qrImg');
@@ -194,7 +250,6 @@
     const closeBtn = $('qrClose');
     const copyBtn = $('copyUrl');
     const urlBox = $('qrUrlBox');
-
     function showQR(){
       const enc = encodeURIComponent(CANONICAL);
       const src = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
@@ -212,6 +267,32 @@
     closeBtn.addEventListener('click', hideQR);
     copyBtn.addEventListener('click', copyUrl);
     backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) hideQR(); });
+
+    // Info modal (hooked but hidden)
+    const infoBtn = $('infoBtn');
+    const infoBackdrop = $('infoModalBackdrop');
+    if (infoBtn) {
+      const infoClose = $('infoClose');
+      const tbody = $('calTable') ? $('calTable').querySelector('tbody') : null;
+      if (tbody) {
+        CAL_D.forEach((mm, idx) => {
+          const tr = document.createElement('tr');
+          const td1 = document.createElement('td'); td1.textContent = mm;
+          const td2 = document.createElement('td'); td2.textContent = CAL_T[idx];
+          tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+        });
+      }
+      function showInfo(){ if (infoBackdrop) infoBackdrop.style.display = 'flex'; }
+      function hideInfo(){ if (infoBackdrop) infoBackdrop.style.display = 'none'; }
+      infoBtn.addEventListener('click', showInfo);
+      if (infoClose) infoClose.addEventListener('click', hideInfo);
+      if (infoBackdrop) infoBackdrop.addEventListener('click', (e)=>{ if(e.target === infoBackdrop) hideInfo(); });
+      const copyCsv = $('copyCsv');
+      if (copyCsv) copyCsv.addEventListener('click', async () => {
+        const lines = CAL_D.map((mm, i) => mm + ',' + CAL_T[i]).join('\n');
+        try { await navigator.clipboard.writeText(lines); } catch(e) { }
+      });
+    }
   });
 
   $('D').addEventListener('input', render);
