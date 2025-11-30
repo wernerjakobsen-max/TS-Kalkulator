@@ -7,191 +7,13 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <script>
-
-  const STR = {
-    no: {
-      app:"TS-kalkulator", sub:"Avlest vinkel på tommestokk omregnet til grader",
-      lblD:"Avlest D (mm)", range:"måleområde 400-800mm", angle:"Vinkel (grader)",
-      guide_title:"Bruksanvisning (kort)",
-      guide:[
-        "Utstyr: plast tommestokk 2 m (Hultafors e.l.), leddbredde ca. 15 mm.",
-        "Knekk 200 mm‑leddet til ønsket vinkel.",
-        "Knekk deretter 400 mm‑leddet og bøy helt til hjørnet (0‑mm‑enden) treffer kanten av tommestokken.",
-        "Les av målet i mm langs kanten (inn mot siden av tommestokken).",
-        "Legg inn verdien i feltet «Avlest D (mm)» – kalkulatoren viser vinkelen i grader.",
-        "Måleområde er 400–800 mm (400≈0°, 800≈180°). Utenfor vises –."
-      ],
-      help_btn:"Vis forklaring og illustrasjon",
-      help_text:"Prinsipp: 200 mm‑leddet settes i vinkel θ. 400 mm‑leddet brukes som følerarm til 0‑mm‑hjørnet i bunnstokken møter kanten. Avstanden D som avleses langs kanten fra 0‑punktet er entydig knyttet til θ via kalibreringskurven (kombinert av dine målepunkter)."
-    },
-    en: {
-      app:"TS Calculator", sub:"Angle from folding ruler reading (mm → degrees)",
-      lblD:"Reading D (mm)", range:"measuring range 400–800 mm", angle:"Angle (degrees)",
-      guide_title:"Quick instructions",
-      guide:[
-        "Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.",
-        "Bend the 200 mm section to the desired angle.",
-        "Then bend the 400 mm section until the 0 mm corner touches the ruler’s edge.",
-        "Read the distance D in mm along the edge (inwards along the ruler’s side).",
-        "Enter D in the field «Reading D (mm)» – the calculator shows the angle.",
-        "Valid range is 400–800 mm (400≈0°, 800≈180°). Outside this, “–” is shown."
-      ],
-      help_btn:"Show explanation and illustration",
-      help_text:"Principle: set the 200 mm section to angle θ. Use the 400 mm section as a feeler until the 0 mm corner meets the base edge. The edge reading D relates uniquely to θ via the calibration curve (merged from your measurements)."
-    },
-    sv: { app:"TS-kalkylator", sub:"Avläst vinkel på tumstock omräknad till grader",
-      lblD:"Avläst D (mm)", range:"mätområde 400–800 mm", angle:"Vinkel (grader)",
-      guide_title:"Kort bruksanvisning",
-      guide:[ "Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.",
-        "Vik 200 mm‑sektionen till önskad vinkel.",
-        "Vik sedan 400 mm‑sektionen tills 0‑mm‑hörnet träffar tumstockens kant.",
-        "Läs av D i mm längs kanten (in mot tumstockens sida).",
-        "Mata in D i fältet «Avläst D (mm)» – kalkylatorn visar vinkeln.",
-        "Mätområde 400–800 mm (400≈0°, 800≈180°). Utanför visas –."],
-      help_btn:"Visa förklaring och illustration",
-      help_text:"Princip: 200 mm‑sektionen ställs i vinkel θ. 400 mm‑sektionen används som kännarm tills 0‑mm‑hörnet möter basens kant. Avståndet D längs kanten är kopplat till θ via kalibreringskurvan (dina mätpunkter)." },
-    dk: { app:"TS-beregner", sub:"Aflæst vinkel på tommestok omregnet til grader",
-      lblD:"Aflæst D (mm)", range:"måleområde 400–800 mm", angle:"Vinkel (grader)",
-      guide_title:"Kort vejledning",
-      guide:[ "Udstyr: 2 m plasttommestok (fx Hultafors), led-bredde ca. 15 mm.",
-        "Bøj 200 mm-leddet til den ønskede vinkel.",
-        "Bøj derefter 400 mm-leddet, til 0‑mm‑hjørnet rammer kanten på tommestokken.",
-        "Læs D i mm langs kanten (ind mod siden af tommestokken).",
-        "Indtast D i feltet «Aflæst D (mm)» – beregneren viser vinklen.",
-        "Måleområde 400–800 mm (400≈0°, 800≈180°). Udenfor vises –."],
-      help_btn:"Vis forklaring og illustration",
-      help_text:"Princip: 200 mm-leddet sættes i vinkel θ. 400 mm-leddet bruges som føler, til 0‑mm‑hjørnet møder basens kant. Aflæsningen D er entydigt relateret til θ via kalibreringskurven (dine målepunkter)." },
-    fi: { app:"TS‑laskin", sub:"Kulma mittatikkulukemasta (mm → astetta)",
-      lblD:"Lukema D (mm)", range:"mittausalue 400–800 mm", angle:"Kulma (astetta)",
-      guide_title:"Lyhyt ohje",
-      guide:[ "Väline: 2 m muovinen taittomitta (esim. Hultafors), nivelin leveys n. 15 mm.",
-        "Taivuta 200 mm osaa haluttuun kulmaan.",
-        "Taivuta sitten 400 mm osaa, kunnes 0 mm kulma osuu mitan reunaan.",
-        "Lue D millimetreinä reunaa pitkin (mitan sivun suuntaisesti).",
-        "Syötä D kenttään «Lukema D (mm)» – laskin näyttää kulman.",
-        "Mittausalue on 400–800 mm (400≈0°, 800≈180°). Muuten näytetään –."],
-      help_btn:"Näytä selitys ja kuva",
-      help_text:"Periaate: 200 mm osa asetetaan kulmaan θ. 400 mm osaa käytetään tuntotappina, kunnes 0 mm kulma kohtaa perusreunan. Reunalukema D liittyy θ:aan kalibrointikäyrän kautta (mittauspisteistäsi)." },
-    de: { app:"TS‑Rechner", sub:"Winkel aus Gliedmaß-Ablesung (mm → Grad)",
-      lblD:"Ablesung D (mm)", range:"Messbereich 400–800 mm", angle:"Winkel (Grad)",
-      guide_title:"Kurzanleitung",
-      guide:[ "Werkzeug: 2‑m Kunststoff‑Gliedmaß (z.B. Hultafors), Gelenkbreite ca. 15 mm.",
-        "Das 200‑mm‑Glied auf den gewünschten Winkel biegen.",
-        "Dann das 400‑mm‑Glied so weit biegen, bis die 0‑mm‑Ecke die Kante trifft.",
-        "D in mm entlang der Kante ablesen (an der Seite des Gliedmaßes).",
-        "D im Feld «Ablesung D (mm)» eingeben – der Rechner zeigt den Winkel.",
-        "Messbereich 400–800 mm (400≈0°, 800≈180°). Außerhalb wird – angezeigt."],
-      help_btn:"Erklärung und Illustration anzeigen",
-      help_text:"Prinzip: Das 200‑mm‑Glied wird auf den Winkel θ gestellt. Das 400‑mm‑Glied dient als Fühler, bis die 0‑mm‑Ecke die Basis‑Kante erreicht. Die Kantenablesung D ist über die Kalibrierkurve (aus deinen Messpunkten) eindeutig mit θ verknüpft." }
-  };
-
-  // PCHIP
-  function pchipSlopes(x, y) {
-    const n = x.length, h = new Array(n-1), d = new Array(n-1);
-    for (let i=0;i<n-1;i++) { h[i]=x[i+1]-x[i]; d[i]=(y[i+1]-y[i])/h[i]; }
-    const m = new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
-    for (let i=1;i<n-1;i++) { if (d[i-1]*d[i] <= 0) m[i]=0; else { const w1=2*h[i]+h[i-1], w2=h[i]+2*h[i-1]; m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]); } }
-    for (let i=0;i<n-1;i++) { if (d[i]===0) { m[i]=0; m[i+1]=0; } else { const a=m[i]/d[i], b=m[i+1]/d[i], s=a*a+b*b; if (s>9) { const t=3/Math.sqrt(s); m[i]=t*a*d[i]; m[i+1]=t*b*d[i]; } } }
-    return m;
-  }
-  const M = pchipSlopes(X, Y);
-  function pchipEval(xq) {
-    const n=X.length; if (xq<X[0]||xq>X[n-1]) return null;
-    let i=0,j=n-1; while (j-i>1) { const k=(i+j)>>1; if (X[k]<=xq) i=k; else j=k; }
-    const h=X[i+1]-X[i], t=(xq-X[i])/h;
-    const h00=(1+2*t)*(1-t)*(1-t), h10=t*(1-t)*(1-t), h01=t*t*(3-2*t), h11=t*t*(t-1);
-    return h00*Y[i] + h10*h*M[i] + h01*Y[i+1] + h11*h*M[i+1];
-  }
-
-  // Desimals
-  const DEC_KEY='ts_desimals';
-  function getDecimals(){ try{return parseInt(localStorage.getItem(DEC_KEY)||'0',10);}catch(e){return 0;} }
-  function setDecimals(n){ try{localStorage.setItem(DEC_KEY,String(n));}catch(e){} updateDecBtn(); render(); }
-  function toggleDecimals(){ setDecimals(getDecimals()===0?1:0); }
-  function formatDeg(v){ const d=getDecimals(); return (d===0?Math.round(v):v.toFixed(d))+'°'; }
-  function updateDecBtn(){ const d=getDecimals(); const b=$('decBtn'); if(b) b.textContent=(d===0?'0 des':'1 des'); }
-
-  // Language
-  const LANG_KEY='ts_lang';
-  function getLang(){ try{ return localStorage.getItem(LANG_KEY)||'no'; }catch(e){ return 'no'; } }
-  function setLang(code){ try{ localStorage.setItem(LANG_KEY, code); }catch(e){} applyLang(code); }
-  function applyLang(code){
-    const S = STR[code] || STR.no;
-    $('t_app').textContent = S.app; $('h_app').textContent = S.app; $('h_sub').textContent = S.sub;
-    $('lbl_D').textContent = S.lblD; $('rangeText').textContent = S.range; $('lbl_angle').textContent = S.angle;
-    $('guide_title').textContent = S.guide_title;
-    const ul=$('guide_list'); ul.innerHTML=''; S.guide.forEach(line=>{ const li=document.createElement('li'); li.textContent=line; ul.appendChild(li); });
-    $('help_btn').textContent = S.help_btn; $('help_text').textContent = S.help_text;
-  }
-
-  function render(){
-    const inp=$('D'), slider=$('sliderD');
-    const D=Number(String(inp.value).replace(',', '.'));
-    if(!Number.isFinite(D)){ $('thetaTop').textContent='–'; return; }
-    slider.value=String(Math.max(400, Math.min(800, D)));
-    const deg=pchipEval(D);
-    if(deg==null){ $('thetaTop').textContent='–'; $('rangeText').classList.add('warn'); }
-    else{ $('rangeText').classList.remove('warn'); $('thetaTop').textContent=formatDeg(deg); }
-  }
-
-  // Theme
-  const themeEl=document.documentElement, themeKey='ts_theme', themeColorTag=document.getElementById('themeColor');
-  function isDarkNow(){ const t=themeEl.getAttribute('data-theme')||'auto'; return t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches); }
-  function applyTheme(v){ themeEl.setAttribute('data-theme',v); try{localStorage.setItem(themeKey,v);}catch(e){} if(themeColorTag) themeColorTag.setAttribute('content', isDarkNow()?'#0b1220':'#00FFFF'); }
-  function currentTheme(){ return themeEl.getAttribute('data-theme')||'auto'; }
-  function toggleTheme(){ const t=currentTheme(); applyTheme(t==='dark'?'light':t==='light'?'auto':'dark'); }
-
-  document.addEventListener('DOMContentLoaded',()=>{
-    const sel=$('lang'); sel.value=getLang(); applyLang(sel.value);
-    sel.addEventListener('change', (e)=> setLang(e.target.value));
-
-    updateDecBtn(); render();
-    $('decBtn').addEventListener('click', toggleDecimals);
-    $('themeBtn').addEventListener('click', toggleTheme);
-    $('D').addEventListener('input', render);
-    $('sliderD').addEventListener('input',(e)=>{ $('D').value=e.target.value; render(); });
-
-    const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
-    const installBtn=$('installBtn');
-    if(!isStandalone){
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt',(e)=>{ e.preventDefault(); deferredPrompt=e; installBtn.hidden=false; installBtn.addEventListener('click', async()=>{ installBtn.hidden=true; await deferredPrompt.prompt(); deferredPrompt=null; }); },{once:true});
-      window.addEventListener('appinstalled',()=>{ installBtn.hidden=true; });
-    } else { installBtn.hidden=true; }
-
-    $('hardRefreshBtn').addEventListener('click', async()=>{
-      if('caches' in window){ const names=await caches.keys(); await Promise.all(names.map(n=>caches.delete(n))); }
-      if('serviceWorker' in navigator){ const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister())); }
-      location.href=CANONICAL;
-    });
-
-    const btn=$('qrBtn'), backdrop=$('qrModalBackdrop'), img=$('qrImg'), dl=$('qrDownload'), closeBtn=$('qrClose'), copyBtn=$('copyUrl'), urlBox=$('qrUrlBox');
-    function showQR(){ const enc=encodeURIComponent(CANONICAL); const src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`; img.src=src; dl.href=src; backdrop.style.display='flex'; }
-    function hideQR(){ backdrop.style.display='none'; }
-    async function copyUrl(){ try{ await navigator.clipboard.writeText(CANONICAL); copyBtn.textContent='Kopiert!'; setTimeout(()=>copyBtn.textContent='Kopier lenke',1200); }catch(e){} }
-    btn.addEventListener('click', showQR); closeBtn.addEventListener('click', hideQR); copyBtn.addEventListener('click', copyUrl); backdrop.addEventListener('click',(e)=>{ if(e.target===backdrop) hideQR(); });
-  });
-
-  if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
-
-    (function() {{
-      try {{
-        var saved = localStorage.getItem('ts_theme') || 'auto';
-        document.documentElement.setAttribute('data-theme', saved);
-        var tc = document.getElementById('themeColor');
-        var dark = saved === 'dark' || (saved === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (tc) tc.setAttribute('content', dark ? '#0b1220' : '#00FFFF');
-      }} catch(e) {{ }}
-    }})();
-  </script>
+  <script>(function(){try{var s=localStorage.getItem('ts_theme')||'auto';document.documentElement.setAttribute('data-theme',s);var tc=document.getElementById('themeColor');var d=s==='dark'||(s==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(tc)tc.setAttribute('content',d?'#0b1220':'#00FFFF');}catch(e){}})();</script>
   <style>
-    :root {{ --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; --brand:#00FFFF; }}
-    @media (prefers-color-scheme: dark) {{ :root {{ --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }} }}
-    [data-theme="dark"] {{ --bg:#0b1220; --card:#0f172a; --muted:#93a1b5; --text:#ebf0f7; --ring:#1f2937; }}
-    [data-theme="light"] {{ --bg:#f8fafc; --card:#fff; --muted:#64748b; --text:#0f172a; --ring:#e2e8f0; }}
-
-    *{{box-sizing:border-box}} body{{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}}
+    :root{{--bg:#f8fafc;--card:#fff;--muted:#64748b;--text:#0f172a;--ring:#e2e8f0;--brand:#00FFFF;}}
+    @media (prefers-color-scheme:dark){{:root{{--bg:#0b1220;--card:#0f172a;--muted:#93a1b5;--text:#ebf0f7;--ring:#1f2937;}}}}
+    [data-theme="dark"]{{--bg:#0b1220;--card:#0f172a;--muted:#93a1b5;--text:#ebf0f7;--ring:#1f2937;}}
+    [data-theme="light"]{{--bg:#f8fafc;--card:#fff;--muted:#64748b;--text:#0f172a;--ring:#e2e8f0;}}
+    *{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}}
     .wrap{{max-width:760px;margin:0 auto;padding:16px 20px}}
     .h1{{font-weight:700;font-size:clamp(20px,3.2vw,28px)}}
     .muted{{color:var(--muted);font-size:14px}}
@@ -202,14 +24,12 @@
     input[type=range]{{padding:0}}
     .big{{font-size:32px;font-weight:800;margin-top:4px}}
     .btn{{display:inline-block;background:var(--brand);color:#000;text-decoration:none;padding:10px 14px;border-radius:10px;border:1px solid #a0fefe;cursor:pointer}}
-    .footer{{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}}
     .ghost{{background:transparent;border:1px solid var(--ring)}}
+    .footer{{margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}}
     .warn{{color:#b91c1c}}
-    ul.guide{{margin:8px 0 0 18px;padding:0}}
-    ul.guide li{{margin:4px 0}}
-    details.help > summary{{cursor:pointer; user-select:none; font-weight:600}}
-    .lang{{min-width:96px}}
+    ul.guide{{margin:8px 0 0 18px;padding:0}}ul.guide li{{margin:4px 0}}
     .svgbox{{background:var(--bg);border:1px solid var(--ring);border-radius:12px;padding:8px;overflow:auto;margin-top:8px}}
+    details.help>summary{{cursor:pointer;font-weight:600}}
   </style>
 </head>
 <body>
@@ -220,25 +40,21 @@
         <div class="muted" id="h_sub">Avlest vinkel på tommestokk omregnet til grader</div>
       </div>
       <div class="row">
-        <select id="lang" class="btn ghost lang" title="Language">
-          <option value="no">NO</option>
-          <option value="en">EN</option>
-          <option value="sv">SV</option>
-          <option value="dk">DK</option>
-          <option value="fi">FI</option>
-          <option value="de">DE</option>
+        <select id="lang" class="btn ghost" style="min-width:96px">
+          <option value="no">NO</option><option value="en">EN</option><option value="sv">SV</option>
+          <option value="dk">DK</option><option value="fi">FI</option><option value="de">DE</option>
         </select>
-        <button type="button" class="btn ghost" id="decBtn" title="Desimaler av/på">0 des</button>
-        <button type="button" class="btn ghost" id="themeBtn" title="Bytt lys/mørk">🌓</button>
-        <button type="button" class="btn" id="qrBtn">QR</button>
+        <button class="btn ghost" id="decBtn">0 des</button>
+        <button class="btn ghost" id="themeBtn">🌓</button>
+        <button class="btn" id="qrBtn">QR</button>
         <button class="btn" id="installBtn" hidden>Installer</button>
-        <button class="btn ghost" id="hardRefreshBtn" title="Tøm cache og last siden på nytt">Hard refresh</button>
+        <button class="btn ghost" id="hardRefreshBtn">Hard refresh</button>
       </div>
     </header>
 
     <section class="card">
       <label id="lbl_D">Avlest D (mm)</label>
-      <input id="D" inputmode="decimal" value="760" aria-label="Avlest D i millimeter">
+      <input id="D" inputmode="decimal" value="760">
       <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
       <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
       <div class="muted" style="margin-top:10px" id="lbl_angle">Vinkel (grader)</div>
@@ -251,29 +67,18 @@
       <details class="help" id="helpBox">
         <summary id="help_btn">Vis forklaring og illustrasjon</summary>
         <div id="help_text" class="muted" style="margin-top:8px"></div>
+        <div class="row" style="margin:8px 0">
+          <button class="btn ghost" id="vizTech">Teknisk</button>
+          <button class="btn ghost" id="vizSketch">Skisse</button>
+        </div>
         <div class="svgbox">
-          <!-- Improved SVG illustration without inline JS -->
-          <svg id="help_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 320" width="100%">
-            <defs>
-              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/>
-              </filter>
-              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
-              </marker>
-            </defs>
-
-            <!-- Base stick (0–800 mm) -->
+          <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 320" width="100%">
+            <defs><filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#444"/></marker></defs>
             <g transform="translate(60,160)">
               <rect x="0" y="-10" width="820" height="20" rx="4" fill="#e6e6e6" stroke="#888" filter="url(#shadow)"/>
-              <!-- Major ticks every 100 mm -->
               <g fill="#666">
-                <!-- Generated ticks (pre-baked) -->
-                <!-- 0 to 800 -->
-                <!-- Major -->
                 <g>
-                  <rect x="0" y="-10" width="2" height="10"/>
-                  <text x="0" y="18" font-size="12" text-anchor="middle">0</text>
+                  <rect x="0" y="-10" width="2" height="10"/><text x="0" y="18" font-size="12" text-anchor="middle">0</text>
                   <rect x="100" y="-10" width="2" height="10"/><text x="100" y="18" font-size="12" text-anchor="middle">100</text>
                   <rect x="200" y="-10" width="2" height="10"/><text x="200" y="18" font-size="12" text-anchor="middle">200</text>
                   <rect x="300" y="-10" width="2" height="10"/><text x="300" y="18" font-size="12" text-anchor="middle">300</text>
@@ -283,171 +88,70 @@
                   <rect x="700" y="-10" width="2" height="10"/><text x="700" y="18" font-size="12" text-anchor="middle">700</text>
                   <rect x="800" y="-10" width="2" height="10"/><text x="800" y="18" font-size="12" text-anchor="middle">800</text>
                 </g>
-                <!-- Mid (50 mm) -->
-                <g opacity="0.9">
-                  <rect x="50" y="-10" width="1.6" height="8"/>
-                  <rect x="150" y="-10" width="1.6" height="8"/>
-                  <rect x="250" y="-10" width="1.6" height="8"/>
-                  <rect x="350" y="-10" width="1.6" height="8"/>
-                  <rect x="450" y="-10" width="1.6" height="8"/>
-                  <rect x="550" y="-10" width="1.6" height="8"/>
-                  <rect x="650" y="-10" width="1.6" height="8"/>
-                  <rect x="750" y="-10" width="1.6" height="8"/>
-                </g>
-                <!-- Minor (10 mm) -->
-                <g opacity="0.6">
-                  <!-- 10..90 -->
-                  <rect x="10" y="-10" width="1.2" height="6"/>
-<rect x="20" y="-10" width="1.2" height="6"/>
-<rect x="30" y="-10" width="1.2" height="6"/>
-<rect x="40" y="-10" width="1.2" height="6"/>
-<rect x="60" y="-10" width="1.2" height="6"/>
-<rect x="70" y="-10" width="1.2" height="6"/>
-<rect x="80" y="-10" width="1.2" height="6"/>
-<rect x="90" y="-10" width="1.2" height="6"/>
-<rect x="110" y="-10" width="1.2" height="6"/>
-<rect x="120" y="-10" width="1.2" height="6"/>
-<rect x="130" y="-10" width="1.2" height="6"/>
-<rect x="140" y="-10" width="1.2" height="6"/>
-<rect x="160" y="-10" width="1.2" height="6"/>
-<rect x="170" y="-10" width="1.2" height="6"/>
-<rect x="180" y="-10" width="1.2" height="6"/>
-<rect x="190" y="-10" width="1.2" height="6"/>
-<rect x="210" y="-10" width="1.2" height="6"/>
-<rect x="220" y="-10" width="1.2" height="6"/>
-<rect x="230" y="-10" width="1.2" height="6"/>
-<rect x="240" y="-10" width="1.2" height="6"/>
-<rect x="260" y="-10" width="1.2" height="6"/>
-<rect x="270" y="-10" width="1.2" height="6"/>
-<rect x="280" y="-10" width="1.2" height="6"/>
-<rect x="290" y="-10" width="1.2" height="6"/>
-<rect x="310" y="-10" width="1.2" height="6"/>
-<rect x="320" y="-10" width="1.2" height="6"/>
-<rect x="330" y="-10" width="1.2" height="6"/>
-<rect x="340" y="-10" width="1.2" height="6"/>
-<rect x="360" y="-10" width="1.2" height="6"/>
-<rect x="370" y="-10" width="1.2" height="6"/>
-<rect x="380" y="-10" width="1.2" height="6"/>
-<rect x="390" y="-10" width="1.2" height="6"/>
-<rect x="410" y="-10" width="1.2" height="6"/>
-<rect x="420" y="-10" width="1.2" height="6"/>
-<rect x="430" y="-10" width="1.2" height="6"/>
-<rect x="440" y="-10" width="1.2" height="6"/>
-<rect x="460" y="-10" width="1.2" height="6"/>
-<rect x="470" y="-10" width="1.2" height="6"/>
-<rect x="480" y="-10" width="1.2" height="6"/>
-<rect x="490" y="-10" width="1.2" height="6"/>
-<rect x="510" y="-10" width="1.2" height="6"/>
-<rect x="520" y="-10" width="1.2" height="6"/>
-<rect x="530" y="-10" width="1.2" height="6"/>
-<rect x="540" y="-10" width="1.2" height="6"/>
-<rect x="560" y="-10" width="1.2" height="6"/>
-<rect x="570" y="-10" width="1.2" height="6"/>
-<rect x="580" y="-10" width="1.2" height="6"/>
-<rect x="590" y="-10" width="1.2" height="6"/>
-<rect x="610" y="-10" width="1.2" height="6"/>
-<rect x="620" y="-10" width="1.2" height="6"/>
-<rect x="630" y="-10" width="1.2" height="6"/>
-<rect x="640" y="-10" width="1.2" height="6"/>
-<rect x="660" y="-10" width="1.2" height="6"/>
-<rect x="670" y="-10" width="1.2" height="6"/>
-<rect x="680" y="-10" width="1.2" height="6"/>
-<rect x="690" y="-10" width="1.2" height="6"/>
-<rect x="710" y="-10" width="1.2" height="6"/>
-<rect x="720" y="-10" width="1.2" height="6"/>
-<rect x="730" y="-10" width="1.2" height="6"/>
-<rect x="740" y="-10" width="1.2" height="6"/>
-<rect x="760" y="-10" width="1.2" height="6"/>
-<rect x="770" y="-10" width="1.2" height="6"/>
-<rect x="780" y="-10" width="1.2" height="6"/>
-<rect x="790" y="-10" width="1.2" height="6"/>
-                </g>
+                <g opacity="0.9"><rect x="50" y="-10" width="1.6" height="8"/><rect x="150" y="-10" width="1.6" height="8"/><rect x="250" y="-10" width="1.6" height="8"/><rect x="350" y="-10" width="1.6" height="8"/><rect x="450" y="-10" width="1.6" height="8"/><rect x="550" y="-10" width="1.6" height="8"/><rect x="650" y="-10" width="1.6" height="8"/><rect x="750" y="-10" width="1.6" height="8"/></g>
+                <g opacity="0.6"><rect x="10" y="-10" width="1.2" height="6"/><rect x="20" y="-10" width="1.2" height="6"/><rect x="30" y="-10" width="1.2" height="6"/><rect x="40" y="-10" width="1.2" height="6"/><rect x="60" y="-10" width="1.2" height="6"/><rect x="70" y="-10" width="1.2" height="6"/><rect x="80" y="-10" width="1.2" height="6"/><rect x="90" y="-10" width="1.2" height="6"/><rect x="110" y="-10" width="1.2" height="6"/><rect x="120" y="-10" width="1.2" height="6"/><rect x="130" y="-10" width="1.2" height="6"/><rect x="140" y="-10" width="1.2" height="6"/><rect x="160" y="-10" width="1.2" height="6"/><rect x="170" y="-10" width="1.2" height="6"/><rect x="180" y="-10" width="1.2" height="6"/><rect x="190" y="-10" width="1.2" height="6"/><rect x="210" y="-10" width="1.2" height="6"/><rect x="220" y="-10" width="1.2" height="6"/><rect x="230" y="-10" width="1.2" height="6"/><rect x="240" y="-10" width="1.2" height="6"/><rect x="260" y="-10" width="1.2" height="6"/><rect x="270" y="-10" width="1.2" height="6"/><rect x="280" y="-10" width="1.2" height="6"/><rect x="290" y="-10" width="1.2" height="6"/><rect x="310" y="-10" width="1.2" height="6"/><rect x="320" y="-10" width="1.2" height="6"/><rect x="330" y="-10" width="1.2" height="6"/><rect x="340" y="-10" width="1.2" height="6"/><rect x="360" y="-10" width="1.2" height="6"/><rect x="370" y="-10" width="1.2" height="6"/><rect x="380" y="-10" width="1.2" height="6"/><rect x="390" y="-10" width="1.2" height="6"/><rect x="410" y="-10" width="1.2" height="6"/><rect x="420" y="-10" width="1.2" height="6"/><rect x="430" y="-10" width="1.2" height="6"/><rect x="440" y="-10" width="1.2" height="6"/><rect x="460" y="-10" width="1.2" height="6"/><rect x="470" y="-10" width="1.2" height="6"/><rect x="480" y="-10" width="1.2" height="6"/><rect x="490" y="-10" width="1.2" height="6"/><rect x="510" y="-10" width="1.2" height="6"/><rect x="520" y="-10" width="1.2" height="6"/><rect x="530" y="-10" width="1.2" height="6"/><rect x="540" y="-10" width="1.2" height="6"/><rect x="560" y="-10" width="1.2" height="6"/><rect x="570" y="-10" width="1.2" height="6"/><rect x="580" y="-10" width="1.2" height="6"/><rect x="590" y="-10" width="1.2" height="6"/><rect x="610" y="-10" width="1.2" height="6"/><rect x="620" y="-10" width="1.2" height="6"/><rect x="630" y="-10" width="1.2" height="6"/><rect x="640" y="-10" width="1.2" height="6"/><rect x="660" y="-10" width="1.2" height="6"/><rect x="670" y="-10" width="1.2" height="6"/><rect x="680" y="-10" width="1.2" height="6"/><rect x="690" y="-10" width="1.2" height="6"/><rect x="710" y="-10" width="1.2" height="6"/><rect x="720" y="-10" width="1.2" height="6"/><rect x="730" y="-10" width="1.2" height="6"/><rect x="740" y="-10" width="1.2" height="6"/><rect x="760" y="-10" width="1.2" height="6"/><rect x="770" y="-10" width="1.2" height="6"/><rect x="780" y="-10" width="1.2" height="6"/><rect x="790" y="-10" width="1.2" height="6"/></g>
               </g>
-
-              <!-- 0 mm corner highlight -->
               <rect x="-2" y="-12" width="6" height="24" fill="#00FFFF" stroke="#088"/>
-              <text x="0" y="-18" font-size="12" text-anchor="middle">0 mm (hjørne)</text>
-
-              <!-- Vertical edge to read against -->
               <line x1="0" y1="-10" x2="0" y2="90" stroke="#444" stroke-dasharray="4 3"/>
               <text x="10" y="86" font-size="12">Kant for avlesning</text>
             </g>
+            <g transform="translate(260,160) rotate(-45)"><rect x="0" y="-10" width="200" height="20" rx="4" fill="#ffe9cc" stroke="#c88" filter="url(#shadow)"/><circle cx="0" cy="0" r="8" fill="#fff" stroke="#c88"/><circle cx="0" cy="0" r="3" fill="#c88"/><text x="100" y="-14" font-size="12" text-anchor="middle">200 mm‑ledd (θ)</text></g>
+            <path d="M260,160 A60,60 0 0,1 302,118" fill="none" stroke="#c44" stroke-width="2"/><text x="300" y="130" font-size="12" fill="#c44">θ</text>
+            <g transform="translate(460,160) rotate(-25)"><rect x="0" y="-9" width="400" height="18" rx="4" fill="#dfe9ff" stroke="#88a" filter="url(#shadow)"/><circle cx="0" cy="0" r="8" fill="#fff" stroke="#88a"/><circle cx="0" cy="0" r="3" fill="#88a"/><text x="200" y="-14" font-size="12" text-anchor="middle">400 mm‑ledd (følerarm)</text></g>
+            <circle cx="60" cy="160" r="5" fill="#00FFFF" stroke="#088"/><text x="60" y="150" font-size="12" text-anchor="middle">touch</text>
+            <g><line x1="60" y1="200" x2="740" y2="200" stroke="#444" marker-start="url(#arrow)" marker-end="url(#arrow)"/><line x1="60" y1="190" x2="60" y2="210" stroke="#444"/><line x1="740" y1="190" x2="740" y2="210" stroke="#444"/><text x="400" y="218" font-size="13" text-anchor="middle">Avlest D (mm) langs kanten</text></g>
+            <g transform="translate(60,160)"><line x1="678" y1="-10" x2="678" y2="30" stroke="#2c7" stroke-dasharray="4 3"/><text x="678" y="44" font-size="12" text-anchor="middle">≈678 mm ≈ 90°</text><text x="400" y="44" font-size="12" text-anchor="middle">400 mm ≈ 0°</text><text x="800" y="44" font-size="12" text-anchor="middle">800 mm ≈ 180°</text></g>
+          </svg>
 
-            <!-- 200 mm segment at angle θ -->
-            <g transform="translate(260,160) rotate(-45)">
-              <rect x="0" y="-10" width="200" height="20" rx="4" fill="#ffe9cc" stroke="#c88" filter="url(#shadow)"/>
-              <!-- Hinge glyph -->
-              <circle cx="0" cy="0" r="8" fill="#fff" stroke="#c88"/>
-              <circle cx="0" cy="0" r="3" fill="#c88"/>
-              <text x="100" y="-14" font-size="12" text-anchor="middle">200 mm‑ledd (θ)</text>
+          <svg id="svgSketch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 320" width="100%" style="display:none">
+            <rect x="0" y="0" width="940" height="320" fill="black"/>
+            <line x1="470" y1="30" x2="470" y2="300" stroke="#bbb" stroke-dasharray="8 6"/>
+            <g stroke="#fff" stroke-width="3" fill="none">
+              <circle cx="470" cy="180" r="6" fill="#fff"/>
+              <line x1="470" y1="180" x2="270" y2="260"/>
+              <line x1="470" y1="180" x2="670" y2="260"/>
+              <text x="281" y="256" fill="#fff" font-size="16">200</text>
+              <text x="655" y="256" fill="#fff" font-size="16">200</text>
             </g>
-
-            <!-- θ arc (protractor) -->
-            <path d="M260,160 A60,60 0 0,1 302,118" fill="none" stroke="#c44" stroke-width="2"/>
-            <text x="300" y="130" font-size="12" fill="#c44">θ</text>
-
-            <!-- 400 mm feeler arm -->
-            <g transform="translate(460,160) rotate(-25)">
-              <rect x="0" y="-9" width="400" height="18" rx="4" fill="#dfe9ff" stroke="#88a" filter="url(#shadow)"/>
-              <circle cx="0" cy="0" r="8" fill="#fff" stroke="#88a"/><circle cx="0" cy="0" r="3" fill="#88a"/>
-              <text x="200" y="-14" font-size="12" text-anchor="middle">400 mm‑ledd (følerarm)</text>
-            </g>
-
-            <!-- Touch point at 0 mm edge -->
-            <circle cx="60" cy="160" r="5" fill="#00FFFF" stroke="#088"/>
-            <text x="60" y="150" font-size="12" text-anchor="middle">touch</text>
-
-            <!-- D dimension along edge example (arbitrary 680 mm) -->
-            <g>
-              <line x1="60" y1="200" x2="740" y2="200" stroke="#444" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-              <line x1="60" y1="190" x2="60" y2="210" stroke="#444"/>
-              <line x1="740" y1="190" x2="740" y2="210" stroke="#444"/>
-              <text x="400" y="218" font-size="13" text-anchor="middle">Avlest D (mm) langs kanten</text>
-            </g>
-
-            <!-- Helpful labels -->
-            <g transform="translate(60,160)">
-              <line x1="678" y1="-10" x2="678" y2="30" stroke="#2c7" stroke-dasharray="4 3"/>
-              <text x="678" y="44" font-size="12" text-anchor="middle">≈678 mm ≈ 90°</text>
-              <text x="400" y="44" font-size="12" text-anchor="middle">400 mm ≈ 0°</text>
-              <text x="800" y="44" font-size="12" text-anchor="middle">800 mm ≈ 180°</text>
-            </g>
+            <text x="455" y="160" fill="#ddd" font-size="18" transform="rotate(-90 455,160)">400</text>
+            <defs><marker id="arrW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#ddd"/></marker></defs>
+            <line x1="470" y1="115" x2="630" y2="50" stroke="#ddd" stroke-width="3" marker-end="url(#arrW)"/>
+            <text x="640" y="55" fill="#ddd" font-size="18">pull +</text>
+            <text x="90" y="300" fill="#ddd" font-size="22">734 mm</text>
           </svg>
         </div>
       </details>
     </section>
 
-    <div class="footer muted">
-      <div id="ft_owner">© Stymparen</div>
-      <div>v3.9.1</div>
-    </div>
+    <div class="footer muted"><div>© Stymparen</div><div>v3.9.2</div></div>
   </div>
 
-  <!-- QR modal -->
   <div id="qrModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qrTitle" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999">
     <div class="card" style="max-width:92vw">
-      <div class="row" style="justify-content:space-between">
-        <h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3>
-        <button class="btn ghost" id="qrClose">Lukk</button>
-      </div>
-      <div class="muted" id="qrUrlBox" style="background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px;margin-top:6px">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.1</div>
+      <div class="row" style="justify-content:space-between"><h3 id="qrTitle" style="margin:0">QR-kode til denne siden</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
+      <div class="muted" id="qrUrlBox" style="background:var(--bg);border:1px solid var(--ring);border-radius:10px;padding:8px 10px;overflow:auto;font-size:12px;margin-top:6px">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.2</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
-      <div class="row">
-        <button class="btn" id="copyUrl">Kopier lenke</button>
-        <a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a>
-      </div>
+      <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
   </div>
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.1";
+  const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.2";
+  const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
+  const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
+  const STR={no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (Hultafors e.l.), leddbredde ca. 15 mm.","Knekk 200 mm‑leddet til ønsket vinkel.","Knekk deretter 400 mm‑leddet og bøy helt til hjørnet (0‑mm‑enden) treffer kanten av tommestokken.","Les av målet i mm langs kanten (inn mot siden av tommestokken).","Legg inn verdien i feltet «Avlest D (mm)» – kalkulatoren viser vinkelen i grader.","Måleområde er 400–800 mm (400≈0°, 800≈180°). Utenfor vises –."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200 mm‑leddet settes i vinkel θ. 400 mm‑leddet brukes som følerarm til 0‑mm‑hjørnet i bunnstokken møter kanten. Avstanden D som avleses langs kanten fra 0‑punktet er entydig knyttet til θ via kalibreringskurven (kombinert av dine målepunkter)."},en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend the 200 mm section to the desired angle.","Then bend the 400 mm section until the 0 mm corner touches the ruler’s edge.","Read the distance D in mm along the edge (inwards along the ruler’s side).","Enter D in the field «Reading D (mm)» – the calculator shows the angle.","Valid range is 400–800 mm (400≈0°, 800≈180°). Outside this, “–” is shown."],help_btn:"Show explanation and illustration",help_text:"Principle: set the 200 mm section to angle θ. Use the 400 mm section as a feeler until the 0 mm corner meets the base edge. The edge reading D relates uniquely to θ via the calibration curve (merged from your measurements)."}};
 
-  // Calibration data
-  const X = [400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
-  const Y = [  0,  8,10.5, 31, 38, 41, 42, 59, 60, 70, 90,107,120,128,135,145,150,157,166,180];
+  function pchipSlopes(x,y){const n=x.length,h=new Array(n-1),d=new Array(n-1);for(let i=0;i<n-1;i++){h[i]=x[i+1]-x[i];d[i]=(y[i+1]-y[i])/h[i];}const m=new Array(n);m[0]=d[0];m[n-1]=d[n-2];for(let i=1;i<n-1;i++){if(d[i-1]*d[i]<=0)m[i]=0;else{const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1];m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);}}for(let i=0;i<n-1;i++){if(d[i]===0){m[i]=0;m[i+1]=0;}else{const a=m[i]/d[i],b=m[i+1]/d[i],s=a*a+b*b;if(s>9){const t=3/Math.sqrt(s);m[i]=t*a*d[i];m[i+1]=t*b*d[i];}}}return m;}
+  const M=pchipSlopes(X,Y);
+  function pchipEval(xq){const n=X.length;if(xq<X[0]||xq>X[n-1])return null;let i=0,j=n-1;while(j-i>1){const k=(i+j)>>1;if(X[k]<=xq)i=k;else j=k;}const h=X[i+1]-X[i],t=(xq-X[i])/h;const h00=(1+2*t)*(1-t)*(1-t),h10=t*(1-t)*(1-t),h01=t*t*(3-2*t),h11=t*t*(t-1);return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];}
 
-  // Strings for languages
-  const STR = {{ /* same as previous build (shortened here for brevity) */ }};
-  // (For this notebook cell, we'll paste full strings again to ensure functionality.)
+  const DEC_KEY='ts_desimals';function getDecimals(){try{return parseInt(localStorage.getItem(DEC_KEY)||'0',10);}catch(e){return 0;}}function setDecimals(n){try{localStorage.setItem(DEC_KEY,String(n));}catch(e){}updateDecBtn();render();}function toggleDecimals(){setDecimals(getDecimals()===0?1:0);}function formatDeg(v){const d=getDecimals();return(d===0?Math.round(v):v.toFixed(d))+'°';}function updateDecBtn(){const d=getDecimals();const b=$('decBtn');if(b)b.textContent=(d===0?'0 des':'1 des');}
+  const LANG_KEY='ts_lang';function getLang(){try{return localStorage.getItem(LANG_KEY)||'no';}catch(e){return'no';}}function setLang(c){try{localStorage.setItem(LANG_KEY,c);}catch(e){}applyLang(c);}function applyLang(c){const S=(STR[c]||STR.no);$('t_app').textContent=S.app;$('h_app').textContent=S.app;$('h_sub').textContent=S.sub;$('lbl_D').textContent=S.lblD;$('rangeText').textContent=S.range;$('lbl_angle').textContent=S.angle;$('guide_title').textContent=S.guide_title;const ul=$('guide_list');ul.innerHTML='';S.guide.forEach(t=>{const li=document.createElement('li');li.textContent=t;ul.appendChild(li);});$('help_btn').textContent=S.help_btn;$('help_text').textContent=S.help_text;}
+  function render(){const inp=$('D'),slider=$('sliderD');const D=Number(String(inp.value).replace(',','.'));if(!Number.isFinite(D)){$('thetaTop').textContent='–';return;}slider.value=String(Math.max(400,Math.min(800,D)));const deg=pchipEval(D);if(deg==null){$('thetaTop').textContent='–';$('rangeText').classList.add('warn');}else{$('rangeText').classList.remove('warn');$('thetaTop').textContent=formatDeg(deg);}}
+  const themeEl=document.documentElement,themeKey='ts_theme',themeColorTag=document.getElementById('themeColor');function isDarkNow(){const t=themeEl.getAttribute('data-theme')||'auto';return t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}function applyTheme(v){themeEl.setAttribute('data-theme',v);try{localStorage.setItem(themeKey,v);}catch(e){}if(themeColorTag)themeColorTag.setAttribute('content',isDarkNow()?'#0b1220':'#00FFFF');}function currentTheme(){return themeEl.getAttribute('data-theme')||'auto';}function toggleTheme(){const t=currentTheme();applyTheme(t==='dark'?'light':t==='light'?'auto':'dark');}
+  document.addEventListener('DOMContentLoaded',()=>{const sel=$('lang');sel.value=getLang();applyLang(sel.value);sel.addEventListener('change',e=>setLang(e.target.value));updateDecBtn();render();$('decBtn').addEventListener('click',toggleDecimals);$('themeBtn').addEventListener('click',toggleTheme);$('D').addEventListener('input',render);$('sliderD').addEventListener('input',e=>{$('D').value=e.target.value;render();});const tech=$('svgTech'),sketch=$('svgSketch');$('vizTech').addEventListener('click',()=>{tech.style.display='block';sketch.style.display='none';});$('vizSketch').addEventListener('click',()=>{tech.style.display='none';sketch.style.display='block';});const installBtn=$('installBtn');const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;if(!isStandalone){let dp;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;installBtn.hidden=false;installBtn.addEventListener('click',async()=>{installBtn.hidden=true;await dp.prompt();dp=null;});},{once:true});window.addEventListener('appinstalled',()=>installBtn.hidden=true);}else{installBtn.hidden=true;}$('hardRefreshBtn').addEventListener('click',async()=>{if('caches'in window){const names=await caches.keys();await Promise.all(names.map(n=>caches.delete(n)));}if('serviceWorker'in navigator){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(r=>r.unregister()));}location.href=CANONICAL;});const btn=$('qrBtn'),backdrop=$('qrModalBackdrop'),img=$('qrImg'),dl=$('qrDownload'),closeBtn=$('qrClose'),copyBtn=$('copyUrl');function showQR(){const enc=encodeURIComponent(CANONICAL);const src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${{enc}}`;img.src=src;dl.href=src;backdrop.style.display='flex';}function hideQR(){backdrop.style.display='none';}async function copyUrl(){try{await navigator.clipboard.writeText(CANONICAL);copyBtn.textContent='Kopiert!';setTimeout(()=>copyBtn.textContent='Kopier lenke',1200);}catch(e){}}btn.addEventListener('click',showQR);closeBtn.addEventListener('click',hideQR);copyBtn.addEventListener('click',copyUrl);backdrop.addEventListener('click',e=>{if(e.target===backdrop)hideQR();});});
+  if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js');});}
 </script>
+</body>
+</html>
