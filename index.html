@@ -35,6 +35,7 @@
     .svgbox{background:var(--bg);border:1px solid var(--ring);border-radius:12px;padding:8px;overflow:auto;margin-top:8px}
     .warn{color:#b91c1c}
     details.help>summary{cursor:pointer;font-weight:700}
+    .status{font-size:12px;margin-top:8px}
   </style>
 </head>
 <body>
@@ -63,6 +64,7 @@
       <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
       <div class="muted" style="margin-top:12px" id="lbl_angle">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
+      <div class="status" id="statusMsg"></div>
     </section>
 
     <section class="card">
@@ -72,9 +74,8 @@
         <summary id="help_btn">Vis forklaring og illustrasjon</summary>
         <div id="help_text" class="muted" style="margin:8px 0 6px"></div>
         <div class="svgbox">
-          <!-- Technical SVG kept -->
           <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 320" width="100%">
-            <defs><filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#444"/></marker></defs>
+            <defs><filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter></defs>
             <g transform="translate(60,160)">
               <rect x="0" y="-10" width="820" height="20" rx="4" fill="#e6e6e6" stroke="#888" filter="url(#shadow)"/>
               <g fill="#666">
@@ -89,7 +90,6 @@
                   <rect x="700" y="-10" width="2" height="10"/><text x="700" y="18" font-size="12" text-anchor="middle">700</text>
                   <rect x="800" y="-10" width="2" height="10"/><text x="800" y="18" font-size="12" text-anchor="middle">800</text>
                 </g>
-                <g opacity="0.9"><rect x="50" y="-10" width="1.6" height="8"/><rect x="150" y="-10" width="1.6" height="8"/><rect x="250" y="-10" width="1.6" height="8"/><rect x="350" y="-10" width="1.6" height="8"/><rect x="450" y="-10" width="1.6" height="8"/><rect x="550" y="-10" width="1.6" height="8"/><rect x="650" y="-10" width="1.6" height="8"/><rect x="750" y="-10" width="1.6" height="8"/></g>
               </g>
               <rect x="-2" y="-12" width="6" height="24" fill="#00FFFF" stroke="#088"/>
               <line x1="0" y1="-10" x2="0" y2="90" stroke="#444" stroke-dasharray="4 3"/>
@@ -102,7 +102,7 @@
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div id="ver">3.10.0</div>
+      <div id="ver">3.10.1</div>
     </div>
     <div class="small">
       Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -114,7 +114,7 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.0</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.1</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
@@ -135,14 +135,14 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.0";
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.1";
   const INCH = 25.4;
 
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
 
   const STR={
-    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD_mm:"Avlest D (mm)",lblD_in:"Avlest D (inch)",range_mm:"måleområde 400-800mm",range_in:"måleområde 15.75–31.50"",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm‑leddet til ønsket vinkel.","Knekk 400 mm‑leddet og bøy til 0‑mm‑hjørnet treffer kanten.","Les av mm eller inch langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (15.75–31.50")."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200‑ledd i vinkel θ. 400‑ledd som føler til 0‑hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
+    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD_mm:"Avlest D (mm)",lblD_in:"Avlest D (inch)",range_mm:"måleområde 400–800 mm",range_in:"måleområde 15.75–31.50"",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm‑leddet til ønsket vinkel.","Knekk 400 mm‑leddet og bøy til 0‑mm‑hjørnet treffer kanten.","Les av i mm eller inch langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (15.75–31.50")."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200‑ledd i vinkel θ. 400‑ledd som føler til 0‑hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
     en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD_mm:"Reading D (mm)",lblD_in:"Reading D (inch)",range_mm:"range 400–800 mm",range_in:"range 15.75–31.50"",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200‑mm section to desired angle.","Bend 400‑mm section until the 0‑mm corner meets the edge.","Read along the edge in mm or inch and enter here.","Valid range: 400–800 mm (15.75–31.50")."],help_btn:"Show explanation and illustration",help_text:"Principle: 200‑mm at angle θ. 400‑mm as feeler to the 0‑corner. Edge reading D → angle via calibrated curve."}
   };
 
@@ -184,6 +184,15 @@
   function setUnit(u){try{localStorage.setItem(UNIT_KEY,u);}catch(e){} applyUnits(); render();}
   function fmtInch(v){return (Math.round(v*100)/100).toFixed(2);}
 
+  function toMm(v, isMm){ if(!Number.isFinite(v)) return NaN; return isMm? v : v*INCH; }
+  function fromMm(vmm, toMmUnit){ return toMmUnit? vmm : vmm/INCH; }
+
+  function clampRangeMm(vmm){
+    if(vmm<400) return 400;
+    if(vmm>800) return 800;
+    return vmm;
+  }
+
   function applyLang(c){
     const S=(STR[c]||STR.no);
     document.title = "TS-kalkulator";
@@ -203,28 +212,48 @@
     $('unit').value=u;
     $('lbl_D').textContent= u==='mm'? S.lblD_mm : S.lblD_in;
     $('rangeText').textContent= u==='mm'? S.range_mm : S.range_in;
-    const valMm = toMm(parseFloat(String($('D').value).replace(',','.'))||0, u==='mm');
+
+    // Convert current value to mm, clamp, then show in selected unit
+    const raw = parseFloat(String($('D').value).replace(',','.'));
+    const curMm = toMm(raw, $('unit').value==='mm'); // Note: uses new unit value; adjust:
+    const prevUnit = (u==='mm')?'in':'mm'; // derive previous unit roughly
+    const curMmSafe = Number.isFinite(curMm) ? clampRangeMm(curMm) : 760;
+
     $('sliderD').min= u==='mm'? 400 : (400/INCH).toFixed(2);
     $('sliderD').max= u==='mm'? 800 : (800/INCH).toFixed(2);
-    const showVal = fromMm(valMm, u==='mm');
+
+    const showVal = fromMm(curMmSafe, u==='mm');
     $('D').value = u==='mm'? String(Math.round(showVal)) : fmtInch(showVal);
     $('sliderD').value = u==='mm'? String(Math.round(showVal)) : fmtInch(showVal);
   }
-
-  function toMm(v, isMm){ if(!Number.isFinite(v)) return NaN; return isMm? v : v*INCH; }
-  function fromMm(vmm, toMmUnit){ return toMmUnit? vmm : vmm/INCH; }
 
   function Fdeg(v){const d=getDec(); return (d===0?Math.round(v):v.toFixed(d))+'°';}
 
   function render(){
     const u=getUnit();
     const raw = parseFloat(String($('D').value).replace(',','.'));
-    if(!Number.isFinite(raw)){ $('thetaTop').textContent='–'; return; }
-    let Dmm = toMm(raw, u==='mm');
-    $('sliderD').value = u==='mm'? String(Math.max(400,Math.min(800,Math.round(raw)))) : fmtInch(Math.max(400/INCH, Math.min(800/INCH, raw)));
-    const deg=pchipEval(Dmm);
-    if(deg==null){ $('rangeText').classList.add('warn'); $('thetaTop').textContent='–'; }
-    else { $('rangeText').classList.remove('warn'); $('thetaTop').textContent=Fdeg(deg); }
+    const status = $('statusMsg');
+    status.textContent='';
+
+    if(!Number.isFinite(raw)){ $('thetaTop').textContent='–'; status.textContent = 'Ugyldig tall.'; return; }
+
+    const DmmRaw = toMm(raw, u==='mm');
+    if(!Number.isFinite(DmmRaw)){ $('thetaTop').textContent='–'; status.textContent = 'Ugyldig tall.'; return; }
+
+    // Show warning and dash if outside range, else compute
+    if(DmmRaw < 400 || DmmRaw > 800){
+      $('rangeText').classList.add('warn');
+      $('thetaTop').textContent='–';
+      status.textContent = (u==='mm') ? 'Utenfor måleområde 400–800 mm.' : 'Utenfor måleområde 15.75–31.50".';
+      return;
+    } else {
+      $('rangeText').classList.remove('warn');
+      status.textContent='';
+    }
+
+    const deg=pchipEval(DmmRaw);
+    if(deg==null){ $('thetaTop').textContent='–'; status.textContent='Kan ikke beregne – sjekk D.'; }
+    else { $('thetaTop').textContent=Fdeg(deg); }
   }
 
   function openQR(){
@@ -250,9 +279,20 @@
     updateDecBtn();
     $('decBtn').addEventListener('click',()=>{ setDec(getDec()===0?1:0) });
     $('themeBtn').addEventListener('click',toggleTheme);
-    $('unit').value=getUnit(); applyUnits();
+    $('unit').value=getUnit();
+    applyUnits();
     $('unit').addEventListener('change',(e)=>setUnit(e.target.value));
     $('D').addEventListener('input',render);
+    $('D').addEventListener('blur',()=>{ // clamp on blur for safety
+      const u=getUnit();
+      const raw=parseFloat(String($('D').value).replace(',','.'));
+      if(!Number.isFinite(raw)) return;
+      const mm=toMm(raw, u==='mm');
+      const mmC=clampRangeMm(mm);
+      const show=fromMm(mmC, u==='mm');
+      $('D').value = u==='mm'? String(Math.round(show)) : (Math.round(show*100)/100).toFixed(2);
+      render();
+    });
     $('sliderD').addEventListener('input',e=>{ $('D').value=e.target.value; render(); });
     $('qrBtn').addEventListener('click',openQR);
     $('qrClose').addEventListener('click',closeQR);
@@ -265,7 +305,7 @@
       location.href=CANONICAL;
     });
     render();
-    document.getElementById('ver').textContent='3.10.0';
+    document.getElementById('ver').textContent='3.10.1';
   });
 
   if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
