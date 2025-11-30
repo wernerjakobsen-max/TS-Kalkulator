@@ -61,7 +61,7 @@
       <label id="lbl_D">Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760">
       <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
-      <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
+      <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400–800 mm</div>
       <div class="muted" style="margin-top:12px" id="lbl_angle">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
       <div class="status" id="statusMsg"></div>
@@ -102,7 +102,7 @@
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div id="ver">3.10.1</div>
+      <div id="ver">3.10.2</div>
     </div>
     <div class="small">
       Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -114,8 +114,9 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.1</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.2</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
+      <div id="qrFallback" class="muted" style="display:none;margin:8px 0">Kunne ikke laste QR-bildet. Du kan <a id="qrOpenLink" href="#" target="_blank" rel="noopener">åpne lenken</a> eller kopiere den.</div>
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
   </div>
@@ -135,7 +136,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.1";
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.10.2";
   const INCH = 25.4;
 
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
@@ -213,18 +214,19 @@
     $('lbl_D').textContent= u==='mm'? S.lblD_mm : S.lblD_in;
     $('rangeText').textContent= u==='mm'? S.range_mm : S.range_in;
 
-    // Convert current value to mm, clamp, then show in selected unit
-    const raw = parseFloat(String($('D').value).replace(',','.'));
-    const curMm = toMm(raw, $('unit').value==='mm'); // Note: uses new unit value; adjust:
-    const prevUnit = (u==='mm')?'in':'mm'; // derive previous unit roughly
-    const curMmSafe = Number.isFinite(curMm) ? clampRangeMm(curMm) : 760;
+    // Convert current value (assume previous unit was the opposite if not known)
+    const rawTxt = String($('D').value).replace(',','.');
+    const raw = parseFloat(rawTxt);
+    const currentUnitIsMm = (u==='mm');
+    const mm = toMm(raw, currentUnitIsMm);
+    const mmSafe = Number.isFinite(mm) ? clampRangeMm(mm) : 760;
 
-    $('sliderD').min= u==='mm'? 400 : (400/INCH).toFixed(2);
-    $('sliderD').max= u==='mm'? 800 : (800/INCH).toFixed(2);
+    $('sliderD').min= currentUnitIsMm? 400 : (400/INCH).toFixed(2);
+    $('sliderD').max= currentUnitIsMm? 800 : (800/INCH).toFixed(2);
 
-    const showVal = fromMm(curMmSafe, u==='mm');
-    $('D').value = u==='mm'? String(Math.round(showVal)) : fmtInch(showVal);
-    $('sliderD').value = u==='mm'? String(Math.round(showVal)) : fmtInch(showVal);
+    const showVal = fromMm(mmSafe, currentUnitIsMm);
+    $('D').value = currentUnitIsMm? String(Math.round(showVal)) : fmtInch(showVal);
+    $('sliderD').value = currentUnitIsMm? String(Math.round(showVal)) : fmtInch(showVal);
   }
 
   function Fdeg(v){const d=getDec(); return (d===0?Math.round(v):v.toFixed(d))+'°';}
@@ -240,7 +242,12 @@
     const DmmRaw = toMm(raw, u==='mm');
     if(!Number.isFinite(DmmRaw)){ $('thetaTop').textContent='–'; status.textContent = 'Ugyldig tall.'; return; }
 
-    // Show warning and dash if outside range, else compute
+    // update slider display to match field
+    const sMin = u==='mm'? 400 : (400/INCH);
+    const sMax = u==='mm'? 800 : (800/INCH);
+    const sVal = Math.min(sMax, Math.max(sMin, raw));
+    $('sliderD').value = String(sVal);
+
     if(DmmRaw < 400 || DmmRaw > 800){
       $('rangeText').classList.add('warn');
       $('thetaTop').textContent='–';
@@ -259,8 +266,14 @@
   function openQR(){
     const url=CANONICAL, enc=encodeURIComponent(url);
     $('qrUrlBox').textContent=url;
-    $('qrImg').src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
-    $('qrDownload').href=$('qrImg').src;
+    const qr = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
+    const img = $('qrImg');
+    img.onerror = ()=>{
+      $('qrFallback').style.display='block';
+      $('qrOpenLink').href = url;
+    };
+    img.src = qr;
+    $('qrDownload').href=qr;
     $('qrModal').style.display='flex';
   }
   function closeQR(){ $('qrModal').style.display='none'; }
@@ -275,15 +288,15 @@
 
   document.addEventListener('DOMContentLoaded', ()=>{
     $('lang').value=getLang(); applyLang(getLang());
-    $('lang').addEventListener('change',(e)=>setLang(e.target.value));
+    $('lang').addEventListener('change',(e)=>{ setLang(e.target.value); });
     updateDecBtn();
     $('decBtn').addEventListener('click',()=>{ setDec(getDec()===0?1:0) });
     $('themeBtn').addEventListener('click',toggleTheme);
     $('unit').value=getUnit();
     applyUnits();
-    $('unit').addEventListener('change',(e)=>setUnit(e.target.value));
+    $('unit').addEventListener('change',(e)=>{ setUnit(e.target.value); });
     $('D').addEventListener('input',render);
-    $('D').addEventListener('blur',()=>{ // clamp on blur for safety
+    $('D').addEventListener('blur',()=>{
       const u=getUnit();
       const raw=parseFloat(String($('D').value).replace(',','.'));
       if(!Number.isFinite(raw)) return;
@@ -293,7 +306,17 @@
       $('D').value = u==='mm'? String(Math.round(show)) : (Math.round(show*100)/100).toFixed(2);
       render();
     });
-    $('sliderD').addEventListener('input',e=>{ $('D').value=e.target.value; render(); });
+    $('sliderD').addEventListener('input',e=>{ $('D').value=String(parseFloat(e.target.value)); render(); });
+    $('sliderD').addEventListener('change',()=>{ // clamp on release
+      const u=getUnit();
+      const raw=parseFloat(String($('D').value).replace(',','.'));
+      if(!Number.isFinite(raw)) return;
+      const mm=toMm(raw, u==='mm');
+      const mmC=clampRangeMm(mm);
+      const show=fromMm(mmC, u==='mm');
+      $('D').value = u==='mm'? String(Math.round(show)) : (Math.round(show*100)/100).toFixed(2);
+      render();
+    });
     $('qrBtn').addEventListener('click',openQR);
     $('qrClose').addEventListener('click',closeQR);
     $('copyUrl').addEventListener('click',copyUrl);
@@ -305,7 +328,7 @@
       location.href=CANONICAL;
     });
     render();
-    document.getElementById('ver').textContent='3.10.1';
+    document.getElementById('ver').textContent='3.10.2';
   });
 
   if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
