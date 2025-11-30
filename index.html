@@ -104,7 +104,7 @@
               <text x="10" y="116" font-size="12">Kant for avlesning</text>
             </g>
 
-            <!-- 200 mm section (points UP now) -->
+            <!-- 200 mm section (points UP) -->
             <g transform="translate(260,200) rotate(-65)">
               <rect x="0" y="-10" width="200" height="20" rx="4" fill="#ffe9cc" stroke="#c88" filter="url(#shadow)"/>
               <circle cx="0" cy="0" r="8" fill="#fff" stroke="#c88"/>
@@ -130,7 +130,7 @@
               <text x="400" y="268" font-size="13" text-anchor="middle">Avlest D (mm) langs kanten</text>
             </g>
 
-            <!-- Landmark notes -->
+            <!-- Landmarks -->
             <g transform="translate(60,200)">
               <line x1="678" y1="-10" x2="678" y2="30" stroke="#2c7" stroke-dasharray="4 3"/>
               <text x="678" y="44" font-size="12" text-anchor="middle">≈678 mm ≈ 90°</text>
@@ -143,7 +143,8 @@
     </section>
 
     <div class="footer muted">
-      <div>© Stymparen</div><div id="ver">3.9.7a</div>
+      <div>© Stymparen</div>
+      <div id="ver">3.9.7b</div>
     </div>
     <div class="small">
       Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -155,7 +156,7 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.7a</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.7b</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
@@ -176,14 +177,18 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.7a";
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.7b";
 
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
 
   const STR={
     no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm‑leddet til ønsket vinkel.","Knekk 400 mm‑leddet og bøy til 0‑mm‑hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200‑ledd i vinkel θ. 400‑ledd som føler til 0‑hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
-    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200‑mm section to desired angle.","Bend 400‑mm section until the 0‑mm corner meets the edge.","Read D in mm along the edge and enter it here.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: 200‑mm at angle θ. 400‑mm as feeler to the 0‑corner. Edge reading D → angle via calibrated curve."}
+    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200‑mm section to desired angle.","Bend 400‑mm section until the 0‑mm corner meets the edge.","Read D in mm along the edge and enter it here.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: 200‑mm at angle θ. 400‑mm as feeler to the 0‑corner. Edge reading D → angle via calibrated curve."},
+    sv:{app:"TS‑kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), leden bred ca 15 mm.","Vik 200 mm‑ledet till önskad vinkel.","Vik 400 mm‑ledet tills 0‑mm‑hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200‑led i vinkel θ. 400‑led som känner tills 0‑hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva."},
+    dk:{app:"TS‑kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led‑bredde ca. 15 mm.","Bøj 200 mm‑leddet til ønsket vinkel.","Bøj 400 mm‑leddet til 0‑mm‑hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200‑led i vinkel θ. 400‑led som føler til 0‑hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve."},
+    fi:{app:"TS‑laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta 200 mm osaa haluttuun kulmaan.","Taivuta 400 mm osaa kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0‑kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta."},
+    de:{app:"TS‑Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz‑Anleitung",guide:["Werkzeug: 2‑m‑Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","200‑mm‑Glied auf gewünschten Winkel biegen.","400‑mm‑Glied so biegen, bis die 0‑mm‑Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200‑mm‑Glied im Winkel θ. 400‑mm‑Glied als Fühler bis zur 0‑Ecke. Ablesung D → Winkel über kalibrierte Kurve."}
   };
 
   function pchipSlopes(x,y){
@@ -223,12 +228,12 @@
 
   function applyLang(c){
     const S=(STR[c]||STR.no);
-    document.title = "TS-kalkulator";
+    document.title = S.app || "TS-kalkulator";
     $('h_sub').textContent=S.sub;
     $('lbl_D').textContent=S.lblD; $('rangeText').textContent=S.range; $('lbl_angle').textContent=S.angle;
     $('guide_title').textContent=S.guide_title;
-    const ul=$('guide_list'); ul.innerHTML=''; S.guide.forEach(t=>{const li=document.createElement('li'); li.textContent=t; ul.appendChild(li);});
-    $('help_btn').textContent=S.help_btn; $('help_text').textContent=S.help_text;
+    const ul=$('guide_list'); ul.innerHTML=''; (S.guide||[]).forEach(t=>{const li=document.createElement('li'); li.textContent=t; ul.appendChild(li);});
+    $('help_btn').textContent=S.help_btn||""; $('help_text').textContent=S.help_text||"";
   }
 
   function render(){
@@ -258,8 +263,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', ()=>{
-    $('lang').value=getLang(); applyLang(getLang());
-    $('lang').addEventListener('change',(e)=>setLang(e.target.value));
+    const cur=getLang(); $('lang').value=cur; applyLang(cur);
+    $('lang').addEventListener('change',(e)=>{ setLang(e.target.value); });
     updateDecBtn();
     $('decBtn').addEventListener('click',toggleDec);
     $('themeBtn').addEventListener('click',toggleTheme);
@@ -276,7 +281,7 @@
       location.href=CANONICAL;
     });
     render();
-    document.getElementById('ver').textContent='3.9.7a';
+    document.getElementById('ver').textContent='3.9.7b';
   });
 
   if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
