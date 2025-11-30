@@ -1,7 +1,7 @@
 # TS-Kalkulator
 
-Statisk PWA for tommestokk-vinkel (a-la Hultafors 2 m, 20 cm-ledd).
-Kalibrert mot målepunktene deres. Cyan profilfarge.
+Statisk PWA for tommestokk-vinkel (a-la Hultafors 2 m med 20 cm-ledd).
+Regn ut grader ved bruk av tommestokk.
 
 ## Hurtigoppsett på GitHub Pages
 1. Opprett repo (f.eks. `TS-Kalkulator`) på GitHub.
