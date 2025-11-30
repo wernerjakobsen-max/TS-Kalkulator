@@ -27,7 +27,6 @@
     label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
     input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);font-size:20px;background:var(--card);color:var(--text)}
     input[type=range]{padding:0}
-    select{padding:10px 12px;border-radius:12px;border:1px solid var(--ring);background:var(--card);color:var(--text')}
     .muted{color:var(--muted)}
     .big{font-size:48px;font-weight:900;letter-spacing:.5px}
     .footer{margin-top:18px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
@@ -35,7 +34,6 @@
     .svgbox{background:var(--bg);border:1px solid var(--ring);border-radius:12px;padding:8px;overflow:auto;margin-top:8px}
     .warn{color:#b91c1c}
     details.help>summary{cursor:pointer;font-weight:700}
-    .status{font-size:12px;margin-top:8px}
   </style>
 </head>
 <body>
@@ -48,7 +46,6 @@
         <button class="btn" id="installBtn">Installer</button>
         <button class="btn ghost" id="themeBtn">🌓</button>
         <button class="btn ghost" id="decBtn">0 des</button>
-        <select id="unit" class="btn ghost"><option value="mm">mm</option><option value="in">inch</option></select>
         <select id="lang" class="btn ghost" style="min-width:96px">
           <option value="no">NO</option><option value="en">EN</option><option value="sv">SV</option>
           <option value="dk">DK</option><option value="fi">FI</option><option value="de">DE</option>
@@ -61,10 +58,9 @@
       <label id="lbl_D">Avlest D (mm)</label>
       <input id="D" inputmode="decimal" value="760">
       <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
-      <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400–800 mm</div>
+      <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
       <div class="muted" style="margin-top:12px" id="lbl_angle">Vinkel (grader)</div>
       <div class="big" id="thetaTop">–</div>
-      <div class="status" id="statusMsg"></div>
     </section>
 
     <section class="card">
@@ -77,8 +73,12 @@
           <!-- Technical SVG (horizontal base, 200 mm section points UP) -->
           <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="100%">
             <defs>
-              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/></filter>
-              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#444"/></marker>
+              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/>
+              </filter>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M0 0L10 5L0 10Z" fill="#444"/>
+              </marker>
             </defs>
             <!-- Base ruler -->
             <g transform="translate(60,200)">
@@ -144,7 +144,7 @@
 
     <div class="footer muted">
       <div>© Stymparen</div>
-      <div id="ver">3.9.8</div>
+      <div id="ver">3.9.7b</div>
     </div>
     <div class="small">
       Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -156,7 +156,7 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.8</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.7b</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
@@ -177,19 +177,18 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.8";
-  const INCH = 25.4;
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=3.9.7b";
 
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
 
   const STR={
-    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD_mm:"Avlest D (mm)",lblD_in:"Avlest D (inch)",range_mm:"måleområde 400–800 mm",range_in:"måleområde 15.75–31.50"",angle:"Vinkel (grader)",out_mm:"Utenfor måleområde 400–800 mm.",out_in:"Utenfor måleområde 15.75–31.50".",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm‑leddet til ønsket vinkel.","Knekk 400 mm‑leddet og bøy til 0‑mm‑hjørnet treffer kanten.","Les av mm/tommer langs kanten og skriv inn her – du får graden.","Gyldig område: 400–800 mm (15.75–31.50")."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200‑ledd i vinkel θ. 400‑ledd som føler til 0‑hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
-    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD_mm:"Reading D (mm)",lblD_in:"Reading D (inch)",range_mm:"range 400–800 mm",range_in:"range 15.75–31.50"",angle:"Angle (degrees)",out_mm:"Outside range 400–800 mm.",out_in:"Outside range 15.75–31.50".",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200‑mm section to desired angle.","Bend 400‑mm section until the 0‑mm corner meets the edge.","Read mm/inch along the edge and enter here.","Valid range: 400–800 mm (15.75–31.50")."],help_btn:"Show explanation and illustration",help_text:"Principle: 200‑mm at angle θ. 400‑mm as feeler to the 0‑corner. Edge reading D → angle via calibrated curve."},
-    sv:{app:"TS‑kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD_mm:"Avläst D (mm)",lblD_in:"Avläst D (tum)",range_mm:"mätområde 400–800 mm",range_in:"mätområde 15.75–31.50"",angle:"Vinkel (grader)",out_mm:"Utanför mätområde 400–800 mm.",out_in:"Utanför mätområde 15.75–31.50".",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), leden bred ca 15 mm.","Vik 200 mm‑ledet till önskad vinkel.","Vik 400 mm‑ledet tills 0‑mm‑hörnet möter kanten.","Läs av mm/tum längs kanten och ange här.","Giltigt område: 400–800 mm (15.75–31.50")."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200‑led i vinkel θ. 400‑led som känner tills 0‑hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva."},
-    dk:{app:"TS‑kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD_mm:"Aflæst D (mm)",lblD_in:"Aflæst D (inch)",range_mm:"måleområde 400–800 mm",range_in:"måleområde 15.75–31.50"",angle:"Vinkel (grader)",out_mm:"Uden for måleområde 400–800 mm.",out_in:"Uden for måleområde 15.75–31.50".",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led‑bredde ca. 15 mm.","Bøj 200 mm‑leddet til ønsket vinkel.","Bøj 400 mm‑leddet til 0‑mm‑hjørnet møder kanten.","Aflæs mm/tommer langs kanten og indtast her.","Gyldigt område: 400–800 mm (15.75–31.50")."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200‑led i vinkel θ. 400‑led som føler til 0‑hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve."},
-    fi:{app:"TS‑laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD_mm:"Lukema D (mm)",lblD_in:"Lukema D (tuuma)",range_mm:"mittausalue 400–800 mm",range_in:"mittausalue 15.75–31.50"",angle:"Kulma (astetta)",out_mm:"Alueen ulkopuolella 400–800 mm.",out_in:"Alueen ulkopuolella 15.75–31.50".",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta 200 mm osaa haluttuun kulmaan.","Taivuta 400 mm osaa kunnes 0 mm kulma osuu reunaan.","Lue mm/tuuma reunaa pitkin ja syötä tähän.","Sallittu alue: 400–800 mm (15.75–31.50")."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0‑kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta."},
-    de:{app:"TS‑Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD_mm:"Ablesung D (mm)",lblD_in:"Ablesung D (Zoll)",range_mm:"Messbereich 400–800 mm",range_in:"Messbereich 15.75–31.50"",angle:"Winkel (Grad)",out_mm:"Außerhalb des Bereichs 400–800 mm.",out_in:"Außerhalb des Bereichs 15.75–31.50".",guide_title:"Kurz‑Anleitung",guide:["Werkzeug: 2‑m‑Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","200‑mm‑Glied auf gewünschten Winkel biegen.","400‑mm‑Glied so biegen, bis die 0‑mm‑Ecke die Kante trifft.","In mm/Zoll an der Kante ablesen und hier eingeben.","Gültiger Bereich: 400–800 mm (15.75–31.50")."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200‑mm‑Glied im Winkel θ. 400‑mm‑Glied als Fühler bis zur 0‑Ecke. Ablesung D → Winkel über kalibrierte Kurve."}
+    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm‑leddet til ønsket vinkel.","Knekk 400 mm‑leddet og bøy til 0‑mm‑hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200‑ledd i vinkel θ. 400‑ledd som føler til 0‑hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
+    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200‑mm section to desired angle.","Bend 400‑mm section until the 0‑mm corner meets the edge.","Read D in mm along the edge and enter it here.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: 200‑mm at angle θ. 400‑mm as feeler to the 0‑corner. Edge reading D → angle via calibrated curve."},
+    sv:{app:"TS‑kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), leden bred ca 15 mm.","Vik 200 mm‑ledet till önskad vinkel.","Vik 400 mm‑ledet tills 0‑mm‑hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200‑led i vinkel θ. 400‑led som känner tills 0‑hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva."},
+    dk:{app:"TS‑kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led‑bredde ca. 15 mm.","Bøj 200 mm‑leddet til ønsket vinkel.","Bøj 400 mm‑leddet til 0‑mm‑hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200‑led i vinkel θ. 400‑led som føler til 0‑hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve."},
+    fi:{app:"TS‑laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta 200 mm osaa haluttuun kulmaan.","Taivuta 400 mm osaa kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0‑kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta."},
+    de:{app:"TS‑Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz‑Anleitung",guide:["Werkzeug: 2‑m‑Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","200‑mm‑Glied auf gewünschten Winkel biegen.","400‑mm‑Glied so biegen, bis die 0‑mm‑Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200‑mm‑Glied im Winkel θ. 400‑mm‑Glied als Fühler bis zur 0‑Ecke. Ablesung D → Winkel über kalibrierte Kurve."}
   };
 
   function pchipSlopes(x,y){
@@ -215,98 +214,35 @@
     return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
   }
 
-  const LANG_KEY='ts_lang', DEC_KEY='ts_dec', UNIT_KEY='ts_unit';
+  const LANG_KEY='ts_lang', DEC_KEY='ts_dec';
   const themeEl=document.documentElement,themeKey='ts_theme',themeColorTag=document.getElementById('themeColor');
   function applyTheme(v){themeEl.setAttribute('data-theme',v); try{localStorage.setItem(themeKey,v);}catch(e){} if(themeColorTag)themeColorTag.setAttribute('content',(v==='dark')?'#0b1220':'#00FFFF');}
   function toggleTheme(){const cur=themeEl.getAttribute('data-theme')||'auto';applyTheme(cur==='dark'?'light':cur==='light'?'auto':'dark');}
-  function setLang(c){try{localStorage.setItem(LANG_KEY,c);}catch(e){} applyLang(c); render();}
+  function setLang(c){try{localStorage.setItem(LANG_KEY,c);}catch(e){} applyLang(c);}
   function getLang(){try{return localStorage.getItem(LANG_KEY)||'no';}catch(e){return'no';}}
   function getDec(){try{return parseInt(localStorage.getItem(DEC_KEY)||'0',10);}catch(e){return 0;}}
   function setDec(n){try{localStorage.setItem(DEC_KEY,String(n));}catch(e){} updateDecBtn(); render();}
   function toggleDec(){setDec(getDec()===0?1:0);}
   function updateDecBtn(){ $('decBtn').textContent=(getDec()===0?'0 des':'1 des'); }
-
-  function getUnit(){try{return localStorage.getItem(UNIT_KEY)||'mm';}catch(e){return 'mm';}}
-  function setUnit(u){try{localStorage.setItem(UNIT_KEY,u);}catch(e){} applyUnits(); render();}
-  function fmtInch(v){return (Math.round(v*100)/100).toFixed(2);}
-
-  function toMm(v, isMm){ if(!Number.isFinite(v)) return NaN; return isMm? v : v*INCH; }
-  function fromMm(vmm, toMmUnit){ return toMmUnit? vmm : vmm/INCH; }
-
-  function clampRangeMm(vmm){
-    if(vmm<400) return 400;
-    if(vmm>800) return 800;
-    return vmm;
-  }
+  function Fdeg(v){const d=getDec(); return (d===0?Math.round(v):v.toFixed(d))+'°';}
 
   function applyLang(c){
     const S=(STR[c]||STR.no);
     document.title = S.app || "TS-kalkulator";
-    const u=getUnit();
     $('h_sub').textContent=S.sub;
-    $('lbl_D').textContent= u==='mm'? S.lblD_mm : S.lblD_in;
-    $('rangeText').textContent= u==='mm'? S.range_mm : S.range_in;
-    $('lbl_angle').textContent=S.angle;
+    $('lbl_D').textContent=S.lblD; $('rangeText').textContent=S.range; $('lbl_angle').textContent=S.angle;
     $('guide_title').textContent=S.guide_title;
     const ul=$('guide_list'); ul.innerHTML=''; (S.guide||[]).forEach(t=>{const li=document.createElement('li'); li.textContent=t; ul.appendChild(li);});
     $('help_btn').textContent=S.help_btn||""; $('help_text').textContent=S.help_text||"";
   }
 
-  function applyUnits(){
-    const lang=getLang(); const S=STR[lang]||STR.no;
-    const u=getUnit();
-    $('unit').value=u;
-    $('lbl_D').textContent= u==='mm'? S.lblD_mm : S.lblD_in;
-    $('rangeText').textContent= u==='mm'? S.range_mm : S.range_in;
-
-    // parse current and convert to mm
-    const rawTxt = String($('D').value).replace(',','.');
-    const raw = parseFloat(rawTxt);
-    const mm = toMm(raw, u==='mm');
-    const mmSafe = Number.isFinite(mm) ? clampRangeMm(mm) : 760;
-
-    // set slider range text (visual only)
-    $('sliderD').min = u==='mm' ? 400 : (400/INCH).toFixed(2);
-    $('sliderD').max = u==='mm' ? 800 : (800/INCH).toFixed(2);
-
-    const showVal = fromMm(mmSafe, u==='mm');
-    $('D').value = u==='mm'? String(Math.round(showVal)) : fmtInch(showVal);
-    $('sliderD').value = u==='mm'? String(Math.round(showVal)) : fmtInch(showVal);
-  }
-
-  function Fdeg(v){const d=getDec(); return (d===0?Math.round(v):v.toFixed(d))+'°';}
-
   function render(){
-    const lang=getLang(), S=STR[lang]||STR.no;
-    const u=getUnit();
-    const raw = parseFloat(String($('D').value).replace(',','.'));
-    const status = $('statusMsg');
-    status.textContent='';
-
-    if(!Number.isFinite(raw)){ $('thetaTop').textContent='–'; status.textContent = (u==='mm')? S.out_mm : S.out_in; return; }
-
-    const DmmRaw = toMm(raw, u==='mm');
-    if(!Number.isFinite(DmmRaw)){ $('thetaTop').textContent='–'; status.textContent = (u==='mm')? S.out_mm : S.out_in; return; }
-
-    // Sync slider to input (clamped display)
-    const sMin = u==='mm'? 400 : (400/INCH);
-    const sMax = u==='mm'? 800 : (800/INCH);
-    const sVal = Math.min(sMax, Math.max(sMin, raw));
-    $('sliderD').value = String(sVal);
-
-    if(DmmRaw < 400 || DmmRaw > 800){
-      $('rangeText').classList.add('warn');
-      $('thetaTop').textContent='–';
-      status.textContent = (u==='mm') ? S.out_mm : S.out_in;
-      return;
-    } else {
-      $('rangeText').classList.remove('warn');
-      status.textContent='';
-    }
-
-    const deg=pchipEval(DmmRaw);
-    if(deg==null){ $('thetaTop').textContent='–'; status.textContent=(u==='mm') ? S.out_mm : S.out_in; }
-    else { $('thetaTop').textContent=Fdeg(deg); }
+    const D=parseFloat(String($('D').value).replace(',','.'));
+    if(!Number.isFinite(D)){ $('thetaTop').textContent='–'; return; }
+    $('sliderD').value=String(Math.max(400,Math.min(800,D)));
+    const deg=pchipEval(D);
+    if(deg==null){ $('rangeText').classList.add('warn'); $('thetaTop').textContent='–'; }
+    else { $('rangeText').classList.remove('warn'); $('thetaTop').textContent=Fdeg(deg); }
   }
 
   function openQR(){
@@ -327,34 +263,13 @@
   }
 
   document.addEventListener('DOMContentLoaded', ()=>{
-    $('lang').value=getLang(); applyLang(getLang());
+    const cur=getLang(); $('lang').value=cur; applyLang(cur);
     $('lang').addEventListener('change',(e)=>{ setLang(e.target.value); });
-    $('unit').value=getUnit(); applyUnits();
-    $('unit').addEventListener('change',(e)=>{ setUnit(e.target.value); });
-    $('decBtn').addEventListener('click',()=>{ setDec(getDec()===0?1:0) });
+    updateDecBtn();
+    $('decBtn').addEventListener('click',toggleDec);
     $('themeBtn').addEventListener('click',toggleTheme);
     $('D').addEventListener('input',render);
-    $('D').addEventListener('blur',()=>{
-      const u=getUnit();
-      const raw=parseFloat(String($('D').value).replace(',','.'));
-      if(!Number.isFinite(raw)) return;
-      const mm=toMm(raw, u==='mm');
-      const mmC=clampRangeMm(mm);
-      const show=fromMm(mmC, u==='mm');
-      $('D').value = u==='mm'? String(Math.round(show)) : (Math.round(show*100)/100).toFixed(2);
-      render();
-    });
-    $('sliderD').addEventListener('input',e=>{ $('D').value=String(e.target.value); render(); });
-    $('sliderD').addEventListener('change',()=>{
-      const u=getUnit();
-      const raw=parseFloat(String($('D').value).replace(',','.'));
-      if(!Number.isFinite(raw)) return;
-      const mm=toMm(raw, u==='mm');
-      const mmC=clampRangeMm(mm);
-      const show=fromMm(mmC, u==='mm');
-      $('D').value = u==='mm'? String(Math.round(show)) : (Math.round(show*100)/100).toFixed(2);
-      render();
-    });
+    $('sliderD').addEventListener('input',e=>{ $('D').value=e.target.value; render(); });
     $('qrBtn').addEventListener('click',openQR);
     $('qrClose').addEventListener('click',closeQR);
     $('copyUrl').addEventListener('click',copyUrl);
@@ -366,7 +281,7 @@
       location.href=CANONICAL;
     });
     render();
-    document.getElementById('ver').textContent='3.9.8';
+    document.getElementById('ver').textContent='3.9.7b';
   });
 
   if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
