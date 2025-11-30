@@ -220,7 +220,7 @@
       <section class="card">
         <h2>Fallkalkulator</h2>
         <p class="fall-info">
-          Legg inn verdi i ett av feltene. De andre oppdateres automatisk.
+          Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.
         </p>
 
         <div class="fall-grid">
@@ -228,28 +228,28 @@
           <div class="fall-field">
             <label for="fallPercent">Fall i prosent (%)</label>
             <small>Eksempel: 2 betyr 2 % fall</small>
-            <input id="fallPercent" type="number" step="0.001" inputmode="decimal" oninput="fallFromPercent()">
+            <input id="fallPercent" type="number" step="0.001" inputmode="decimal" onchange="fallFromPercent()">
           </div>
 
           <!-- Grader -->
           <div class="fall-field">
             <label for="fallDegrees">Fall i grader (°)</label>
             <small>Eksempel: 1.145 ≈ 2 % fall</small>
-            <input id="fallDegrees" type="number" step="0.001" inputmode="decimal" oninput="fallFromDegrees()">
+            <input id="fallDegrees" type="number" step="0.001" inputmode="decimal" onchange="fallFromDegrees()">
           </div>
 
           <!-- Forhold 1:X -->
           <div class="fall-field">
             <label for="fallRatio">Fallforhold (1 : X)</label>
             <small>Skriv X. Eksempel: 50 for 1:50</small>
-            <input id="fallRatio" type="text" inputmode="decimal" oninput="fallFromRatio()">
+            <input id="fallRatio" type="text" inputmode="decimal" onchange="fallFromRatio()">
           </div>
 
           <!-- Høyde pr m -->
           <div class="fall-field">
             <label for="fallRisePerM">Høydeforskjell pr meter (m/m)</label>
             <small>Eksempel: 0.02 betyr 2 cm pr meter</small>
-            <input id="fallRisePerM" type="number" step="0.0001" inputmode="decimal" oninput="fallFromRisePerM()">
+            <input id="fallRisePerM" type="number" step="0.0001" inputmode="decimal" onchange="fallFromRisePerM()">
           </div>
         </div>
 
