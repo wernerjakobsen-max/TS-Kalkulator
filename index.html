@@ -155,7 +155,7 @@
           <summary id="help_btn">Vis forklaring og illustrasjon</summary>
           <div id="help_text" class="muted" style="margin:8px 0 6px"></div>
           <div class="svgbox">
-            <!-- Hultafors-lignende tommestokk med ledd -->
+            <!-- Hultafors-lignende tommestokk med 200 mm ledd -->
             <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="100%">
               <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -188,9 +188,9 @@
                 <text x="10" y="116" font-size="12">Kant for avlesning</text>
               </g>
 
-              <!-- Tommestokk-gruppe, delt i 200 mm ledd -->
+              <!-- Tommestokk-gruppe, 200 mm + 200 mm ledd -->
               <g id="tsRoot" transform="translate(60,200)">
-                <!-- Fast 0–200 mm segment langs kanten til venstre -->
+                <!-- Fast 0–200 mm segment -->
                 <g id="segBase">
                   <rect x="-200" y="-10" width="200" height="20" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
                   <g stroke="#b99a4a">
@@ -203,7 +203,7 @@
                   <text x="-100" y="24" font-size="11" text-anchor="middle" fill="#7a642e">0–200 mm på kant</text>
                 </g>
 
-                <!-- 200 mm-ledd (knakkes først rundt 0-punktet) -->
+                <!-- 200 mm-ledd (vinkelen vi måler) -->
                 <g id="joint200">
                   <rect x="0" y="-10" width="200" height="20" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
                   <g stroke="#b99a4a">
@@ -217,28 +217,24 @@
                   <circle cx="0" cy="0" r="3" fill="#c9b36a"/>
                   <text x="90" y="-14" font-size="11" text-anchor="middle" fill="#7a642e">200 mm-ledd (θ)</text>
 
-                  <!-- 400 mm-ledd, hengslet i enden av 200 mm-leddet -->
+                  <!-- Ledd ved 400 mm-punktet, også 200 mm langt -->
                   <g id="joint400" transform="translate(200,0)">
-                    <rect x="0" y="-9" width="400" height="18" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
+                    <rect x="0" y="-9" width="200" height="18" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
                     <g stroke="#b99a4a">
                       <line x1="0"   y1="-9" x2="0"   y2="9"/>
                       <line x1="50"  y1="-7" x2="50"  y2="7"/>
                       <line x1="100" y1="-9" x2="100" y2="9"/>
                       <line x1="150" y1="-7" x2="150" y2="7"/>
                       <line x1="200" y1="-9" x2="200" y2="9"/>
-                      <line x1="250" y1="-7" x2="250" y2="7"/>
-                      <line x1="300" y1="-9" x2="300" y2="9"/>
-                      <line x1="350" y1="-7" x2="350" y2="7"/>
-                      <line x1="400" y1="-9" x2="400" y2="9"/>
                     </g>
                     <circle cx="0" cy="0" r="7" fill="#fff" stroke="#c9b36a"/>
                     <circle cx="0" cy="0" r="3" fill="#c9b36a"/>
-                    <text x="200" y="-13" font-size="11" text-anchor="middle" fill="#7a642e">400 mm-ledd (føler)</text>
+                    <text x="100" y="-13" font-size="11" text-anchor="middle" fill="#7a642e">ledd ved 400 mm-punkt</text>
                   </g>
                 </g>
               </g>
 
-              <!-- D-mål (prinsippskisse) -->
+              <!-- D-mål (langs kanten) -->
               <g>
                 <line x1="60" y1="250" x2="740" y2="250" stroke="#444" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
                 <line x1="60" y1="240" x2="60" y2="260" stroke="#444"/>
@@ -252,7 +248,7 @@
 
       <div class="footer muted">
         <div>© Stymparen</div>
-        <div id="ver">4.1.0</div>
+        <div id="ver">4.2.0</div>
       </div>
       <div class="small">
         Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -324,7 +320,7 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.1.0</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.0</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
@@ -345,19 +341,19 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.1.0";
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.0";
 
   /* Data for TS-kalkulator (som 3.9.7b) */
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
 
   const STR={
-    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk først 200 mm-leddet til ønsket vinkel (θ).","Knekk deretter 400 mm-leddet og bøy til 0-mm-hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200-mm-leddet står i vinkel θ. 400-mm-leddet fungerer som føler til 0-hjørnet treffer kanten. Avlest D langs kanten gir vinkel via kalibrert kurve.",toolChoice:"Velg kalkulator:",fall_title:"Fallkalkulator",fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",fall_percent_label:"Fall i prosent (%)",fall_percent_hint:"Eksempel: 2 betyr 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",fall_ratio_label:"Fallforhold (1 : X)",fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",fall_hl_label:"Høydeforskjell og lengde",fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."},
-    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","First bend the 200 mm section to the desired angle (θ).","Then bend the 400 mm section until the 0 mm corner meets the edge.","Read D in mm along the edge and enter it here – you get the angle.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: the 200 mm section is at angle θ. The 400 mm section acts as a feeler until the 0-corner meets the edge. The reading D along the edge gives the angle via a calibrated curve.",toolChoice:"Select calculator:",fall_title:"Slope calculator",fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",fall_percent_label:"Slope in percent (%)",fall_percent_hint:"Example: 2 means 2% slope",fall_deg_label:"Slope in degrees (°)",fall_deg_hint:"Example: 1.145 ≈ 2% slope",fall_ratio_label:"Slope ratio (1 : X)",fall_ratio_hint:"Type X. Example: 50 for 1:50",fall_hl_label:"Height difference and length",fall_hl_hint:"Use the same run. Choose units for both.",fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."},
-    sv:{app:"TS-kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.","Vik först 200 mm-ledet till önskad vinkel (θ).","Vik sedan 400 mm-ledet tills 0-mm-hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200-ledd i vinkel θ. 400-ledd som känner tills 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva.",toolChoice:"Välj kalkylator:",fall_title:"Fallkalkylator",fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",fall_percent_label:"Fall i procent (%)",fall_percent_hint:"Exempel: 2 betyder 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",fall_ratio_label:"Fallförhållande (1 : X)",fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",fall_hl_label:"Höjdskillnad och längd",fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."},
-    dk:{app:"TS-kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.","Bøj først 200 mm-leddet til ønsket vinkel (θ).","Bøj derefter 400 mm-leddet til 0-mm-hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200-led i vinkel θ. 400-led som føler til 0-hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve.",toolChoice:"Vælg lommeregner:",fall_title:"Fald-kalkulator",fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",fall_percent_label:"Fald i procent (%)",fall_percent_hint:"Eksempel: 2 betyder 2 % fald",fall_deg_label:"Fald i grader (°)",fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",fall_ratio_label:"Faldforhold (1 : X)",fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",fall_hl_label:"Højde-forskel og længde",fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."},
-    fi:{app:"TS-laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta ensin 200 mm osa haluttuun kulmaan (θ).","Taivuta sitten 400 mm osa, kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta.",toolChoice:"Valitse laskin:",fall_title:"Kaato-laskin",fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",fall_percent_label:"Kaato prosentteina (%)",fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",fall_deg_label:"Kaato asteina (°)",fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",fall_ratio_label:"Kaatosuhde (1 : X)",fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",fall_hl_label:"Korkeusero ja pituus",fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."},
-    de:{app:"TS-Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz-Anleitung",guide:["Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.","Dann 400-mm-Glied so biegen, bis die 0-mm-Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200-mm-Glied im Winkel θ. 400-mm-Glied als Fühler bis zur 0-Ecke. Ablesung D → Winkel über kalibrierte Kurve.",toolChoice:"Rechner wählen:",fall_title:"Gefälle-Rechner",fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",fall_percent_label:"Gefälle in Prozent (%)",fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",fall_deg_label:"Gefälle in Grad (°)",fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",fall_ratio_label:"Gefälle-Verhältnis (1 : X)",fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",fall_hl_label:"Höhenunterschied und Länge",fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."}
+    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk først 200 mm-leddet til ønsket vinkel (θ).","Knekk deretter leddet ved 400 mm-punktet til 0-mm-hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200-mm-leddet står i vinkel θ (det er denne vi finner). Leddet ved 400 mm-punktet bøyes slik at 0-hjørnet treffer kanten. Avlest D langs kanten gir vinkel via kalibrert kurve.",toolChoice:"Velg kalkulator:",fall_title:"Fallkalkulator",fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",fall_percent_label:"Fall i prosent (%)",fall_percent_hint:"Eksempel: 2 betyr 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",fall_ratio_label:"Fallforhold (1 : X)",fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",fall_hl_label:"Høydeforskjell og lengde",fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."},
+    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","First bend the 200 mm section to the desired angle (θ).","Then bend the joint at the 400 mm point until the 0 mm corner meets the edge.","Read D in mm along the edge and enter it here – you get the angle.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: the 200 mm section is at angle θ (this is what we measure). The joint at 400 mm is bent so that the 0-corner meets the edge. The reading D along the edge gives θ via a calibrated curve.",toolChoice:"Select calculator:",fall_title:"Slope calculator",fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",fall_percent_label:"Slope in percent (%)",fall_percent_hint:"Example: 2 means 2% slope",fall_deg_label:"Slope in degrees (°)",fall_deg_hint:"Example: 1.145 ≈ 2% slope",fall_ratio_label:"Slope ratio (1 : X)",fall_ratio_hint:"Type X. Example: 50 for 1:50",fall_hl_label:"Height difference and length",fall_hl_hint:"Use the same run. Choose units for both.",fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."},
+    sv:{app:"TS-kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.","Vik först 200 mm-ledet till önskad vinkel (θ).","Vik sedan leden vid 400 mm-punkten tills 0-mm-hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200-ledd i vinkel θ (det är denna vi mäter). Leddet vid 400 mm böjs så att 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva.",toolChoice:"Välj kalkylator:",fall_title:"Fallkalkylator",fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",fall_percent_label:"Fall i procent (%)",fall_percent_hint:"Exempel: 2 betyder 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",fall_ratio_label:"Fallförhållande (1 : X)",fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",fall_hl_label:"Höjdskillnad och längd",fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."},
+    dk:{app:"TS-kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.","Bøj først 200 mm-leddet til ønsket vinkel (θ).","Bøj derefter leddet ved 400 mm-punktet til 0-mm-hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200-led i vinkel θ (det er denne vi finder). Leddet ved 400 mm bøjes, så 0-hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve.",toolChoice:"Vælg lommeregner:",fall_title:"Fald-kalkulator",fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",fall_percent_label:"Fald i procent (%)",fall_percent_hint:"Eksempel: 2 betyder 2 % fald",fall_deg_label:"Fald i grader (°)",fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",fall_ratio_label:"Faldforhold (1 : X)",fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",fall_hl_label:"Højde-forskel og længde",fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."},
+    fi:{app:"TS-laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta ensin 200 mm osa haluttuun kulmaan (θ).","Taivuta sitten 400 mm kohdan nivel, kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ (tätä etsimme). 400 mm kohdan niveltä taivutetaan kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta.",toolChoice:"Valitse laskin:",fall_title:"Kaato-laskin",fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",fall_percent_label:"Kaato prosentteina (%)",fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",fall_deg_label:"Kaato asteina (°)",fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",fall_ratio_label:"Kaatosuhde (1 : X)",fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",fall_hl_label:"Korkeusero ja pituus",fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."},
+    de:{app:"TS-Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz-Anleitung",guide:["Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.","Dann das Glied bei 400 mm so biegen, bis die 0-mm-Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200-mm-Glied im Winkel θ (dieser Winkel wird berechnet). Das Glied bei 400 mm wird gebogen, bis die 0-Ecke die Kante berührt. Ablesung D → Winkel über kalibrierte Kurve.",toolChoice:"Rechner wählen:",fall_title:"Gefälle-Rechner",fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",fall_percent_label:"Gefälle in Prozent (%)",fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",fall_deg_label:"Gefälle in Grad (°)",fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",fall_ratio_label:"Gefälle-Verhältnis (1 : X)",fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",fall_hl_label:"Höhenunterschied und Länge",fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."}
   };
 
   function pchipSlopes(x,y){
@@ -462,92 +458,55 @@
     if(fallFooter)fallFooter.textContent=S.fall_footer||"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
   }
 
-  /* Dynamisk illustrasjon – 200 mm + 200 mm ledd.
-   200-leddet står i vinkel θ, 400-leddet speiles (-θ),
-   og hele tommestokken skyves langs kanten slik at 0-punktet
-   havner på D-målet (f.eks. 678 mm). */
-function updateIllustration(deg){
-  const tsRoot  = $('tsRoot');
-  const joint200 = $('joint200');
-  const joint400 = $('joint400');
-  const Dinput  = $('D');
+  /* Dynamisk illustrasjon – to 200 mm ledd:
+     - 200 mm-ledd står i vinkel θ (graden fra kalkulatoren)
+     - leddet ved 400 mm-punktet speiles slik at spissen havner på D
+     - hele tommestokken skyves langs kanten slik at 0-punktet treffer D */
+  function updateIllustration(deg){
+    const tsRoot=$('tsRoot');
+    const joint200=$('joint200');
+    const joint400=$('joint400');
+    const Dinput=$('D');
+    if(!tsRoot || !joint200 || !joint400 || !Dinput) return;
 
-  if (!tsRoot || !joint200 || !joint400 || !Dinput) return;
+    const Dval=parseFloat(String(Dinput.value).replace(',','.'));
 
-  // Hvis vi ikke har gyldig vinkel / D -> fallback-posisjon
-  const Dval = parseFloat(String(Dinput.value).replace(',','.'));
-  if (!Number.isFinite(deg) || !Number.isFinite(Dval)){
-    joint200.setAttribute('transform','rotate(-65)');
-    joint400.setAttribute('transform','translate(200,0) rotate(130)');
-    tsRoot.setAttribute('transform','translate(60,200)');
-    return;
-  }
-
-  // 1) 200 mm-leddet:
-  //    Matematisk vinkel θ over kanten -> i SVG blir det -θ (y nedover).
-  joint200.setAttribute('transform', 'rotate(' + (-deg) + ')');
-
-  // 2) 400 mm-leddet:
-  //    Matematisk skal det stå i vinkel -θ (speil).
-  //    joint400 ligger inne i joint200, så vi må rotere relativt.
-  //    Absolutt vinkel for 400: +deg i SVG (nedover).
-  //    => relativ rotasjon = (+deg) - (-deg) = 2*deg
-  joint400.setAttribute(
-    'transform',
-    'translate(200,0) rotate(' + (2*deg) + ')'
-  );
-
-  // 3) Skyv hele tommestokken langs kanten slik at 0-punktet (tippen)
-  //    havner ved D mm på baselinja.
-  //
-  //    I lokale tsRoot-koordinater:
-  //      - Hinge (mellom base og 200-ledd) er i (0,0).
-  //      - 200-ledd går 200 mm i vinkel θ.
-  //      - 400-ledd går 200 mm i vinkel -θ.
-  //    => tippen (0-punktet) havner på x = 400 * cos(θ), y = 0.
-  const thetaRad = deg * Math.PI / 180;
-  const tipLocalX = 400 * Math.cos(thetaRad); // fra hengselet
-
-  // Vi vil at tippen skal være på D mm langs basen.
-  // baseRuler er plassert med translate(60,200), så 0 mm er ved x=60.
-  // tsRoot er også translate(60,200) + en ekstra forskyvning Tx:
-  //   x_tip_skjerm = 60 + Tx + tipLocalX   skal bli  60 + Dval
-  //   => Tx = Dval - tipLocalX
-  const Tx = Dval - tipLocalX;
-
-  tsRoot.setAttribute(
-    'transform',
-    'translate(' + (60 + Tx) + ',200)'
-  );
-}
-
-
-    // 3) Vektor fra 200-tip til D
-    const vx = Cx - P1x;
-    const vy = Cy - P1y;
-    const dist = Math.sqrt(vx*vx + vy*vy);
-    if(!(dist > 1e-3)){
-      joint400.setAttribute('transform','translate(200,0) rotate(40) scale(1,1)');
+    if(!Number.isFinite(deg) || !Number.isFinite(Dval)){
+      // Fallback-posisjon
+      tsRoot.setAttribute('transform','translate(60,200)');
+      joint200.setAttribute('transform','rotate(-65)');
+      joint400.setAttribute('transform','translate(200,0) rotate(130)');
       return;
     }
 
-    // 4) Global vinkel for linjen P1 -> D
-    const alpha = Math.atan2(vy,vx);        // rad
-    const phi_rad = alpha - a200_rad;       // relativ knekk i leddet
-    const phi_deg = phi_rad * 180 / Math.PI;
+    // 1) 200 mm-leddet: vinkel θ opp fra kanten → -θ i SVG
+    const thetaDeg = deg;
+    const thetaSvgDeg = -thetaDeg;
+    const thetaRad = thetaDeg * Math.PI / 180;
 
-    // 5) Skaler lengde på 400-leddet langs x slik at ytterenden treffer D
-    const L2_nominal = 400;
-    const scale = dist / L2_nominal;
+    joint200.setAttribute('transform','rotate('+thetaSvgDeg+')');
 
-    // 6) Transform for 400-leddet:
-    //    - translate(200,0): ut langs 200-leddet
-    //    - rotate(phi_deg): knekk relativt til 200-leddet
-    //    - scale(scale,1): strekk/krymp så tip havner i D
-    joint400.setAttribute(
-      'transform',
-      'translate(200,0) rotate('+phi_deg+') scale('+scale+',1)'
-    );
+    // 2) Leddet ved 400 mm-punktet:
+    //    Vi velger en symmetrisk løsning: absolut vinkel = +θ i SVG,
+    //    slik at spissen ender på linjen igjen (y=0).
+    //    Parent (joint200) er -θ, så relativ rotasjon = (+θ) - (-θ) = 2θ.
+    const rel400Deg = 2*thetaDeg;
+    joint400.setAttribute('transform','translate(200,0) rotate('+rel400Deg+')');
+
+    // 3) Hvor er 0-punktet i lokale tsRoot-koordinater?
+    //    To ledd à 200 mm, med absolutte vinkler -θ og +θ (i SVG-verden).
+    //    I matematisk (opp = +y) vinkel:
+    //      første ledd: +θ, andre ledd: -θ
+    //    Dermed blir x-koordinaten til spissen:
+    //      x_tip_local = 200 cos θ + 200 cos θ = 400 cos θ
+    const tipLocalX = 400 * Math.cos(thetaRad);
+
+    // 4) Vi vil at spissen skal havne på D mm langs kanten (baseRuler).
+    //    baseRuler sin 0 ligger på x=60. Vi setter tsRoot-translate slik at:
+    //      60 + Tx + x_tip_local = 60 + D  =>  Tx = D - x_tip_local
+    const Tx = Dval - tipLocalX;
+
+    tsRoot.setAttribute('transform','translate('+(60+Tx)+',200)');
   }
 
   function render(){
@@ -700,7 +659,7 @@ function updateIllustration(deg){
     });
 
     render();
-    const ver=$('ver'); if(ver)ver.textContent='4.1.0';
+    const ver=$('ver'); if(ver)ver.textContent='4.2.0';
   });
 
   if('serviceWorker' in navigator){
