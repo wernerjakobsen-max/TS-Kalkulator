@@ -7,17 +7,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <script>
-    (function(){
-      try{
-        var s=localStorage.getItem('ts_theme')||'auto';
-        document.documentElement.setAttribute('data-theme',s);
-        var tc=document.getElementById('themeColor');
-        var d=s==='dark'||(s==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if(tc)tc.setAttribute('content',d?'#0b1220':'#00FFFF');
-      }catch(e){}
-    })();
-  </script>
+  <script>(function(){try{var s=localStorage.getItem('ts_theme')||'auto';document.documentElement.setAttribute('data-theme',s);var tc=document.getElementById('themeColor');var d=s==='dark'||(s==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(tc)tc.setAttribute('content',d?'#0b1220':'#00FFFF');}catch(e){}})();</script>
   <style>
     :root{--bg:#f8fafc;--card:#fff;--muted:#475569;--text:#0f172a;--ring:#e2e8f0;--brand:#00FFFF;--brandText:#041b1b;}
     @media (prefers-color-scheme:dark){
@@ -165,7 +155,7 @@
           <summary id="help_btn">Vis forklaring og illustrasjon</summary>
           <div id="help_text" class="muted" style="margin:8px 0 6px"></div>
           <div class="svgbox">
-            <!-- Technical SVG med Hultafors-lignende tommestokk og ledd -->
+            <!-- Hultafors-lignende tommestokk med ledd -->
             <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="100%">
               <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -176,7 +166,7 @@
                 </marker>
               </defs>
 
-              <!-- Kant for avlesning (vegg/platekant) -->
+              <!-- Kant for avlesning -->
               <g id="baseRuler" transform="translate(60,200)">
                 <rect x="0" y="-10" width="820" height="20" rx="4" fill="#e6e6e6" stroke="#888" filter="url(#shadow)"/>
                 <g fill="#666">
@@ -198,12 +188,11 @@
                 <text x="10" y="116" font-size="12">Kant for avlesning</text>
               </g>
 
-              <!-- Hultafors-lignende tommestokk, nullpunkt i lesekanten -->
+              <!-- Tommestokk-gruppe, delt i 200 mm ledd -->
               <g id="tsRoot" transform="translate(60,200)">
-                <!-- Fast 0–200 mm segment langs kanten (til venstre) -->
+                <!-- Fast 0–200 mm segment langs kanten til venstre -->
                 <g id="segBase">
                   <rect x="-200" y="-10" width="200" height="20" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
-                  <!-- litt graderinger -->
                   <g stroke="#b99a4a">
                     <line x1="-200" y1="-10" x2="-200" y2="10"/>
                     <line x1="-150" y1="-8"  x2="-150" y2="8"/>
@@ -214,7 +203,7 @@
                   <text x="-100" y="24" font-size="11" text-anchor="middle" fill="#7a642e">0–200 mm på kant</text>
                 </g>
 
-                <!-- 200 mm-ledd (knekker først rundt 0-punktet) -->
+                <!-- 200 mm-ledd (knakkes først rundt 0-punktet) -->
                 <g id="joint200">
                   <rect x="0" y="-10" width="200" height="20" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
                   <g stroke="#b99a4a">
@@ -263,7 +252,7 @@
 
       <div class="footer muted">
         <div>© Stymparen</div>
-        <div id="ver">4.0.1</div>
+        <div id="ver">4.1.0</div>
       </div>
       <div class="small">
         Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -335,7 +324,7 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.1</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.1.0</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
@@ -356,188 +345,19 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.1";
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.1.0";
 
-  /* Data for TS-kalkulator */
+  /* Data for TS-kalkulator (som 3.9.7b) */
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
 
   const STR={
-    no:{
-      app:"TS-kalkulator",
-      sub:"Avlest vinkel på tommestokk omregnet til grader",
-      lblD:"Avlest D (mm)",
-      range:"måleområde 400-800mm",
-      angle:"Vinkel (grader)",
-      guide_title:"Bruksanvisning (kort)",
-      guide:[
-        "Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.",
-        "Knekk først 200 mm-leddet til ønsket vinkel (θ).",
-        "Knekk deretter 400 mm-leddet og bøy til 0-mm-hjørnet treffer kanten.",
-        "Les av mm langs kanten. Skriv inn her – du får graden.",
-        "Gyldig område: 400–800 mm (400≈0°, 800≈180°)."
-      ],
-      help_btn:"Vis forklaring og illustrasjon",
-      help_text:"Prinsipp: 200-mm-leddet står i vinkel θ. 400-mm-leddet fungerer som føler til 0-hjørnet treffer kanten. Avlest D langs kanten gir vinkel via kalibrert kurve.",
-      toolChoice:"Velg kalkulator:",
-      /* Fallkalkulator-tekst */
-      fall_title:"Fallkalkulator",
-      fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",
-      fall_percent_label:"Fall i prosent (%)",
-      fall_percent_hint:"Eksempel: 2 betyr 2 % fall",
-      fall_deg_label:"Fall i grader (°)",
-      fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",
-      fall_ratio_label:"Fallforhold (1 : X)",
-      fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
-      fall_hl_label:"Høydeforskjell og lengde",
-      fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",
-      fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."
-    },
-    en:{
-      app:"TS Calculator",
-      sub:"Angle from folding ruler reading (mm → degrees)",
-      lblD:"Reading D (mm)",
-      range:"measuring range 400–800 mm",
-      angle:"Angle (degrees)",
-      guide_title:"Quick instructions",
-      guide:[
-        "Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.",
-        "First bend the 200 mm section to the desired angle (θ).",
-        "Then bend the 400 mm section until the 0 mm corner meets the edge.",
-        "Read D in mm along the edge and enter it here – you get the angle.",
-        "Valid range: 400–800 mm (400≈0°, 800≈180°)."
-      ],
-      help_btn:"Show explanation and illustration",
-      help_text:"Principle: the 200 mm section is at angle θ. The 400 mm section acts as a feeler until the 0-corner meets the edge. The reading D along the edge gives the angle via a calibrated curve.",
-      toolChoice:"Select calculator:",
-      fall_title:"Slope calculator",
-      fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",
-      fall_percent_label:"Slope in percent (%)",
-      fall_percent_hint:"Example: 2 means 2% slope",
-      fall_deg_label:"Slope in degrees (°)",
-      fall_deg_hint:"Example: 1.145 ≈ 2% slope",
-      fall_ratio_label:"Slope ratio (1 : X)",
-      fall_ratio_hint:"Type X. Example: 50 for 1:50",
-      fall_hl_label:"Height difference and length",
-      fall_hl_hint:"Use the same run. Choose units for both.",
-      fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."
-    },
-    sv:{
-      app:"TS-kalkylator",
-      sub:"Avläst vinkel på tumstock omräknad till grader",
-      lblD:"Avläst D (mm)",
-      range:"mätområde 400–800 mm",
-      angle:"Vinkel (grader)",
-      guide_title:"Snabbguide",
-      guide:[
-        "Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.",
-        "Vik först 200 mm-ledet till önskad vinkel (θ).",
-        "Vik sedan 400 mm-ledet tills 0-mm-hörnet möter kanten.",
-        "Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.",
-        "Giltigt område: 400–800 mm (400≈0°, 800≈180°)."
-      ],
-      help_btn:"Visa förklaring och illustration",
-      help_text:"Princip: 200-ledd i vinkel θ. 400-ledd som känner tills 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva.",
-      toolChoice:"Välj kalkylator:",
-      fall_title:"Fallkalkylator",
-      fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",
-      fall_percent_label:"Fall i procent (%)",
-      fall_percent_hint:"Exempel: 2 betyder 2 % fall",
-      fall_deg_label:"Fall i grader (°)",
-      fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",
-      fall_ratio_label:"Fallförhållande (1 : X)",
-      fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",
-      fall_hl_label:"Höjdskillnad och längd",
-      fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",
-      fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."
-    },
-    dk:{
-      app:"TS-kalkulator",
-      sub:"Aflæst vinkel på tommestok omregnet til grader",
-      lblD:"Aflæst D (mm)",
-      range:"måleområde 400–800 mm",
-      angle:"Vinkel (grader)",
-      guide_title:"Kort vejledning",
-      guide:[
-        "Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.",
-        "Bøj først 200 mm-leddet til ønsket vinkel (θ).",
-        "Bøj derefter 400 mm-leddet til 0-mm-hjørnet møder kanten.",
-        "Aflæs i mm langs kanten og indtast her – du får vinklen.",
-        "Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."
-      ],
-      help_btn:"Vis forklaring og illustration",
-      help_text:"Princip: 200-led i vinkel θ. 400-led som føler til 0-hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve.",
-      toolChoice:"Vælg lommeregner:",
-      fall_title:"Fald-kalkulator",
-      fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",
-      fall_percent_label:"Fald i procent (%)",
-      fall_percent_hint:"Eksempel: 2 betyder 2 % fald",
-      fall_deg_label:"Fald i grader (°)",
-      fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",
-      fall_ratio_label:"Faldforhold (1 : X)",
-      fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",
-      fall_hl_label:"Højde-forskel og længde",
-      fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",
-      fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."
-    },
-    fi:{
-      app:"TS-laskin",
-      sub:"Taittomitan lukema muunnettuna asteiksi",
-      lblD:"Lukema D (mm)",
-      range:"mittausalue 400–800 mm",
-      angle:"Kulma (astetta)",
-      guide_title:"Pikaohje",
-      guide:[
-        "Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.",
-        "Taivuta ensin 200 mm osa haluttuun kulmaan (θ).",
-        "Taivuta sitten 400 mm osa, kunnes 0 mm kulma osuu reunaan.",
-        "Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.",
-        "Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."
-      ],
-      help_btn:"Näytä selitys ja kuva",
-      help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta.",
-      toolChoice:"Valitse laskin:",
-      fall_title:"Kaato-laskin",
-      fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",
-      fall_percent_label:"Kaato prosentteina (%)",
-      fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",
-      fall_deg_label:"Kaato asteina (°)",
-      fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",
-      fall_ratio_label:"Kaatosuhde (1 : X)",
-      fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",
-      fall_hl_label:"Korkeusero ja pituus",
-      fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",
-      fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."
-    },
-    de:{
-      app:"TS-Rechner",
-      sub:"Abgelesener Winkel am Gliedermaßstab in Grad",
-      lblD:"Ablesung D (mm)",
-      range:"Messbereich 400–800 mm",
-      angle:"Winkel (Grad)",
-      guide_title:"Kurz-Anleitung",
-      guide:[
-        "Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.",
-        "Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.",
-        "Dann 400-mm-Glied so biegen, bis die 0-mm-Ecke die Kante trifft.",
-        "In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.",
-        "Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."
-      ],
-      help_btn:"Erklärung und Skizze anzeigen",
-      help_text:"Prinzip: 200-mm-Glied im Winkel θ. 400-mm-Glied als Fühler bis zur 0-Ecke. Ablesung D → Winkel über kalibrierte Kurve.",
-      toolChoice:"Rechner wählen:",
-      fall_title:"Gefälle-Rechner",
-      fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",
-      fall_percent_label:"Gefälle in Prozent (%)",
-      fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",
-      fall_deg_label:"Gefälle in Grad (°)",
-      fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",
-      fall_ratio_label:"Gefälle-Verhältnis (1 : X)",
-      fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",
-      fall_hl_label:"Höhenunterschied und Länge",
-      fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",
-      fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."
-    }
+    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk først 200 mm-leddet til ønsket vinkel (θ).","Knekk deretter 400 mm-leddet og bøy til 0-mm-hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200-mm-leddet står i vinkel θ. 400-mm-leddet fungerer som føler til 0-hjørnet treffer kanten. Avlest D langs kanten gir vinkel via kalibrert kurve.",toolChoice:"Velg kalkulator:",fall_title:"Fallkalkulator",fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",fall_percent_label:"Fall i prosent (%)",fall_percent_hint:"Eksempel: 2 betyr 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",fall_ratio_label:"Fallforhold (1 : X)",fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",fall_hl_label:"Høydeforskjell og lengde",fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."},
+    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","First bend the 200 mm section to the desired angle (θ).","Then bend the 400 mm section until the 0 mm corner meets the edge.","Read D in mm along the edge and enter it here – you get the angle.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: the 200 mm section is at angle θ. The 400 mm section acts as a feeler until the 0-corner meets the edge. The reading D along the edge gives the angle via a calibrated curve.",toolChoice:"Select calculator:",fall_title:"Slope calculator",fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",fall_percent_label:"Slope in percent (%)",fall_percent_hint:"Example: 2 means 2% slope",fall_deg_label:"Slope in degrees (°)",fall_deg_hint:"Example: 1.145 ≈ 2% slope",fall_ratio_label:"Slope ratio (1 : X)",fall_ratio_hint:"Type X. Example: 50 for 1:50",fall_hl_label:"Height difference and length",fall_hl_hint:"Use the same run. Choose units for both.",fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."},
+    sv:{app:"TS-kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.","Vik först 200 mm-ledet till önskad vinkel (θ).","Vik sedan 400 mm-ledet tills 0-mm-hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200-ledd i vinkel θ. 400-ledd som känner tills 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva.",toolChoice:"Välj kalkylator:",fall_title:"Fallkalkylator",fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",fall_percent_label:"Fall i procent (%)",fall_percent_hint:"Exempel: 2 betyder 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",fall_ratio_label:"Fallförhållande (1 : X)",fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",fall_hl_label:"Höjdskillnad och längd",fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."},
+    dk:{app:"TS-kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.","Bøj først 200 mm-leddet til ønsket vinkel (θ).","Bøj derefter 400 mm-leddet til 0-mm-hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200-led i vinkel θ. 400-led som føler til 0-hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve.",toolChoice:"Vælg lommeregner:",fall_title:"Fald-kalkulator",fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",fall_percent_label:"Fald i procent (%)",fall_percent_hint:"Eksempel: 2 betyder 2 % fald",fall_deg_label:"Fald i grader (°)",fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",fall_ratio_label:"Faldforhold (1 : X)",fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",fall_hl_label:"Højde-forskel og længde",fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."},
+    fi:{app:"TS-laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta ensin 200 mm osa haluttuun kulmaan (θ).","Taivuta sitten 400 mm osa, kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta.",toolChoice:"Valitse laskin:",fall_title:"Kaato-laskin",fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",fall_percent_label:"Kaato prosentteina (%)",fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",fall_deg_label:"Kaato asteina (°)",fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",fall_ratio_label:"Kaatosuhde (1 : X)",fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",fall_hl_label:"Korkeusero ja pituus",fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."},
+    de:{app:"TS-Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz-Anleitung",guide:["Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.","Dann 400-mm-Glied so biegen, bis die 0-mm-Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200-mm-Glied im Winkel θ. 400-mm-Glied als Fühler bis zur 0-Ecke. Ablesung D → Winkel über kalibrierte Kurve.",toolChoice:"Rechner wählen:",fall_title:"Gefälle-Rechner",fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",fall_percent_label:"Gefälle in Prozent (%)",fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",fall_deg_label:"Gefälle in Grad (°)",fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",fall_ratio_label:"Gefälle-Verhältnis (1 : X)",fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",fall_hl_label:"Höhenunterschied und Länge",fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."}
   };
 
   function pchipSlopes(x,y){
@@ -546,37 +366,23 @@
     const m=new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
     for(let i=1;i<n-1;i++){
       if(d[i-1]*d[i]<=0) m[i]=0;
-      else{
-        const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1];
-        m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);
-      }
+      else {const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1]; m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);}
     }
     for(let i=0;i<n-1;i++){
       if(d[i]===0){m[i]=0; m[i+1]=0;}
-      else{
+      else {
         const a=m[i]/d[i],b=m[i+1]/d[i],s=a*a+b*b;
-        if(s>9){
-          const t=3/Math.sqrt(s);
-          m[i]=t*a*d[i]; m[i+1]=t*b*d[i];
-        }
+        if(s>9){const t=3/Math.sqrt(s); m[i]=t*a*d[i]; m[i+1]=t*b*d[i];}
       }
     }
     return m;
   }
   const M=pchipSlopes(X,Y);
   function pchipEval(xq){
-    const n=X.length;
-    if(xq<X[0]||xq>X[n-1])return null;
-    let i=0,j=n-1;
-    while(j-i>1){
-      const k=(i+j)>>1;
-      if(X[k]<=xq)i=k; else j=k;
-    }
+    const n=X.length; if(xq<X[0]||xq>X[n-1])return null;
+    let i=0,j=n-1; while(j-i>1){const k=(i+j)>>1; if(X[k]<=xq)i=k; else j=k;}
     const h=X[i+1]-X[i],t=(xq-X[i])/h;
-    const h00=(1+2*t)*(1-t)*(1-t),
-          h10=t*(1-t)*(1-t),
-          h01=t*t*(3-2*t),
-          h11=t*t*(t-1);
+    const h00=(1+2*t)*(1-t)*(1-t),h10=t*(1-t)*(1-t),h01=t*t*(3-2*t),h11=t*t*(t-1);
     return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
   }
 
@@ -607,26 +413,15 @@
     updateDecBtn(); render();
   }
   function toggleDec(){setDec(getDec()===0?1:0);}
-  function updateDecBtn(){
-    const b=$('decBtn'); if(b)b.textContent=(getDec()===0?'0 des':'1 des');
-  }
-  function Fdeg(v){
-    const d=getDec();
-    return (d===0?Math.round(v):v.toFixed(d))+'°';
-  }
+  function updateDecBtn(){ const b=$('decBtn'); if(b)b.textContent=(getDec()===0?'0 des':'1 des'); }
+  function Fdeg(v){const d=getDec(); return (d===0?Math.round(v):v.toFixed(d))+'°';}
 
   function applyLang(c){
     const S=(STR[c]||STR.no);
     document.title = S.app || "TS-kalkulator";
-    const h_sub=$('h_sub'),
-          lbl_D=$('lbl_D'),
-          rangeText=$('rangeText'),
-          lbl_angle=$('lbl_angle'),
-          guide_title=$('guide_title'),
-          guide_list=$('guide_list'),
-          help_btn=$('help_btn'),
-          help_text=$('help_text'),
-          toolChoice=$('lbl_toolChoice');
+    const h_sub=$('h_sub'),lbl_D=$('lbl_D'),rangeText=$('rangeText'),lbl_angle=$('lbl_angle'),
+          guide_title=$('guide_title'),guide_list=$('guide_list'),
+          help_btn=$('help_btn'),help_text=$('help_text'),toolChoice=$('lbl_toolChoice');
 
     if(h_sub)h_sub.textContent=S.sub;
     if(lbl_D)lbl_D.textContent=S.lblD;
@@ -635,9 +430,7 @@
     if(guide_title)guide_title.textContent=S.guide_title;
     if(guide_list){
       guide_list.innerHTML='';
-      (S.guide||[]).forEach(t=>{
-        const li=document.createElement('li'); li.textContent=t; guide_list.appendChild(li);
-      });
+      (S.guide||[]).forEach(t=>{const li=document.createElement('li'); li.textContent=t; guide_list.appendChild(li);});
     }
     if(help_btn)help_btn.textContent=S.help_btn||"";
     if(help_text)help_text.textContent=S.help_text||"";
@@ -669,34 +462,72 @@
     if(fallFooter)fallFooter.textContent=S.fall_footer||"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
   }
 
-  /* Dynamisk illustrasjon – knekk 200 mm, så 400 mm */
+  /* Dynamisk illustrasjon – 0-punkt på kant, 200mm i vinkel θ, 400mm tip treffer D */
   function updateIllustration(deg){
     const joint200=$('joint200');
     const joint400=$('joint400');
     if(!joint200 || !joint400) return;
 
+    // Fallback-posisjon
     if(!isFinite(deg)){
-      // fallback: en illustrativ standard-posisjon
       joint200.setAttribute('transform','rotate(-65)');
-      joint400.setAttribute('transform','translate(200,0) rotate(40)');
+      joint400.setAttribute('transform','translate(200,0) rotate(40) scale(1,1)');
       return;
     }
 
-    // 200 mm-leddet knekker først rundt nullpunktet
-    const a200 = -deg;        // SVG: negativ = oppover
-    joint200.setAttribute('transform','rotate('+a200+')');
+    // 1) 200 mm-leddet: står i vinkelen θ (negativ = oppover i SVG)
+    const a200_deg = -deg;
+    const a200_rad = a200_deg * Math.PI / 180;
+    joint200.setAttribute('transform','rotate('+a200_deg+')');
 
-    // 400 mm-leddet knekker etterpå ved 200 mm-leddet
-    // Vi bruker samme "følelse" som før: total vinkel ≈ -0.4 * deg
-    const a400_total = -deg*0.4;
-    const phi = a400_total - a200; // relativ vinkel i joint400
-    joint400.setAttribute('transform','translate(200,0) rotate('+phi+')');
+    // 2) Geometri:
+    //    0-punkt: (0,0)
+    //    200-tip: P1
+    const L1 = 200; // 200 mm "tegnet lengde"
+    const P1x = L1 * Math.cos(a200_rad);
+    const P1y = L1 * Math.sin(a200_rad);
+
+    //    Kantpunkt D langs kanten: (D,0)
+    const Draw = String($('D').value).replace(',','.');
+    const Dval = parseFloat(Draw);
+    if(!isFinite(Dval)){
+      joint400.setAttribute('transform','translate(200,0) rotate(40) scale(1,1)');
+      return;
+    }
+    const Cx = Dval;
+    const Cy = 0;
+
+    // 3) Vektor fra 200-tip til D
+    const vx = Cx - P1x;
+    const vy = Cy - P1y;
+    const dist = Math.sqrt(vx*vx + vy*vy);
+    if(!(dist > 1e-3)){
+      joint400.setAttribute('transform','translate(200,0) rotate(40) scale(1,1)');
+      return;
+    }
+
+    // 4) Global vinkel for linjen P1 -> D
+    const alpha = Math.atan2(vy,vx);        // rad
+    const phi_rad = alpha - a200_rad;       // relativ knekk i leddet
+    const phi_deg = phi_rad * 180 / Math.PI;
+
+    // 5) Skaler lengde på 400-leddet langs x slik at ytterenden treffer D
+    const L2_nominal = 400;
+    const scale = dist / L2_nominal;
+
+    // 6) Transform for 400-leddet:
+    //    - translate(200,0): ut langs 200-leddet
+    //    - rotate(phi_deg): knekk relativt til 200-leddet
+    //    - scale(scale,1): strekk/krymp så tip havner i D
+    joint400.setAttribute(
+      'transform',
+      'translate(200,0) rotate('+phi_deg+') scale('+scale+',1)'
+    );
   }
 
   function render(){
-    const thetaTop=$('thetaTop'),rangeText=$('rangeText'),sliderD=$('sliderD');
-    if(!thetaTop||!rangeText||!sliderD)return;
-    const inp=$('D');
+    const thetaTop=$('thetaTop'),rangeText=$('rangeText'),sliderD=$('sliderD'),inp=$('D');
+    if(!thetaTop||!rangeText||!sliderD||!inp)return;
     const D=parseFloat(String(inp.value).replace(',','.'));
     if(!Number.isFinite(D)){
       thetaTop.textContent='–';
@@ -724,9 +555,7 @@
     if(a && img)a.href=img.src;
     if(modal)modal.style.display='flex';
   }
-  function closeQR(){
-    const m=$('qrModal'); if(m)m.style.display='none';
-  }
+  function closeQR(){const m=$('qrModal'); if(m)m.style.display='none';}
   function copyUrl(){
     if(!navigator.clipboard)return;
     navigator.clipboard.writeText(CANONICAL).then(()=>{
@@ -736,16 +565,9 @@
   }
 
   let deferredPrompt=null;
-  window.addEventListener('beforeinstallprompt',(e)=>{
-    e.preventDefault();
-    deferredPrompt=e;
-  });
+  window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;});
   async function tryInstall(){
-    if(deferredPrompt){
-      await deferredPrompt.prompt();
-      deferredPrompt=null;
-      return;
-    }
+    if(deferredPrompt){await deferredPrompt.prompt();deferredPrompt=null;return;}
     const m=$('instModal'); if(m)m.style.display='flex';
   }
 
@@ -753,78 +575,53 @@
   function switchTool(tool){
     const ts=$('tool-ts'),fall=$('tool-fall');
     if(!ts||!fall)return;
-    if(tool==='fall'){
-      ts.style.display='none';
-      fall.style.display='block';
-    }else{
-      ts.style.display='block';
-      fall.style.display='none';
-    }
+    if(tool==='fall'){ts.style.display='none';fall.style.display='block';}
+    else{ts.style.display='block';fall.style.display='none';}
   }
 
   /* Fallkalkulator – hjelpefunksjoner */
   function fallParseInput(id){
-    const el=$(id);
-    if(!el)return NaN;
-    let raw=el.value.trim();
-    if(!raw)return NaN;
+    const el=$(id); if(!el)return NaN;
+    let raw=el.value.trim(); if(!raw)return NaN;
     raw=raw.replace(",",".");
     return parseFloat(raw);
   }
   function fallSetNumber(id,value,decimals){
-    const el=$(id);
-    if(!el||!isFinite(value))return;
+    const el=$(id); if(!el||!isFinite(value))return;
     el.value=value.toFixed(decimals);
   }
   function fallSetText(id,value){
-    const el=$(id);
-    if(!el)return;
+    const el=$(id); if(!el)return;
     el.value=value;
   }
 
   /* Fallkalkulator – kjerne (stigning = høyde / lengde) */
   function fallUpdateAll(stigning){
     if(!isFinite(stigning)||stigning<0)return;
-
     fallSetNumber("fallPercent",stigning*100,3);
     fallSetNumber("fallDegrees",Math.atan(stigning)*180/Math.PI,3);
-
-    if(stigning===0){
-      fallSetText("fallRatio","∞");
-    }else{
+    if(stigning===0){fallSetText("fallRatio","∞");}
+    else{
       const ratio=1/stigning;
       fallSetText("fallRatio",ratio.toFixed(3).replace(/\.?0+$/,""));
     }
   }
 
   function fallFromPercent(){
-    const p=fallParseInput("fallPercent");
-    if(isNaN(p))return;
-    const s=p/100;
-    fallUpdateAll(s);
+    const p=fallParseInput("fallPercent"); if(isNaN(p))return;
+    const s=p/100; fallUpdateAll(s);
   }
   function fallFromDegrees(){
-    const d=fallParseInput("fallDegrees");
-    if(isNaN(d))return;
-    const s=Math.tan(d*Math.PI/180);
-    fallUpdateAll(s);
+    const d=fallParseInput("fallDegrees"); if(isNaN(d))return;
+    const s=Math.tan(d*Math.PI/180); fallUpdateAll(s);
   }
   function fallFromRatio(){
-    const el=$("fallRatio");
-    if(!el)return;
-    let raw=el.value.trim();
-    if(!raw)return;
-
-    if(raw.indexOf(":")>=0){
-      const parts=raw.split(":");
-      raw=parts[1]||parts[0];
-    }
+    const el=$("fallRatio"); if(!el)return;
+    let raw=el.value.trim(); if(!raw)return;
+    if(raw.indexOf(":")>=0){const parts=raw.split(":"); raw=parts[1]||parts[0];}
     raw=raw.replace(",",".");
-    const r=parseFloat(raw);
-    if(!isFinite(r)||r<=0)return;
-
-    const s=1/r;
-    fallUpdateAll(s);
+    const r=parseFloat(raw); if(!isFinite(r)||r<=0)return;
+    const s=1/r; fallUpdateAll(s);
   }
 
   function unitToMeters(value,unit){
@@ -838,37 +635,28 @@
   function fallFromHeightLength(){
     const hVal=fallParseInput("fallHeightVal");
     const LVal=fallParseInput("fallLengthVal");
-    const hUnitEl=$("fallHeightUnit");
-    const LUnitEl=$("fallLengthUnit");
+    const hUnitEl=$("fallHeightUnit"),LUnitEl=$("fallLengthUnit");
     const hUnit=hUnitEl?hUnitEl.value:"mm";
     const LUnit=LUnitEl?LUnitEl.value:"m";
-
     if(isNaN(hVal)||isNaN(LVal))return;
-
     const hM=unitToMeters(hVal,hUnit);
     const LM=unitToMeters(LVal,LUnit);
     if(!isFinite(hM)||!isFinite(LM)||LM<=0)return;
-
-    const s=hM/LM;
-    fallUpdateAll(s);
+    const s=hM/LM; fallUpdateAll(s);
   }
 
   document.addEventListener('DOMContentLoaded',()=>{
-    const langSel=$('lang');
-    const cur=getLang();
+    const langSel=$('lang'); const cur=getLang();
     if(langSel)langSel.value=cur;
     applyLang(cur);
-    if(langSel){
-      langSel.addEventListener('change',(e)=>{setLang(e.target.value);});
-    }
+    if(langSel){langSel.addEventListener('change',(e)=>{setLang(e.target.value);});}
     updateDecBtn();
 
     const decBtn=$('decBtn'); if(decBtn)decBtn.addEventListener('click',toggleDec);
     const themeBtn=$('themeBtn'); if(themeBtn)themeBtn.addEventListener('click',toggleTheme);
 
     const Dinput=$('D'); if(Dinput)Dinput.addEventListener('input',render);
-    const sliderD=$('sliderD');
-    if(sliderD)sliderD.addEventListener('input',e=>{Dinput.value=e.target.value;render();});
+    const sliderD=$('sliderD'); if(sliderD)sliderD.addEventListener('input',e=>{Dinput.value=e.target.value;render();});
 
     const qrBtn=$('qrBtn'); if(qrBtn)qrBtn.addEventListener('click',openQR);
     const qrClose=$('qrClose'); if(qrClose)qrClose.addEventListener('click',closeQR);
@@ -880,26 +668,18 @@
     const hardBtn=$('hardRefreshBtn');
     if(hardBtn)hardBtn.addEventListener('click', async ()=>{
       try{
-        if('caches' in window){
-          const names=await caches.keys();
-          await Promise.all(names.map(n=>caches.delete(n)));
-        }
-        if('serviceWorker' in navigator){
-          const regs=await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.map(r=>r.unregister()));
-        }
+        if('caches' in window){const names=await caches.keys(); await Promise.all(names.map(n=>caches.delete(n))); }
+        if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister()));}
       }catch(e){}
       location.href=CANONICAL;
     });
 
     render();
-    const ver=$('ver'); if(ver)ver.textContent='4.0.1';
+    const ver=$('ver'); if(ver)ver.textContent='4.1.0';
   });
 
   if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>{
-      navigator.serviceWorker.register('./sw.js');
-    });
+    window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js');});
   }
 </script>
 </body>
