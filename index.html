@@ -462,40 +462,65 @@
     if(fallFooter)fallFooter.textContent=S.fall_footer||"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
   }
 
-  /* Dynamisk illustrasjon – 0-punkt på kant, 200mm i vinkel θ, 400mm tip treffer D */
-  function updateIllustration(deg){
-    const joint200=$('joint200');
-    const joint400=$('joint400');
-    if(!joint200 || !joint400) return;
+  /* Dynamisk illustrasjon – 200 mm + 200 mm ledd.
+   200-leddet står i vinkel θ, 400-leddet speiles (-θ),
+   og hele tommestokken skyves langs kanten slik at 0-punktet
+   havner på D-målet (f.eks. 678 mm). */
+function updateIllustration(deg){
+  const tsRoot  = $('tsRoot');
+  const joint200 = $('joint200');
+  const joint400 = $('joint400');
+  const Dinput  = $('D');
 
-    // Fallback-posisjon
-    if(!isFinite(deg)){
-      joint200.setAttribute('transform','rotate(-65)');
-      joint400.setAttribute('transform','translate(200,0) rotate(40) scale(1,1)');
-      return;
-    }
+  if (!tsRoot || !joint200 || !joint400 || !Dinput) return;
 
-    // 1) 200 mm-leddet: står i vinkelen θ (negativ = oppover i SVG)
-    const a200_deg = -deg;
-    const a200_rad = a200_deg * Math.PI / 180;
-    joint200.setAttribute('transform','rotate('+a200_deg+')');
+  // Hvis vi ikke har gyldig vinkel / D -> fallback-posisjon
+  const Dval = parseFloat(String(Dinput.value).replace(',','.'));
+  if (!Number.isFinite(deg) || !Number.isFinite(Dval)){
+    joint200.setAttribute('transform','rotate(-65)');
+    joint400.setAttribute('transform','translate(200,0) rotate(130)');
+    tsRoot.setAttribute('transform','translate(60,200)');
+    return;
+  }
 
-    // 2) Geometri:
-    //    0-punkt: (0,0)
-    //    200-tip: P1
-    const L1 = 200; // 200 mm "tegnet lengde"
-    const P1x = L1 * Math.cos(a200_rad);
-    const P1y = L1 * Math.sin(a200_rad);
+  // 1) 200 mm-leddet:
+  //    Matematisk vinkel θ over kanten -> i SVG blir det -θ (y nedover).
+  joint200.setAttribute('transform', 'rotate(' + (-deg) + ')');
 
-    //    Kantpunkt D langs kanten: (D,0)
-    const Draw = String($('D').value).replace(',','.');
-    const Dval = parseFloat(Draw);
-    if(!isFinite(Dval)){
-      joint400.setAttribute('transform','translate(200,0) rotate(40) scale(1,1)');
-      return;
-    }
-    const Cx = Dval;
-    const Cy = 0;
+  // 2) 400 mm-leddet:
+  //    Matematisk skal det stå i vinkel -θ (speil).
+  //    joint400 ligger inne i joint200, så vi må rotere relativt.
+  //    Absolutt vinkel for 400: +deg i SVG (nedover).
+  //    => relativ rotasjon = (+deg) - (-deg) = 2*deg
+  joint400.setAttribute(
+    'transform',
+    'translate(200,0) rotate(' + (2*deg) + ')'
+  );
+
+  // 3) Skyv hele tommestokken langs kanten slik at 0-punktet (tippen)
+  //    havner ved D mm på baselinja.
+  //
+  //    I lokale tsRoot-koordinater:
+  //      - Hinge (mellom base og 200-ledd) er i (0,0).
+  //      - 200-ledd går 200 mm i vinkel θ.
+  //      - 400-ledd går 200 mm i vinkel -θ.
+  //    => tippen (0-punktet) havner på x = 400 * cos(θ), y = 0.
+  const thetaRad = deg * Math.PI / 180;
+  const tipLocalX = 400 * Math.cos(thetaRad); // fra hengselet
+
+  // Vi vil at tippen skal være på D mm langs basen.
+  // baseRuler er plassert med translate(60,200), så 0 mm er ved x=60.
+  // tsRoot er også translate(60,200) + en ekstra forskyvning Tx:
+  //   x_tip_skjerm = 60 + Tx + tipLocalX   skal bli  60 + Dval
+  //   => Tx = Dval - tipLocalX
+  const Tx = Dval - tipLocalX;
+
+  tsRoot.setAttribute(
+    'transform',
+    'translate(' + (60 + Tx) + ',200)'
+  );
+}
+
 
     // 3) Vektor fra 200-tip til D
     const vx = Cx - P1x;
