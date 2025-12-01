@@ -152,7 +152,7 @@
           <summary id="help_btn">Vis forklaring og illustrasjon</summary>
           <div id="help_text" class="muted" style="margin:8px 0 6px"></div>
           <div class="svgbox">
-            <!-- Technical SVG (horizontal base, 200 mm section points UP) -->
+            <!-- Technical SVG (dynamic arms) -->
             <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="100%">
               <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -163,7 +163,7 @@
                 </marker>
               </defs>
               <!-- Base ruler -->
-              <g transform="translate(60,200)">
+              <g id="baseRuler" transform="translate(60,200)">
                 <rect x="0" y="-10" width="820" height="20" rx="4" fill="#e6e6e6" stroke="#888" filter="url(#shadow)"/>
                 <g fill="#666">
                   <g>
@@ -208,38 +208,28 @@
                 <text x="10" y="116" font-size="12">Kant for avlesning</text>
               </g>
 
-              <!-- 200 mm section (points UP) -->
-              <g transform="translate(260,200) rotate(-65)">
+              <!-- 200 mm section (dynamic) -->
+              <g id="arm200" transform="translate(260,200)">
                 <rect x="0" y="-10" width="200" height="20" rx="4" fill="#ffe9cc" stroke="#c88" filter="url(#shadow)"/>
                 <circle cx="0" cy="0" r="8" fill="#fff" stroke="#c88"/>
                 <circle cx="0" cy="0" r="3" fill="#c88"/>
                 <text x="100" y="-14" font-size="12" text-anchor="middle">200 mm-ledd (θ)</text>
               </g>
-              <path d="M260,200 A70,70 0 0,1 305,160" fill="none" stroke="#c44" stroke-width="2"/>
-              <text x="305" y="164" font-size="12" fill="#c44">θ</text>
 
-              <!-- 400 mm feeler -->
-              <g transform="translate(460,200) rotate(-25)">
+              <!-- 400 mm feeler (dynamic-ish) -->
+              <g id="arm400" transform="translate(460,200)">
                 <rect x="0" y="-9" width="400" height="18" rx="4" fill="#dfe9ff" stroke="#88a" filter="url(#shadow)"/>
                 <circle cx="0" cy="0" r="8" fill="#fff" stroke="#88a"/>
                 <circle cx="0" cy="0" r="3" fill="#88a"/>
                 <text x="200" y="-14" font-size="12" text-anchor="middle">400 mm-ledd (følerarm)</text>
               </g>
 
-              <!-- Dimension D -->
+              <!-- Dimension D (generell forklaring) -->
               <g>
                 <line x1="60" y1="250" x2="740" y2="250" stroke="#444" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
                 <line x1="60" y1="240" x2="60" y2="260" stroke="#444"/>
                 <line x1="740" y1="240" x2="740" y2="260" stroke="#444"/>
                 <text x="400" y="268" font-size="13" text-anchor="middle">Avlest D (mm) langs kanten</text>
-              </g>
-
-              <!-- Landmarks -->
-              <g transform="translate(60,200)">
-                <line x1="678" y1="-10" x2="678" y2="30" stroke="#2c7" stroke-dasharray="4 3"/>
-                <text x="678" y="44" font-size="12" text-anchor="middle">≈678 mm ≈ 90°</text>
-                <text x="400" y="44" font-size="12" text-anchor="middle">400 mm ≈ 0°</text>
-                <text x="800" y="44" font-size="12" text-anchor="middle">800 mm ≈ 180°</text>
               </g>
             </svg>
           </div>
@@ -452,20 +442,48 @@
     if(help_text)help_text.textContent=S.help_text||"";
   }
 
+  /* Dynamisk illustrasjon */
+  function updateIllustration(deg){
+    const arm200=$('arm200');
+    const arm400=$('arm400');
+    if(!arm200 || !arm400) return;
+
+    if(!isFinite(deg)){
+      // fallback til original posisjon
+      arm200.setAttribute('transform','translate(260,200) rotate(-65)');
+      arm400.setAttribute('transform','translate(460,200) rotate(-25)');
+      return;
+    }
+
+    // 200-ledd følger vinkelen (negativ = oppover, pga SVG-koordinater)
+    const a200 = -deg;
+    arm200.setAttribute('transform','translate(260,200) rotate('+a200+')');
+
+    // 400-ledd følger med, men litt slakere (visuell effekt)
+    const a400 = -deg*0.4;
+    arm400.setAttribute('transform','translate(460,200) rotate('+a400+')');
+  }
+
   function render(){
     const thetaTop=$('thetaTop'),rangeText=$('rangeText'),sliderD=$('sliderD');
     if(!thetaTop||!rangeText||!sliderD)return;
     const inp=$('D');
     const D=parseFloat(String(inp.value).replace(',','.'));
-    if(!Number.isFinite(D)){ thetaTop.textContent='–'; return; }
+    if(!Number.isFinite(D)){ 
+      thetaTop.textContent='–'; 
+      updateIllustration(NaN);
+      return; 
+    }
     sliderD.value=String(Math.max(400,Math.min(800,D)));
     const deg=pchipEval(D);
     if(deg==null){
       rangeText.classList.add('warn');
       thetaTop.textContent='–';
+      updateIllustration(NaN);
     }else{
       rangeText.classList.remove('warn');
       thetaTop.textContent=Fdeg(deg);
+      updateIllustration(deg);
     }
   }
 
