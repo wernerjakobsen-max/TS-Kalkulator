@@ -203,3 +203,466 @@
                     <rect x="360" y="-10" width="1.2" height="6"/><rect x="370" y="-10" width="1.2" height="6"/><rect x="380" y="-10" width="1.2" height="6"/><rect x="390" y="-10" width="1.2" height="6"/>
                     <rect x="410" y="-10" width="1.2" height="6"/><rect x="420" y="-10" width="1.2" height="6"/><rect x="430" y="-10" width="1.2" height="6"/><rect x="440" y="-10" width="1.2" height="6"/>
                     <rect x="460" y="-10" width="1.2" height="6"/><rect x="470" y="-10" width="1.2" height="6"/><rect x="480" y="-10" width="1.2" height="6"/><rect x="490" y="-10" width="1.2" height="6"/>
+                    <rect x="510" y="-10" width="1.2" height="6"/><rect x="520" y="-10" width="1.2" height="6"/><rect x="530" y="-10" width="1.2" height="6"/><rect x="540" y="-10" width="1.2" height="6"/>
+                    <rect x="560" y="-10" width="1.2" height="6"/><rect x="570" y="-10" width="1.2" height="6"/><rect x="580" y="-10" width="1.2" height="6"/><rect x="590" y="-10" width="1.2" height="6"/>
+                    <rect x="610" y="-10" width="1.2" height="6"/><rect x="620" y="-10" width="1.2" height="6"/><rect x="630" y="-10" width="1.2" height="6"/><rect x="640" y="-10" width="1.2" height="6"/>
+                    <rect x="660" y="-10" width="1.2" height="6"/><rect x="670" y="-10" width="1.2" height="6"/><rect x="680" y="-10" width="1.2" height="6"/><rect x="690" y="-10" width="1.2" height="6"/>
+                    <rect x="710" y="-10" width="1.2" height="6"/><rect x="720" y="-10" width="1.2" height="6"/><rect x="730" y="-10" width="1.2" height="6"/><rect x="740" y="-10" width="1.2" height="6"/>
+                    <rect x="760" y="-10" width="1.2" height="6"/><rect x="770" y="-10" width="1.2" height="6"/><rect x="780" y="-10" width="1.2" height="6"/><rect x="790" y="-10" width="1.2" height="6"/>
+                  </g>
+                </g>
+                <!-- Read edge -->
+                <rect x="-2" y="-12" width="6" height="24" fill="#00FFFF" stroke="#088"/>
+                <line x1="0" y1="-10" x2="0" y2="120" stroke="#444" stroke-dasharray="4 3"/>
+                <text x="10" y="116" font-size="12">Kant for avlesning</text>
+              </g>
+
+              <!-- 200 mm section (points UP) -->
+              <g transform="translate(260,200) rotate(-65)">
+                <rect x="0" y="-10" width="200" height="20" rx="4" fill="#ffe9cc" stroke="#c88" filter="url(#shadow)"/>
+                <circle cx="0" cy="0" r="8" fill="#fff" stroke="#c88"/>
+                <circle cx="0" cy="0" r="3" fill="#c88"/>
+                <text x="100" y="-14" font-size="12" text-anchor="middle">200 mm-ledd (θ)</text>
+              </g>
+              <path d="M260,200 A70,70 0 0,1 305,160" fill="none" stroke="#c44" stroke-width="2"/>
+              <text x="305" y="164" font-size="12" fill="#c44">θ</text>
+
+              <!-- 400 mm feeler -->
+              <g transform="translate(460,200) rotate(-25)">
+                <rect x="0" y="-9" width="400" height="18" rx="4" fill="#dfe9ff" stroke="#88a" filter="url(#shadow)"/>
+                <circle cx="0" cy="0" r="8" fill="#fff" stroke="#88a"/>
+                <circle cx="0" cy="0" r="3" fill="#88a"/>
+                <text x="200" y="-14" font-size="12" text-anchor="middle">400 mm-ledd (følerarm)</text>
+              </g>
+
+              <!-- Dimension D -->
+              <g>
+                <line x1="60" y1="250" x2="740" y2="250" stroke="#444" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                <line x1="60" y1="240" x2="60" y2="260" stroke="#444"/>
+                <line x1="740" y1="240" x2="740" y2="260" stroke="#444"/>
+                <text x="400" y="268" font-size="13" text-anchor="middle">Avlest D (mm) langs kanten</text>
+              </g>
+
+              <!-- Landmarks -->
+              <g transform="translate(60,200)">
+                <line x1="678" y1="-10" x2="678" y2="30" stroke="#2c7" stroke-dasharray="4 3"/>
+                <text x="678" y="44" font-size="12" text-anchor="middle">≈678 mm ≈ 90°</text>
+                <text x="400" y="44" font-size="12" text-anchor="middle">400 mm ≈ 0°</text>
+                <text x="800" y="44" font-size="12" text-anchor="middle">800 mm ≈ 180°</text>
+              </g>
+            </svg>
+          </div>
+        </details>
+      </section>
+
+      <div class="footer muted">
+        <div>© Stymparen</div>
+        <div id="ver">4.0.0</div>
+      </div>
+      <div class="small">
+        Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
+        Hultafors® is a registered trademark of Hultafors Group. This calculator is independent and not affiliated with, endorsed or sponsored by Hultafors.
+      </div>
+    </div>
+
+    <!-- Fallkalkulator -->
+    <div id="tool-fall" style="display:none;">
+      <section class="card">
+        <h2>Fallkalkulator</h2>
+        <p class="fall-info">
+          Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.
+        </p>
+
+        <div class="fall-grid">
+          <!-- Prosent -->
+          <div class="fall-field">
+            <label for="fallPercent">Fall i prosent (%)</label>
+            <small>Eksempel: 2 betyr 2 % fall</small>
+            <input id="fallPercent" type="number" step="0.001" inputmode="decimal" onchange="fallFromPercent()">
+          </div>
+
+          <!-- Grader -->
+          <div class="fall-field">
+            <label for="fallDegrees">Fall i grader (°)</label>
+            <small>Eksempel: 1.145 ≈ 2 % fall</small>
+            <input id="fallDegrees" type="number" step="0.001" inputmode="decimal" onchange="fallFromDegrees()">
+          </div>
+
+          <!-- Forhold 1:X -->
+          <div class="fall-field">
+            <label for="fallRatio">Fallforhold (1 : X)</label>
+            <small>Skriv X. Eksempel: 50 for 1:50</small>
+            <input id="fallRatio" type="text" inputmode="decimal" onchange="fallFromRatio()">
+          </div>
+
+          <!-- Høydeforskjell / lengde med enhetsvelger -->
+          <div class="fall-field">
+            <label>Høydeforskjell og lengde</label>
+            <small>Bruk samme strekning. Velg enhet for begge.</small>
+            <div class="mini-row">
+              <input id="fallHeightVal" type="number" step="0.1" inputmode="decimal" placeholder="Høyde" onchange="fallFromHeightLength()">
+              <select id="fallHeightUnit" onchange="fallFromHeightLength()">
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+            <div class="mini-row" style="margin-top:6px;">
+              <input id="fallLengthVal" type="number" step="0.01" inputmode="decimal" placeholder="Lengde" onchange="fallFromHeightLength()">
+              <select id="fallLengthUnit" onchange="fallFromHeightLength()">
+                <option value="m">m</option>
+                <option value="cm">cm</option>
+                <option value="mm">mm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <p class="fall-footer">
+          Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <!-- QR modal -->
+  <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
+    <div class="card" style="max-width:92vw">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.0</div>
+      <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
+      <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
+    </div>
+  </div>
+
+  <!-- Install modal -->
+  <div id="instModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
+    <div class="card" style="max-width:92vw">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">Installer app</h3><button class="btn ghost" id="instClose">Lukk</button></div>
+      <div class="muted" style="margin-top:8px">
+        Hvis install-knappen ikke dukker opp: <br>
+        <b>Android/Chrome:</b> meny ⋮ → «Legg til på startsiden».<br>
+        <b>iOS (Safari):</b> delingsikonet ⎋ → «Føy til Hjem-skjerm».<br>
+        <b>Desktop:</b> adresselinje «Installer app»-ikon eller meny.
+      </div>
+    </div>
+  </div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.0";
+
+  /* Data for TS-kalkulator */
+  const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
+  const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
+
+  const STR={
+    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm-leddet til ønsket vinkel.","Knekk 400 mm-leddet og bøy til 0-mm-hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200-ledd i vinkel θ. 400-ledd som føler til 0-hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
+    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200-mm section to desired angle.","Bend 400-mm section until the 0-mm corner meets the edge.","Read D in mm along the edge and enter it here.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: 200-mm at angle θ. 400-mm as feeler to the 0-corner. Edge reading D → angle via calibrated curve."},
+    sv:{app:"TS-kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), leden bred ca 15 mm.","Vik 200 mm-ledet til önskad vinkel.","Vik 400 mm-ledet tills 0-mm-hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200-led i vinkel θ. 400-led som känner tills 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurve."},
+    dk:{app:"TS-kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.","Bøj 200 mm-leddet til ønsket vinkel.","Bøj 400 mm-leddet til 0-mm-hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200-led i vinkel θ. 400-led som føler til 0-hjørnet møder kanten. Aflæst D → vinkel via kalibrieret kurve."},
+    fi:{app:"TS-laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta 200 mm osaa haluttuun kulmaan.","Taivuta 400 mm osaa kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta."},
+    de:{app:"TS-Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz-Anleitung",guide:["Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","200-mm-Glied auf gewünschten Winkel biegen.","400-mm-Glied so biegen, bis die 0-mm-Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200-mm-Glied im Winkel θ. 400-mm-Glied als Fühler bis zur 0-Ecke. Ablesung D → Winkel über kalibrierte Kurve."}
+  };
+
+  function pchipSlopes(x,y){
+    const n=x.length,h=new Array(n-1),d=new Array(n-1);
+    for(let i=0;i<n-1;i++){h[i]=x[i+1]-x[i];d[i]=(y[i+1]-y[i])/h[i];}
+    const m=new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
+    for(let i=1;i<n-1;i++){
+      if(d[i-1]*d[i]<=0) m[i]=0;
+      else{
+        const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1];
+        m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);
+      }
+    }
+    for(let i=0;i<n-1;i++){
+      if(d[i]===0){m[i]=0; m[i+1]=0;}
+      else{
+        const a=m[i]/d[i],b=m[i+1]/d[i],s=a*a+b*b;
+        if(s>9){
+          const t=3/Math.sqrt(s);
+          m[i]=t*a*d[i]; m[i+1]=t*b*d[i];
+        }
+      }
+    }
+    return m;
+  }
+  const M=pchipSlopes(X,Y);
+  function pchipEval(xq){
+    const n=X.length;
+    if(xq<X[0]||xq>X[n-1])return null;
+    let i=0,j=n-1;
+    while(j-i>1){
+      const k=(i+j)>>1;
+      if(X[k]<=xq)i=k; else j=k;
+    }
+    const h=X[i+1]-X[i],t=(xq-X[i])/h;
+    const h00=(1+2*t)*(1-t)*(1-t),
+          h10=t*(1-t)*(1-t),
+          h01=t*t*(3-2*t),
+          h11=t*t*(t-1);
+    return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
+  }
+
+  const LANG_KEY='ts_lang', DEC_KEY='ts_dec';
+  const themeEl=document.documentElement,themeKey='ts_theme',themeColorTag=document.getElementById('themeColor');
+
+  function applyTheme(v){
+    themeEl.setAttribute('data-theme',v);
+    try{localStorage.setItem(themeKey,v);}catch(e){}
+    if(themeColorTag)themeColorTag.setAttribute('content',(v==='dark')?'#0b1220':'#00FFFF');
+  }
+  function toggleTheme(){
+    const cur=themeEl.getAttribute('data-theme')||'auto';
+    applyTheme(cur==='dark'?'light':cur==='light'?'auto':'dark');
+  }
+  function setLang(c){
+    try{localStorage.setItem(LANG_KEY,c);}catch(e){}
+    applyLang(c);
+  }
+  function getLang(){
+    try{return localStorage.getItem(LANG_KEY)||'no';}catch(e){return'no';}
+  }
+  function getDec(){
+    try{return parseInt(localStorage.getItem(DEC_KEY)||'0',10);}catch(e){return 0;}
+  }
+  function setDec(n){
+    try{localStorage.setItem(DEC_KEY,String(n));}catch(e){}
+    updateDecBtn(); render();
+  }
+  function toggleDec(){setDec(getDec()===0?1:0);}
+  function updateDecBtn(){
+    const b=$('decBtn'); if(b)b.textContent=(getDec()===0?'0 des':'1 des');
+  }
+  function Fdeg(v){
+    const d=getDec();
+    return (d===0?Math.round(v):v.toFixed(d))+'°';
+  }
+
+  function applyLang(c){
+    const S=(STR[c]||STR.no);
+    document.title = S.app || "TS-kalkulator";
+    const h_sub=$('h_sub'),lbl_D=$('lbl_D'),rangeText=$('rangeText'),lbl_angle=$('lbl_angle'),
+          guide_title=$('guide_title'),guide_list=$('guide_list'),
+          help_btn=$('help_btn'),help_text=$('help_text');
+    if(h_sub)h_sub.textContent=S.sub;
+    if(lbl_D)lbl_D.textContent=S.lblD;
+    if(rangeText)rangeText.textContent=S.range;
+    if(lbl_angle)lbl_angle.textContent=S.angle;
+    if(guide_title)guide_title.textContent=S.guide_title;
+    if(guide_list){
+      guide_list.innerHTML='';
+      (S.guide||[]).forEach(t=>{
+        const li=document.createElement('li'); li.textContent=t; guide_list.appendChild(li);
+      });
+    }
+    if(help_btn)help_btn.textContent=S.help_btn||"";
+    if(help_text)help_text.textContent=S.help_text||"";
+  }
+
+  function render(){
+    const thetaTop=$('thetaTop'),rangeText=$('rangeText'),sliderD=$('sliderD');
+    if(!thetaTop||!rangeText||!sliderD)return;
+    const inp=$('D');
+    const D=parseFloat(String(inp.value).replace(',','.'));
+    if(!Number.isFinite(D)){ thetaTop.textContent='–'; return; }
+    sliderD.value=String(Math.max(400,Math.min(800,D)));
+    const deg=pchipEval(D);
+    if(deg==null){
+      rangeText.classList.add('warn');
+      thetaTop.textContent='–';
+    }else{
+      rangeText.classList.remove('warn');
+      thetaTop.textContent=Fdeg(deg);
+    }
+  }
+
+  function openQR(){
+    const url=CANONICAL, enc=encodeURIComponent(url);
+    const box=$('qrUrlBox'),img=$('qrImg'),a=$('qrDownload'),modal=$('qrModal');
+    if(box)box.textContent=url;
+    if(img){img.src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;}
+    if(a)a.href=img.src;
+    if(modal)modal.style.display='flex';
+  }
+  function closeQR(){
+    const m=$('qrModal'); if(m)m.style.display='none';
+  }
+  function copyUrl(){
+    if(!navigator.clipboard)return;
+    navigator.clipboard.writeText(CANONICAL).then(()=>{
+      const b=$('copyUrl'); if(!b)return;
+      b.textContent='Kopiert!'; setTimeout(()=>{b.textContent='Kopier lenke';},1200);
+    }).catch(()=>{});
+  }
+
+  let deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt=e;
+  });
+  async function tryInstall(){
+    if(deferredPrompt){
+      await deferredPrompt.prompt();
+      deferredPrompt=null;
+      return;
+    }
+    const m=$('instModal'); if(m)m.style.display='flex';
+  }
+
+  /* Verktøyvelger: TS / Fall */
+  function switchTool(tool){
+    const ts=$('tool-ts'),fall=$('tool-fall');
+    if(!ts||!fall)return;
+    if(tool==='fall'){
+      ts.style.display='none';
+      fall.style.display='block';
+    }else{
+      ts.style.display='block';
+      fall.style.display='none';
+    }
+  }
+
+  /* Fallkalkulator – hjelpefunksjoner */
+  function fallParseInput(id){
+    const el=$(id);
+    if(!el)return NaN;
+    let raw=el.value.trim();
+    if(!raw)return NaN;
+    raw=raw.replace(",",".");
+    return parseFloat(raw);
+  }
+  function fallSetNumber(id,value,decimals){
+    const el=$(id);
+    if(!el||!isFinite(value))return;
+    el.value=value.toFixed(decimals);
+  }
+  function fallSetText(id,value){
+    const el=$(id);
+    if(!el)return;
+    el.value=value;
+  }
+
+  /* Fallkalkulator – kjerne (stigning = høyde / lengde) */
+  function fallUpdateAll(stigning){
+    if(!isFinite(stigning)||stigning<0)return;
+
+    fallSetNumber("fallPercent",stigning*100,3);
+    fallSetNumber("fallDegrees",Math.atan(stigning)*180/Math.PI,3);
+
+    if(stigning===0){
+      fallSetText("fallRatio","∞");
+    }else{
+      const ratio=1/stigning;
+      fallSetText("fallRatio",ratio.toFixed(3).replace(/\.?0+$/,""));
+    }
+  }
+
+  function fallFromPercent(){
+    const p=fallParseInput("fallPercent");
+    if(isNaN(p))return;
+    const s=p/100;
+    fallUpdateAll(s);
+  }
+  function fallFromDegrees(){
+    const d=fallParseInput("fallDegrees");
+    if(isNaN(d))return;
+    const s=Math.tan(d*Math.PI/180);
+    fallUpdateAll(s);
+  }
+  function fallFromRatio(){
+    const el=$("fallRatio");
+    if(!el)return;
+    let raw=el.value.trim();
+    if(!raw)return;
+
+    if(raw.indexOf(":")>=0){
+      const parts=raw.split(":");
+      raw=parts[1]||parts[0];
+    }
+    raw=raw.replace(",",".");
+    const r=parseFloat(raw);
+    if(!isFinite(r)||r<=0)return;
+
+    const s=1/r;
+    fallUpdateAll(s);
+  }
+
+  function unitToMeters(value,unit){
+    if(!isFinite(value))return NaN;
+    if(unit==="mm")return value/1000;
+    if(unit==="cm")return value/100;
+    if(unit==="m")return value;
+    return NaN;
+  }
+
+  function fallFromHeightLength(){
+    const hVal=fallParseInput("fallHeightVal");
+    const LVal=fallParseInput("fallLengthVal");
+    const hUnitEl=$("fallHeightUnit");
+    const LUnitEl=$("fallLengthUnit");
+    const hUnit=hUnitEl?hUnitEl.value:"mm";
+    const LUnit=LUnitEl?LUnitEl.value:"m";
+
+    if(isNaN(hVal)||isNaN(LVal))return;
+
+    const hM=unitToMeters(hVal,hUnit);
+    const LM=unitToMeters(LVal,LUnit);
+    if(!isFinite(hM)||!isFinite(LM)||LM<=0)return;
+
+    const s=hM/LM;
+    fallUpdateAll(s);
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    const langSel=$('lang');
+    const cur=getLang();
+    if(langSel)langSel.value=cur;
+    applyLang(cur);
+    if(langSel){
+      langSel.addEventListener('change',(e)=>{setLang(e.target.value);});
+    }
+    updateDecBtn();
+
+    const decBtn=$('decBtn'); if(decBtn)decBtn.addEventListener('click',toggleDec);
+    const themeBtn=$('themeBtn'); if(themeBtn)themeBtn.addEventListener('click',toggleTheme);
+
+    const Dinput=$('D'); if(Dinput)Dinput.addEventListener('input',render);
+    const sliderD=$('sliderD');
+    if(sliderD)sliderD.addEventListener('input',e=>{Dinput.value=e.target.value;render();});
+
+    const qrBtn=$('qrBtn'); if(qrBtn)qrBtn.addEventListener('click',openQR);
+    const qrClose=$('qrClose'); if(qrClose)qrClose.addEventListener('click',closeQR);
+    const copyBtn=$('copyUrl'); if(copyBtn)copyBtn.addEventListener('click',copyUrl);
+
+    const instBtn=$('installBtn'); if(instBtn)instBtn.addEventListener('click',tryInstall);
+    const instClose=$('instClose'); if(instClose)instClose.addEventListener('click',()=>{const m=$('instModal');if(m)m.style.display='none';});
+
+    const hardBtn=$('hardRefreshBtn');
+    if(hardBtn)hardBtn.addEventListener('click', async ()=>{
+      try{
+        if('caches' in window){
+          const names=await caches.keys();
+          await Promise.all(names.map(n=>caches.delete(n)));
+        }
+        if('serviceWorker' in navigator){
+          const regs=await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r=>r.unregister()));
+        }
+      }catch(e){}
+      location.href=CANONICAL;
+    });
+
+    render();
+    const ver=$('ver'); if(ver)ver.textContent='4.0.0';
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
+</body>
+</html>
