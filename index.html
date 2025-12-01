@@ -49,6 +49,17 @@
     /* Verktøyvelger (TS / Fall) */
     .tool-switch {
       margin: 4px 0 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .tool-switch-inner{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
     }
     .tool-switch select {
       padding:6px 10px;
@@ -107,15 +118,21 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- Verktøyvelger i cyan pill -->
+    <!-- Verktøyvelger + språkvelger i cyan pill -->
     <div class="tool-switch">
       <div class="pill pill-sm">
-        <span>Velg kalkulator:</span>
-        <select id="toolSelect" onchange="switchTool(this.value)">
-          <option value="ts">TS-kalkulator</option>
-          <option value="fall">Fallkalkulator</option>
-        </select>
+        <div class="tool-switch-inner">
+          <span id="lbl_toolChoice">Velg kalkulator:</span>
+          <select id="toolSelect" onchange="switchTool(this.value)">
+            <option value="ts">TS-kalkulator</option>
+            <option value="fall">Fallkalkulator</option>
+          </select>
+        </div>
       </div>
+      <select id="lang" class="btn ghost" style="min-width:96px">
+        <option value="no">NO</option><option value="en">EN</option><option value="sv">SV</option>
+        <option value="dk">DK</option><option value="fi">FI</option><option value="de">DE</option>
+      </select>
     </div>
 
     <!-- TS-kalkulator -->
@@ -128,10 +145,6 @@
           <button class="btn" id="installBtn">Installer</button>
           <button class="btn ghost" id="themeBtn">🌓</button>
           <button class="btn ghost" id="decBtn">0 des</button>
-          <select id="lang" class="btn ghost" style="min-width:96px">
-            <option value="no">NO</option><option value="en">EN</option><option value="sv">SV</option>
-            <option value="dk">DK</option><option value="fi">FI</option><option value="de">DE</option>
-          </select>
           <button class="btn ghost" id="hardRefreshBtn">Hard refresh</button>
         </div>
       </div>
@@ -152,7 +165,7 @@
           <summary id="help_btn">Vis forklaring og illustrasjon</summary>
           <div id="help_text" class="muted" style="margin:8px 0 6px"></div>
           <div class="svgbox">
-            <!-- Technical SVG (dynamic arms) -->
+            <!-- Technical SVG med Hultafors-lignende tommestokk og ledd -->
             <svg id="svgTech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="100%">
               <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -162,7 +175,8 @@
                   <path d="M0 0L10 5L0 10Z" fill="#444"/>
                 </marker>
               </defs>
-              <!-- Base ruler -->
+
+              <!-- Kant for avlesning (vegg/platekant) -->
               <g id="baseRuler" transform="translate(60,200)">
                 <rect x="0" y="-10" width="820" height="20" rx="4" fill="#e6e6e6" stroke="#888" filter="url(#shadow)"/>
                 <g fill="#666">
@@ -177,54 +191,65 @@
                     <rect x="700" y="-10" width="2" height="10"/><text x="700" y="18" font-size="12" text-anchor="middle">700</text>
                     <rect x="800" y="-10" width="2" height="10"/><text x="800" y="18" font-size="12" text-anchor="middle">800</text>
                   </g>
-                  <g opacity="0.9">
-                    <rect x="50" y="-10" width="1.6" height="8"/><rect x="150" y="-10" width="1.6" height="8"/>
-                    <rect x="250" y="-10" width="1.6" height="8"/><rect x="350" y="-10" width="1.6" height="8"/>
-                    <rect x="450" y="-10" width="1.6" height="8"/><rect x="550" y="-10" width="1.6" height="8"/>
-                    <rect x="650" y="-10" width="1.6" height="8"/><rect x="750" y="-10" width="1.6" height="8"/>
-                  </g>
-                  <g opacity="0.6">
-                    <rect x="10" y="-10" width="1.2" height="6"/><rect x="20" y="-10" width="1.2" height="6"/><rect x="30" y="-10" width="1.2" height="6"/><rect x="40" y="-10" width="1.2" height="6"/>
-                    <rect x="60" y="-10" width="1.2" height="6"/><rect x="70" y="-10" width="1.2" height="6"/><rect x="80" y="-10" width="1.2" height="6"/><rect x="90" y="-10" width="1.2" height="6"/>
-                    <rect x="110" y="-10" width="1.2" height="6"/><rect x="120" y="-10" width="1.2" height="6"/><rect x="130" y="-10" width="1.2" height="6"/><rect x="140" y="-10" width="1.2" height="6"/>
-                    <rect x="160" y="-10" width="1.2" height="6"/><rect x="170" y="-10" width="1.2" height="6"/><rect x="180" y="-10" width="1.2" height="6"/><rect x="190" y="-10" width="1.2" height="6"/>
-                    <rect x="210" y="-10" width="1.2" height="6"/><rect x="220" y="-10" width="1.2" height="6"/><rect x="230" y="-10" width="1.2" height="6"/><rect x="240" y="-10" width="1.2" height="6"/>
-                    <rect x="260" y="-10" width="1.2" height="6"/><rect x="270" y="-10" width="1.2" height="6"/><rect x="280" y="-10" width="1.2" height="6"/><rect x="290" y="-10" width="1.2" height="6"/>
-                    <rect x="310" y="-10" width="1.2" height="6"/><rect x="320" y="-10" width="1.2" height="6"/><rect x="330" y="-10" width="1.2" height="6"/><rect x="340" y="-10" width="1.2" height="6"/>
-                    <rect x="360" y="-10" width="1.2" height="6"/><rect x="370" y="-10" width="1.2" height="6"/><rect x="380" y="-10" width="1.2" height="6"/><rect x="390" y="-10" width="1.2" height="6"/>
-                    <rect x="410" y="-10" width="1.2" height="6"/><rect x="420" y="-10" width="1.2" height="6"/><rect x="430" y="-10" width="1.2" height="6"/><rect x="440" y="-10" width="1.2" height="6"/>
-                    <rect x="460" y="-10" width="1.2" height="6"/><rect x="470" y="-10" width="1.2" height="6"/><rect x="480" y="-10" width="1.2" height="6"/><rect x="490" y="-10" width="1.2" height="6"/>
-                    <rect x="510" y="-10" width="1.2" height="6"/><rect x="520" y="-10" width="1.2" height="6"/><rect x="530" y="-10" width="1.2" height="6"/><rect x="540" y="-10" width="1.2" height="6"/>
-                    <rect x="560" y="-10" width="1.2" height="6"/><rect x="570" y="-10" width="1.2" height="6"/><rect x="580" y="-10" width="1.2" height="6"/><rect x="590" y="-10" width="1.2" height="6"/>
-                    <rect x="610" y="-10" width="1.2" height="6"/><rect x="620" y="-10" width="1.2" height="6"/><rect x="630" y="-10" width="1.2" height="6"/><rect x="640" y="-10" width="1.2" height="6"/>
-                    <rect x="660" y="-10" width="1.2" height="6"/><rect x="670" y="-10" width="1.2" height="6"/><rect x="680" y="-10" width="1.2" height="6"/><rect x="690" y="-10" width="1.2" height="6"/>
-                    <rect x="710" y="-10" width="1.2" height="6"/><rect x="720" y="-10" width="1.2" height="6"/><rect x="730" y="-10" width="1.2" height="6"/><rect x="740" y="-10" width="1.2" height="6"/>
-                    <rect x="760" y="-10" width="1.2" height="6"/><rect x="770" y="-10" width="1.2" height="6"/><rect x="780" y="-10" width="1.2" height="6"/><rect x="790" y="-10" width="1.2" height="6"/>
-                  </g>
                 </g>
-                <!-- Read edge -->
+                <!-- Lesekant -->
                 <rect x="-2" y="-12" width="6" height="24" fill="#00FFFF" stroke="#088"/>
                 <line x1="0" y1="-10" x2="0" y2="120" stroke="#444" stroke-dasharray="4 3"/>
                 <text x="10" y="116" font-size="12">Kant for avlesning</text>
               </g>
 
-              <!-- 200 mm section (dynamic) -->
-              <g id="arm200" transform="translate(260,200)">
-                <rect x="0" y="-10" width="200" height="20" rx="4" fill="#ffe9cc" stroke="#c88" filter="url(#shadow)"/>
-                <circle cx="0" cy="0" r="8" fill="#fff" stroke="#c88"/>
-                <circle cx="0" cy="0" r="3" fill="#c88"/>
-                <text x="100" y="-14" font-size="12" text-anchor="middle">200 mm-ledd (θ)</text>
+              <!-- Hultafors-lignende tommestokk, nullpunkt i lesekanten -->
+              <g id="tsRoot" transform="translate(60,200)">
+                <!-- Fast 0–200 mm segment langs kanten (til venstre) -->
+                <g id="segBase">
+                  <rect x="-200" y="-10" width="200" height="20" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
+                  <!-- litt graderinger -->
+                  <g stroke="#b99a4a">
+                    <line x1="-200" y1="-10" x2="-200" y2="10"/>
+                    <line x1="-150" y1="-8"  x2="-150" y2="8"/>
+                    <line x1="-100" y1="-10" x2="-100" y2="10"/>
+                    <line x1="-50"  y1="-8"  x2="-50"  y2="8"/>
+                    <line x1="0"    y1="-10" x2="0"    y2="10"/>
+                  </g>
+                  <text x="-100" y="24" font-size="11" text-anchor="middle" fill="#7a642e">0–200 mm på kant</text>
+                </g>
+
+                <!-- 200 mm-ledd (knekker først rundt 0-punktet) -->
+                <g id="joint200">
+                  <rect x="0" y="-10" width="200" height="20" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
+                  <g stroke="#b99a4a">
+                    <line x1="0"   y1="-10" x2="0"   y2="10"/>
+                    <line x1="50"  y1="-8"  x2="50"  y2="8"/>
+                    <line x1="100" y1="-10" x2="100" y2="10"/>
+                    <line x1="150" y1="-8"  x2="150" y2="8"/>
+                    <line x1="200" y1="-10" x2="200" y2="10"/>
+                  </g>
+                  <circle cx="0" cy="0" r="7" fill="#fff" stroke="#c9b36a"/>
+                  <circle cx="0" cy="0" r="3" fill="#c9b36a"/>
+                  <text x="90" y="-14" font-size="11" text-anchor="middle" fill="#7a642e">200 mm-ledd (θ)</text>
+
+                  <!-- 400 mm-ledd, hengslet i enden av 200 mm-leddet -->
+                  <g id="joint400" transform="translate(200,0)">
+                    <rect x="0" y="-9" width="400" height="18" rx="4" fill="#fffde8" stroke="#c9b36a" filter="url(#shadow)"/>
+                    <g stroke="#b99a4a">
+                      <line x1="0"   y1="-9" x2="0"   y2="9"/>
+                      <line x1="50"  y1="-7" x2="50"  y2="7"/>
+                      <line x1="100" y1="-9" x2="100" y2="9"/>
+                      <line x1="150" y1="-7" x2="150" y2="7"/>
+                      <line x1="200" y1="-9" x2="200" y2="9"/>
+                      <line x1="250" y1="-7" x2="250" y2="7"/>
+                      <line x1="300" y1="-9" x2="300" y2="9"/>
+                      <line x1="350" y1="-7" x2="350" y2="7"/>
+                      <line x1="400" y1="-9" x2="400" y2="9"/>
+                    </g>
+                    <circle cx="0" cy="0" r="7" fill="#fff" stroke="#c9b36a"/>
+                    <circle cx="0" cy="0" r="3" fill="#c9b36a"/>
+                    <text x="200" y="-13" font-size="11" text-anchor="middle" fill="#7a642e">400 mm-ledd (føler)</text>
+                  </g>
+                </g>
               </g>
 
-              <!-- 400 mm feeler (dynamic-ish) -->
-              <g id="arm400" transform="translate(460,200)">
-                <rect x="0" y="-9" width="400" height="18" rx="4" fill="#dfe9ff" stroke="#88a" filter="url(#shadow)"/>
-                <circle cx="0" cy="0" r="8" fill="#fff" stroke="#88a"/>
-                <circle cx="0" cy="0" r="3" fill="#88a"/>
-                <text x="200" y="-14" font-size="12" text-anchor="middle">400 mm-ledd (følerarm)</text>
-              </g>
-
-              <!-- Dimension D (generell forklaring) -->
+              <!-- D-mål (prinsippskisse) -->
               <g>
                 <line x1="60" y1="250" x2="740" y2="250" stroke="#444" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
                 <line x1="60" y1="240" x2="60" y2="260" stroke="#444"/>
@@ -238,7 +263,7 @@
 
       <div class="footer muted">
         <div>© Stymparen</div>
-        <div id="ver">4.0.0</div>
+        <div id="ver">4.0.1</div>
       </div>
       <div class="small">
         Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
@@ -249,37 +274,37 @@
     <!-- Fallkalkulator -->
     <div id="tool-fall" style="display:none;">
       <section class="card">
-        <div class="pill">Fallkalkulator</div>
-        <p class="fall-info" style="margin-top:8px;">
+        <div class="pill" id="fallTitle">Fallkalkulator</div>
+        <p class="fall-info" id="fallIntro" style="margin-top:8px;">
           Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.
         </p>
 
         <div class="fall-grid">
           <!-- Prosent -->
           <div class="fall-field">
-            <label for="fallPercent">Fall i prosent (%)</label>
-            <small>Eksempel: 2 betyr 2 % fall</small>
+            <label for="fallPercent" id="fallPercentLabel">Fall i prosent (%)</label>
+            <small id="fallPercentHint">Eksempel: 2 betyr 2 % fall</small>
             <input id="fallPercent" type="number" step="0.001" inputmode="decimal" onchange="fallFromPercent()">
           </div>
 
           <!-- Grader -->
           <div class="fall-field">
-            <label for="fallDegrees">Fall i grader (°)</label>
-            <small>Eksempel: 1.145 ≈ 2 % fall</small>
+            <label for="fallDegrees" id="fallDegreesLabel">Fall i grader (°)</label>
+            <small id="fallDegreesHint">Eksempel: 1.145 ≈ 2 % fall</small>
             <input id="fallDegrees" type="number" step="0.001" inputmode="decimal" onchange="fallFromDegrees()">
           </div>
 
           <!-- Forhold 1:X -->
           <div class="fall-field">
-            <label for="fallRatio">Fallforhold (1 : X)</label>
-            <small>Skriv X. Eksempel: 50 for 1:50</small>
+            <label for="fallRatio" id="fallRatioLabel">Fallforhold (1 : X)</label>
+            <small id="fallRatioHint">Skriv X. Eksempel: 50 for 1:50</small>
             <input id="fallRatio" type="text" inputmode="decimal" onchange="fallFromRatio()">
           </div>
 
           <!-- Høydeforskjell / lengde med enhetsvelger -->
           <div class="fall-field">
-            <label>Høydeforskjell og lengde</label>
-            <small>Bruk samme strekning. Velg enhet for begge.</small>
+            <label id="fallHLLabel">Høydeforskjell og lengde</label>
+            <small id="fallHLHint">Bruk samme strekning. Velg enhet for begge.</small>
             <div class="mini-row">
               <input id="fallHeightVal" type="number" step="0.1" inputmode="decimal" placeholder="Høyde" onchange="fallFromHeightLength()">
               <select id="fallHeightUnit" onchange="fallFromHeightLength()">
@@ -299,7 +324,7 @@
           </div>
         </div>
 
-        <p class="fall-footer">
+        <p class="fall-footer" id="fallFooter">
           Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).
         </p>
       </section>
@@ -310,7 +335,7 @@
   <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
     <div class="card" style="max-width:92vw">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
-      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.0</div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.1</div>
       <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
       <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
     </div>
@@ -331,19 +356,188 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.0";
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.0.1";
 
   /* Data for TS-kalkulator */
   const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
   const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
 
   const STR={
-    no:{app:"TS-kalkulator",sub:"Avlest vinkel på tommestokk omregnet til grader",lblD:"Avlest D (mm)",range:"måleområde 400-800mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning (kort)",guide:["Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.","Knekk 200 mm-leddet til ønsket vinkel.","Knekk 400 mm-leddet og bøy til 0-mm-hjørnet treffer kanten.","Les av mm langs kanten. Skriv inn her – du får graden.","Gyldig område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustrasjon",help_text:"Prinsipp: 200-ledd i vinkel θ. 400-ledd som føler til 0-hjørnet treffer kanten. Avlest D → vinkel via kalibrert kurve."},
-    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Quick instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","Bend 200-mm section to desired angle.","Bend 400-mm section until the 0-mm corner meets the edge.","Read D in mm along the edge and enter it here.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Show explanation and illustration",help_text:"Principle: 200-mm at angle θ. 400-mm as feeler to the 0-corner. Edge reading D → angle via calibrated curve."},
-    sv:{app:"TS-kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Snabbguide",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), leden bred ca 15 mm.","Vik 200 mm-ledet til önskad vinkel.","Vik 400 mm-ledet tills 0-mm-hörnet möter kanten.","Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Visa förklaring och illustration",help_text:"Princip: 200-led i vinkel θ. 400-led som känner tills 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurve."},
-    dk:{app:"TS-kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Kort vejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.","Bøj 200 mm-leddet til ønsket vinkel.","Bøj 400 mm-leddet til 0-mm-hjørnet møder kanten.","Aflæs i mm langs kanten og indtast her – du får vinklen.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Vis forklaring og illustration",help_text:"Princip: 200-led i vinkel θ. 400-led som føler til 0-hjørnet møder kanten. Aflæst D → vinkel via kalibrieret kurve."},
-    fi:{app:"TS-laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Pikaohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta 200 mm osaa haluttuun kulmaan.","Taivuta 400 mm osaa kunnes 0 mm kulma osuu reunaan.","Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Näytä selitys ja kuva",help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta."},
-    de:{app:"TS-Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Kurz-Anleitung",guide:["Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","200-mm-Glied auf gewünschten Winkel biegen.","400-mm-Glied so biegen, bis die 0-mm-Ecke die Kante trifft.","In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_btn:"Erklärung und Skizze anzeigen",help_text:"Prinzip: 200-mm-Glied im Winkel θ. 400-mm-Glied als Fühler bis zur 0-Ecke. Ablesung D → Winkel über kalibrierte Kurve."}
+    no:{
+      app:"TS-kalkulator",
+      sub:"Avlest vinkel på tommestokk omregnet til grader",
+      lblD:"Avlest D (mm)",
+      range:"måleområde 400-800mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Bruksanvisning (kort)",
+      guide:[
+        "Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.",
+        "Knekk først 200 mm-leddet til ønsket vinkel (θ).",
+        "Knekk deretter 400 mm-leddet og bøy til 0-mm-hjørnet treffer kanten.",
+        "Les av mm langs kanten. Skriv inn her – du får graden.",
+        "Gyldig område: 400–800 mm (400≈0°, 800≈180°)."
+      ],
+      help_btn:"Vis forklaring og illustrasjon",
+      help_text:"Prinsipp: 200-mm-leddet står i vinkel θ. 400-mm-leddet fungerer som føler til 0-hjørnet treffer kanten. Avlest D langs kanten gir vinkel via kalibrert kurve.",
+      toolChoice:"Velg kalkulator:",
+      /* Fallkalkulator-tekst */
+      fall_title:"Fallkalkulator",
+      fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",
+      fall_percent_label:"Fall i prosent (%)",
+      fall_percent_hint:"Eksempel: 2 betyr 2 % fall",
+      fall_deg_label:"Fall i grader (°)",
+      fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",
+      fall_ratio_label:"Fallforhold (1 : X)",
+      fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
+      fall_hl_label:"Høydeforskjell og lengde",
+      fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",
+      fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."
+    },
+    en:{
+      app:"TS Calculator",
+      sub:"Angle from folding ruler reading (mm → degrees)",
+      lblD:"Reading D (mm)",
+      range:"measuring range 400–800 mm",
+      angle:"Angle (degrees)",
+      guide_title:"Quick instructions",
+      guide:[
+        "Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.",
+        "First bend the 200 mm section to the desired angle (θ).",
+        "Then bend the 400 mm section until the 0 mm corner meets the edge.",
+        "Read D in mm along the edge and enter it here – you get the angle.",
+        "Valid range: 400–800 mm (400≈0°, 800≈180°)."
+      ],
+      help_btn:"Show explanation and illustration",
+      help_text:"Principle: the 200 mm section is at angle θ. The 400 mm section acts as a feeler until the 0-corner meets the edge. The reading D along the edge gives the angle via a calibrated curve.",
+      toolChoice:"Select calculator:",
+      fall_title:"Slope calculator",
+      fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",
+      fall_percent_label:"Slope in percent (%)",
+      fall_percent_hint:"Example: 2 means 2% slope",
+      fall_deg_label:"Slope in degrees (°)",
+      fall_deg_hint:"Example: 1.145 ≈ 2% slope",
+      fall_ratio_label:"Slope ratio (1 : X)",
+      fall_ratio_hint:"Type X. Example: 50 for 1:50",
+      fall_hl_label:"Height difference and length",
+      fall_hl_hint:"Use the same run. Choose units for both.",
+      fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."
+    },
+    sv:{
+      app:"TS-kalkylator",
+      sub:"Avläst vinkel på tumstock omräknad till grader",
+      lblD:"Avläst D (mm)",
+      range:"mätområde 400–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Snabbguide",
+      guide:[
+        "Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.",
+        "Vik först 200 mm-ledet till önskad vinkel (θ).",
+        "Vik sedan 400 mm-ledet tills 0-mm-hörnet möter kanten.",
+        "Läs av i mm längs kanten och skriv in här – du får vinkeln i grader.",
+        "Giltigt område: 400–800 mm (400≈0°, 800≈180°)."
+      ],
+      help_btn:"Visa förklaring och illustration",
+      help_text:"Princip: 200-ledd i vinkel θ. 400-ledd som känner tills 0-hörnet möter kanten. Avläst D → vinkel via kalibrerad kurva.",
+      toolChoice:"Välj kalkylator:",
+      fall_title:"Fallkalkylator",
+      fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",
+      fall_percent_label:"Fall i procent (%)",
+      fall_percent_hint:"Exempel: 2 betyder 2 % fall",
+      fall_deg_label:"Fall i grader (°)",
+      fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",
+      fall_ratio_label:"Fallförhållande (1 : X)",
+      fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",
+      fall_hl_label:"Höjdskillnad och längd",
+      fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",
+      fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."
+    },
+    dk:{
+      app:"TS-kalkulator",
+      sub:"Aflæst vinkel på tommestok omregnet til grader",
+      lblD:"Aflæst D (mm)",
+      range:"måleområde 400–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Kort vejledning",
+      guide:[
+        "Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.",
+        "Bøj først 200 mm-leddet til ønsket vinkel (θ).",
+        "Bøj derefter 400 mm-leddet til 0-mm-hjørnet møder kanten.",
+        "Aflæs i mm langs kanten og indtast her – du får vinklen.",
+        "Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."
+      ],
+      help_btn:"Vis forklaring og illustration",
+      help_text:"Princip: 200-led i vinkel θ. 400-led som føler til 0-hjørnet møder kanten. Aflæst D → vinkel via kalibreret kurve.",
+      toolChoice:"Vælg lommeregner:",
+      fall_title:"Fald-kalkulator",
+      fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",
+      fall_percent_label:"Fald i procent (%)",
+      fall_percent_hint:"Eksempel: 2 betyder 2 % fald",
+      fall_deg_label:"Fald i grader (°)",
+      fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",
+      fall_ratio_label:"Faldforhold (1 : X)",
+      fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",
+      fall_hl_label:"Højde-forskel og længde",
+      fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",
+      fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."
+    },
+    fi:{
+      app:"TS-laskin",
+      sub:"Taittomitan lukema muunnettuna asteiksi",
+      lblD:"Lukema D (mm)",
+      range:"mittausalue 400–800 mm",
+      angle:"Kulma (astetta)",
+      guide_title:"Pikaohje",
+      guide:[
+        "Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.",
+        "Taivuta ensin 200 mm osa haluttuun kulmaan (θ).",
+        "Taivuta sitten 400 mm osa, kunnes 0 mm kulma osuu reunaan.",
+        "Lue millimetrit reunaa pitkin ja syötä tähän – saat kulman asteina.",
+        "Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."
+      ],
+      help_btn:"Näytä selitys ja kuva",
+      help_text:"Periaate: 200 mm osan kulma θ. 400 mm osa tuntumana, kunnes 0-kulma kohtaa reunan. Lukema D → kulma kalibroidun käyrän kautta.",
+      toolChoice:"Valitse laskin:",
+      fall_title:"Kaato-laskin",
+      fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",
+      fall_percent_label:"Kaato prosentteina (%)",
+      fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",
+      fall_deg_label:"Kaato asteina (°)",
+      fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",
+      fall_ratio_label:"Kaatosuhde (1 : X)",
+      fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",
+      fall_hl_label:"Korkeusero ja pituus",
+      fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",
+      fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."
+    },
+    de:{
+      app:"TS-Rechner",
+      sub:"Abgelesener Winkel am Gliedermaßstab in Grad",
+      lblD:"Ablesung D (mm)",
+      range:"Messbereich 400–800 mm",
+      angle:"Winkel (Grad)",
+      guide_title:"Kurz-Anleitung",
+      guide:[
+        "Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.",
+        "Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.",
+        "Dann 400-mm-Glied so biegen, bis die 0-mm-Ecke die Kante trifft.",
+        "In mm an der Kante ablesen und hier eingeben – Ergebnis in Grad.",
+        "Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."
+      ],
+      help_btn:"Erklärung und Skizze anzeigen",
+      help_text:"Prinzip: 200-mm-Glied im Winkel θ. 400-mm-Glied als Fühler bis zur 0-Ecke. Ablesung D → Winkel über kalibrierte Kurve.",
+      toolChoice:"Rechner wählen:",
+      fall_title:"Gefälle-Rechner",
+      fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",
+      fall_percent_label:"Gefälle in Prozent (%)",
+      fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",
+      fall_deg_label:"Gefälle in Grad (°)",
+      fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",
+      fall_ratio_label:"Gefälle-Verhältnis (1 : X)",
+      fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",
+      fall_hl_label:"Höhenunterschied und Länge",
+      fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",
+      fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."
+    }
   };
 
   function pchipSlopes(x,y){
@@ -424,9 +618,16 @@
   function applyLang(c){
     const S=(STR[c]||STR.no);
     document.title = S.app || "TS-kalkulator";
-    const h_sub=$('h_sub'),lbl_D=$('lbl_D'),rangeText=$('rangeText'),lbl_angle=$('lbl_angle'),
-          guide_title=$('guide_title'),guide_list=$('guide_list'),
-          help_btn=$('help_btn'),help_text=$('help_text');
+    const h_sub=$('h_sub'),
+          lbl_D=$('lbl_D'),
+          rangeText=$('rangeText'),
+          lbl_angle=$('lbl_angle'),
+          guide_title=$('guide_title'),
+          guide_list=$('guide_list'),
+          help_btn=$('help_btn'),
+          help_text=$('help_text'),
+          toolChoice=$('lbl_toolChoice');
+
     if(h_sub)h_sub.textContent=S.sub;
     if(lbl_D)lbl_D.textContent=S.lblD;
     if(rangeText)rangeText.textContent=S.range;
@@ -440,28 +641,56 @@
     }
     if(help_btn)help_btn.textContent=S.help_btn||"";
     if(help_text)help_text.textContent=S.help_text||"";
+    if(toolChoice)toolChoice.textContent=S.toolChoice||"Velg kalkulator:";
+
+    // Fallkalkulator-tekster
+    const fallTitle=$('fallTitle'),
+          fallIntro=$('fallIntro'),
+          fallPercentLabel=$('fallPercentLabel'),
+          fallPercentHint=$('fallPercentHint'),
+          fallDegreesLabel=$('fallDegreesLabel'),
+          fallDegreesHint=$('fallDegreesHint'),
+          fallRatioLabel=$('fallRatioLabel'),
+          fallRatioHint=$('fallRatioHint'),
+          fallHLLabel=$('fallHLLabel'),
+          fallHLHint=$('fallHLHint'),
+          fallFooter=$('fallFooter');
+
+    if(fallTitle)fallTitle.textContent=S.fall_title||"Fallkalkulator";
+    if(fallIntro)fallIntro.textContent=S.fall_intro||"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.";
+    if(fallPercentLabel)fallPercentLabel.textContent=S.fall_percent_label||"Fall i prosent (%)";
+    if(fallPercentHint)fallPercentHint.textContent=S.fall_percent_hint||"Eksempel: 2 betyr 2 % fall";
+    if(fallDegreesLabel)fallDegreesLabel.textContent=S.fall_deg_label||"Fall i grader (°)";
+    if(fallDegreesHint)fallDegreesHint.textContent=S.fall_deg_hint||"Eksempel: 1.145 ≈ 2 % fall";
+    if(fallRatioLabel)fallRatioLabel.textContent=S.fall_ratio_label||"Fallforhold (1 : X)";
+    if(fallRatioHint)fallRatioHint.textContent=S.fall_ratio_hint||"Skriv X. Eksempel: 50 for 1:50";
+    if(fallHLLabel)fallHLLabel.textContent=S.fall_hl_label||"Høydeforskjell og lengde";
+    if(fallHLHint)fallHLHint.textContent=S.fall_hl_hint||"Bruk samme strekning. Velg enhet for begge.";
+    if(fallFooter)fallFooter.textContent=S.fall_footer||"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
   }
 
-  /* Dynamisk illustrasjon */
+  /* Dynamisk illustrasjon – knekk 200 mm, så 400 mm */
   function updateIllustration(deg){
-    const arm200=$('arm200');
-    const arm400=$('arm400');
-    if(!arm200 || !arm400) return;
+    const joint200=$('joint200');
+    const joint400=$('joint400');
+    if(!joint200 || !joint400) return;
 
     if(!isFinite(deg)){
-      // fallback til original posisjon
-      arm200.setAttribute('transform','translate(260,200) rotate(-65)');
-      arm400.setAttribute('transform','translate(460,200) rotate(-25)');
+      // fallback: en illustrativ standard-posisjon
+      joint200.setAttribute('transform','rotate(-65)');
+      joint400.setAttribute('transform','translate(200,0) rotate(40)');
       return;
     }
 
-    // 200-ledd følger vinkelen (negativ = oppover, pga SVG-koordinater)
-    const a200 = -deg;
-    arm200.setAttribute('transform','translate(260,200) rotate('+a200+')');
+    // 200 mm-leddet knekker først rundt nullpunktet
+    const a200 = -deg;        // SVG: negativ = oppover
+    joint200.setAttribute('transform','rotate('+a200+')');
 
-    // 400-ledd følger med, men litt slakere (visuell effekt)
-    const a400 = -deg*0.4;
-    arm400.setAttribute('transform','translate(460,200) rotate('+a400+')');
+    // 400 mm-leddet knekker etterpå ved 200 mm-leddet
+    // Vi bruker samme "følelse" som før: total vinkel ≈ -0.4 * deg
+    const a400_total = -deg*0.4;
+    const phi = a400_total - a200; // relativ vinkel i joint400
+    joint400.setAttribute('transform','translate(200,0) rotate('+phi+')');
   }
 
   function render(){
@@ -469,10 +698,10 @@
     if(!thetaTop||!rangeText||!sliderD)return;
     const inp=$('D');
     const D=parseFloat(String(inp.value).replace(',','.'));
-    if(!Number.isFinite(D)){ 
-      thetaTop.textContent='–'; 
+    if(!Number.isFinite(D)){
+      thetaTop.textContent='–';
       updateIllustration(NaN);
-      return; 
+      return;
     }
     sliderD.value=String(Math.max(400,Math.min(800,D)));
     const deg=pchipEval(D);
@@ -492,7 +721,7 @@
     const box=$('qrUrlBox'),img=$('qrImg'),a=$('qrDownload'),modal=$('qrModal');
     if(box)box.textContent=url;
     if(img){img.src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;}
-    if(a)a.href=img.src;
+    if(a && img)a.href=img.src;
     if(modal)modal.style.display='flex';
   }
   function closeQR(){
@@ -664,7 +893,7 @@
     });
 
     render();
-    const ver=$('ver'); if(ver)ver.textContent='4.0.0';
+    const ver=$('ver'); if(ver)ver.textContent='4.0.1';
   });
 
   if('serviceWorker' in navigator){
