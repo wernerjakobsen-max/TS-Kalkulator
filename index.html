@@ -1,627 +1,560 @@
-<!doctype html>
-<html lang="no" data-theme="auto">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title id="t_app">TS-kalkulator</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#00FFFF" id="themeColor">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <script>(function(){try{var s=localStorage.getItem('ts_theme')...ibute('content',d?'#0b1220':'#00FFFF');}catch(e){}})();</script>
-  <style>
-    :root{--bg:#f8fafc;--card:#fff;--muted:#475569;--text:#0f172a;--ring:#e2e8f0;--brand:#00FFFF;--brandText:#041b1b;}
-    @media (prefers-color-scheme:dark){
-      :root{--bg:#0b1220;--card:#0f172a;--muted:#9aa8bf;--text:#ebf0f7;--ring:#1f2937;--brand:#00FFFF;--brandText:#002c2c;}
+const $ = (id) => document.getElementById(id);
+const CANONICAL = "https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.1";
+
+/* Data for TS-kalkulator (som 3.9.7b) */
+const X = [400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
+const Y = [0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
+
+const STR = {
+  no:{
+    app:"TS-kalkulator",
+    sub:"Avlest vinkel på tommestokk omregnet til grader",
+    lblD:"Avlest D (mm)",
+    range:"måleområde 400-800mm",
+    angle:"Vinkel (grader)",
+    guide_title:"Bruksanvisning",
+    guide:[
+      "Utstyr: plast tommestokk 2 m (f.eks. Hultafors), leddbredde ca. 15 mm.",
+      "Knekk først 200 mm-leddet til ønsket vinkel (θ).",
+      "Knekk deretter leddet ved 400 mm-punktet til 0-hjørnet treffer tommestokken langs kanten.",
+      "Les av mm langs kanten (D). Skriv D inn her – du får vinkelen i 200-leddet.",
+      "Gyldig område: 400–800 mm (400≈0°, 800≈180°)."
+    ],
+    help_text:"Illustrasjonen viser prinsippet: tommestokken ligger langs kanten. 200 mm-leddet står i vinkel θ. Leddet ved 400 mm bøyes slik at spissen (0-punktet) treffer kanten ved D. Denne D-verdien er kalibrert mot vinkelen θ i 200-leddet.",
+    toolChoice:"Velg kalkulator:",
+    fall_title:"Fallkalkulator",
+    fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",
+    fall_percent_label:"Fall i prosent (%)",
+    fall_percent_hint:"Eksempel: 2 betyr 2 % fall",
+    fall_deg_label:"Fall i grader (°)",
+    fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",
+    fall_ratio_label:"Fallforhold (1 : X)",
+    fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
+    fall_hl_label:"Høydeforskjell og lengde",
+    fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",
+    fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."
+  },
+  en:{
+    app:"TS Calculator",
+    sub:"Angle from folding ruler reading (mm → degrees)",
+    lblD:"Reading D (mm)",
+    range:"measuring range 400–800 mm",
+    angle:"Angle (degrees)",
+    guide_title:"Instructions",
+    guide:[
+      "Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.",
+      "First bend the 200 mm section to the desired angle (θ).",
+      "Then bend the joint at the 400 mm point until the 0-corner meets the ruler edge.",
+      "Read D in mm along the edge. Enter D here – you get the angle in the 200 mm section.",
+      "Valid range: 400–800 mm (400≈0°, 800≈180°)."
+    ],
+    help_text:"The illustration shows the principle: the ruler lies along the edge. The 200 mm section is at angle θ. The joint at 400 mm is bent so that the tip (0-point) meets the edge at D. This D value is calibrated to the angle θ in the 200 mm section.",
+    toolChoice:"Select calculator:",
+    fall_title:"Slope calculator",
+    fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",
+    fall_percent_label:"Slope in percent (%)",
+    fall_percent_hint:"Example: 2 means 2% slope",
+    fall_deg_label:"Slope in degrees (°)",
+    fall_deg_hint:"Example: 1.145 ≈ 2% slope",
+    fall_ratio_label:"Slope ratio (1 : X)",
+    fall_ratio_hint:"Type X. Example: 50 for 1:50",
+    fall_hl_label:"Height difference and length",
+    fall_hl_hint:"Use the same run. Choose units for both.",
+    fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."
+  },
+  sv:{
+    app:"TS-kalkylator",
+    sub:"Avläst vinkel på tumstock omräknad till grader",
+    lblD:"Avläst D (mm)",
+    range:"mätområde 400–800 mm",
+    angle:"Vinkel (grader)",
+    guide_title:"Bruksanvisning",
+    guide:[
+      "Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.",
+      "Vik först 200 mm-ledet till önskad vinkel (θ).",
+      "Vik sedan leden vid 400 mm-punkten tills 0-hörnet möter tumstocken längs kanten.",
+      "Läs av mm längs kanten (D). Skriv in D här – du får vinkeln i 200-ledet.",
+      "Giltigt område: 400–800 mm (400≈0°, 800≈180°)."
+    ],
+    help_text:"Illustrationen visar principen: tumstocken ligger längs kanten. 200 mm-ledet står i vinkel θ. Leddet vid 400 mm böjs så att spetsen (0-punkten) möter kanten vid D. Detta D-värde är kalibrerat mot vinkeln θ i 200-ledet.",
+    toolChoice:"Välj kalkylator:",
+    fall_title:"Fallkalkylator",
+    fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",
+    fall_percent_label:"Fall i procent (%)",
+    fall_percent_hint:"Exempel: 2 betyder 2 % fall",
+    fall_deg_label:"Fall i grader (°)",
+    fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",
+    fall_ratio_label:"Fallförhållande (1 : X)",
+    fall_ratio_hint:"Skriv X. Exempel: 50 for 1:50",
+    fall_hl_label:"Höjdskillnad och längd",
+    fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",
+    fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."
+  },
+  dk:{
+    app:"TS-kalkulator",
+    sub:"Aflæst vinkel på tommestok omregnet til grader",
+    lblD:"Aflæst D (mm)",
+    range:"måleområde 400–800 mm",
+    angle:"Vinkel (grader)",
+    guide_title:"Brugsvejledning",
+    guide:[
+      "Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.",
+      "Bøj først 200 mm-leddet til ønsket vinkel (θ).",
+      "Bøj derefter leddet ved 400 mm-punktet til 0-hjørnet møder tommestokken langs kanten.",
+      "Aflæs mm langs kanten (D). Indtast D her – du får vinklen i 200-leddet.",
+      "Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."
+    ],
+    help_text:"Illustrationen viser princippet: tommestokken ligger langs kanten. 200 mm-leddet står i vinkel θ. Leddet ved 400 mm bøjes, så spidsen (0-punktet) møder kanten ved D. Dette D er kalibreret imod vinklen θ i 200-leddet.",
+    toolChoice:"Vælg lommeregner:",
+    fall_title:"Fald-kalkulator",
+    fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",
+    fall_percent_label:"Fald i procent (%)",
+    fall_percent_hint:"Eksempel: 2 betyder 2 % fald",
+    fall_deg_label:"Fald i grader (°)",
+    fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",
+    fall_ratio_label:"Faldforhold (1 : X)",
+    fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",
+    fall_hl_label:"Højde-forskel og længde",
+    fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",
+    fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."
+  },
+  fi:{
+    app:"TS-laskin",
+    sub:"Taittomitan lukema muunnettuna asteiksi",
+    lblD:"Lukema D (mm)",
+    range:"mittausalue 400–800 mm",
+    angle:"Kulma (astetta)",
+    guide_title:"Käyttöohje",
+    guide:[
+      "Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.",
+      "Taivuta ensin 200 mm osa haluttuun kulmaan (θ).",
+      "Taivuta sitten 400 mm kohdan niveltä, kunnes 0-kulma osuu mittaan reunan kohdalla.",
+      "Lue millimetrit reunaa pitkin (D). Syötä D tähän – saat kulman 200 mm osassa.",
+      "Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."
+    ],
+    help_text:"Kuva havainnollistaa periaatteen: mitta lepää reunan suuntaisesti. 200 mm osa on kulmassa θ. 400 mm kohdan niveltä taivutetaan, kunnes kärki (0-piste) osuu reunaan kohdassa D. Tämä D-arvo on kalibroitu kulmaan θ 200 mm osassa.",
+    toolChoice:"Valitse laskin:",
+    fall_title:"Kaato-laskin",
+    fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",
+    fall_percent_label:"Kaato prosentteina (%)",
+    fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",
+    fall_deg_label:"Kaato asteina (°)",
+    fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",
+    fall_ratio_label:"Kaatosuhde (1 : X)",
+    fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",
+    fall_hl_label:"Korkeusero ja pituus",
+    fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",
+    fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."
+  },
+  de:{
+    app:"TS-Rechner",
+    sub:"Abgelesener Winkel am Gliedermaßstab in Grad",
+    lblD:"Ablesung D (mm)",
+    range:"Messbereich 400–800 mm",
+    angle:"Winkel (Grad)",
+    guide_title:"Bedienungsanleitung",
+    guide:[
+      "Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.",
+      "Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.",
+      "Dann das Glied bei 400 mm so biegen, bis die 0-mm-Ecke den Maßstab entlang der Kante berührt.",
+      "In mm entlang der Kante ablesen (D). Geben Sie D hier ein – Sie erhalten den Winkel im 200-mm-Glied.",
+      "Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."
+    ],
+    help_text:"Die Illustration zeigt das Prinzip: Der Maßstab liegt entlang der Kante. Das 200-mm-Glied steht im Winkel θ. Das Glied bei 400 mm wird so gebogen, dass die Spitze (0-Punkt) die Kante bei D berührt. Dieser D-Wert ist auf den Winkel θ im 200-mm-Glied kalibriert.",
+    toolChoice:"Rechner wählen:",
+    fall_title:"Gefälle-Rechner",
+    fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",
+    fall_percent_label:"Gefälle in Prozent (%)",
+    fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",
+    fall_deg_label:"Gefälle in Grad (°)",
+    fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",
+    fall_ratio_label:"Gefälle-Verhältnis (1 : X)",
+    fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",
+    fall_hl_label:"Höhenunterschied und Länge",
+    fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",
+    fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."
+  }
+};
+
+function pchipSlopes(x,y){
+  const n = x.length, h = new Array(n-1), d = new Array(n-1);
+  for(let i=0;i<n-1;i++){ h[i]=x[i+1]-x[i]; d[i]=(y[i+1]-y[i])/h[i]; }
+  const m = new Array(n);
+  m[0]=d[0]; m[n-1]=d[n-2];
+  for(let i=1;i<n-1;i++){
+    if(d[i-1]*d[i]<=0) m[i]=0;
+    else{
+      const w1=2*h[i]+h[i-1], w2=h[i]+2*h[i-1];
+      m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);
     }
-    [data-theme="dark"]{--bg:#0b1220;--card:#0f172a;--muted:#9aa8bf;--text:#ebf0f7;--ring:#1f2937;--brand:#00FFFF;--brandText:#002c2c;}
-
-    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);}
-    .app{max-width:920px;margin:0 auto;padding:16px}
-    .card{background:var(--card);border-radius:16px;padding:16px 16px 18px;box-shadow:0 18px 60px rgba(15,23,42,0.26);border:1px solid rgba(148,163,184,0.55);}
-    h1{margin:0;font-size:20px;letter-spacing:-0.03em}
-    h2{margin:12px 0 4px;font-size:16px}
-    p{margin:4px 0;font-size:14px;color:var(--muted)}
-    label{font-size:14px;color:var(--muted);display:block;margin:6px 0 2px}
-    input,select{font-family:inherit;font-size:14px}
-    input[type="number"],input[type="text"]{width:100%;padding:6px 9px;border-radius:10px;border:1px solid var(--ring);background:rgba(255,255,255,0.6);color:var(--text);}
-    input[type="number"]:focus,input[type="text"]:focus{outline:none;border-color:#22d3ee;box-shadow:0 0 0 1px rgba(34,211,238,0.35);}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0}
-    .row>div{flex:1 1 130px}
-    .muted{color:var(--muted);font-size:13px}
-    .badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,235,0.11);color:#036672;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:500;border:1px solid rgba(34,197,235,0.45);}
-    .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(15,23,42,0.04);border-radius:999px;padding:3px 6px;border:1px solid rgba(148,163,184,0.6);}
-    .pill-sm{padding:3px 6px;border-radius:999px;border:1px solid rgba(148,163,184,0.4);background:rgba(15,23,42,0.03);}
-    .pill span{font-size:11px;color:var(--muted);}
-    .value{font-size:32px;font-weight:650;letter-spacing:-0.04em}
-    .value span{font-size:15px;font-weight:500;margin-left:6px;color:var(--muted);}
-    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
-    .toolbar-left{display:flex;align-items:center;gap:8px}
-    .theme-toggle{border:none;background:none;padding:4px;border-radius:999px;cursor:pointer;border:1px solid rgba(148,163,184,0.6);}
-    .theme-toggle svg{width:16px;height:16px;display:block}
-    .theme-toggle:hover{background:rgba(15,23,42,0.06);}
-    .link{font-size:12px;color:#0284c7;text-decoration:none}
-    .link:hover{text-decoration:underline}
-    .beta{font-size:11px;font-weight:500;color:#9ca3af;border-radius:999px;border:1px dashed #9ca3af;padding:1px 6px;margin-left:4px;}
-    .btn{border-radius:999px;border:1px solid rgba(148,163,184,0.7);background:rgba(15,23,42,0.03);color:var(--text);padding:5px 10px;font-size:12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
-    .btn.ghost{background:transparent}
-    .btn svg{width:14px;height:14px}
-    .btn:hover{background:rgba(15,23,42,0.05);}
-    .code{text-align:center;margin:6px 0;font-size:13px;color:var(--muted);}
-    .code span{display:inline-block;padding:3px 8px;border-radius:999px;background:rgba(15,23,42,0.04);border:1px solid rgba(148,163,184,0.6);font-family:"SF Mono",ui-monospace,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px;color:var(--muted);}
-    .footer{margin-top:12px;font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px}
-    .footer a{color:inherit;text-decoration:none}
-    .footer a:hover{text-decoration:underline}
-    .svgbox{background:var(--bg);border:1px solid var(--ring);border-radius:12px;padding:8px;overflow:auto;margin-top:8px}
-    .warn{color:#b91c1c}
-
-    /* Verktøyvelger (TS / Fall) */
-    .tool-switch {
-      margin: 4px 0 10px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .tool-switch-inner{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-    }
-    .tool-switch select {
-      padding:6px 10px;
-      border-radius:10px;
-      border:1px solid #9efefe;
-      background:rgba(255,255,255,0.85);
-      color:var(--brandText);
-      font-size:14px;
-    }
-
-    /* Fallkalkulator-layout */
-    #tool-fall { margin-top: 8px; }
-    .fall-info,
-    .fall-footer {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .fall-footer {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .fall-footer span {
-      display: inline-flex;
-      align-items:center;
-      gap:4px;
-    }
-    .badge-info {
-      background: rgba(59,130,246,0.09);
-      border-color: rgba(59,130,246,0.6);
-      color:#1d4ed8;
-    }
-
-    @media (max-width:600px){
-      .toolbar{flex-direction:column;align-items:flex-start}
-      h1{font-size:18px}
-      .value{font-size:28px}
-    }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <div class="card">
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <h1 id="appTitle">TS-kalkulator</h1>
-          <span class="badge">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 3.9 4.3.6-3.1 3  .7 4.3L8 11.6l-3.8 2  .7-4.3-3.1-3  4.3-.6L8 1.5z" fill="currentColor"/></svg>
-            <span id="t_trust">Brukes på byggeplass</span>
-          </span>
-        </div>
-        <div>
-          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Bytt tema">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v1.1a5 5 0 0 1 4.9 4.9H19a1 1 0 1 1 0 2h-1.1A5 5 0 0 1 13 17.9V19a1 1 0 1 1-2 0v-1.1A5 5 0 0 1 6.1 12H5a1 1 0 1 1 0-2h1.1A5 5 0 0 1 11 5.1V4a1 1 0 0 1 1-1zM12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="currentColor"/></svg>
-          </button>
-          <a id="qrlink" href="qr.html" class="btn" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v2H6v5H4V4zm10 0h6v7h-2V6h-4V4zM4 13h2v4h5v2H4v-6zm13 4h-3v-2h3v-3h2v5h-2z" fill="currentColor"/></svg>
-            <span id="t_qr">QR-kode</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Verktøyvelger (TS / Fall) -->
-      <div class="tool-switch" id="toolbar">
-        <div class="pill pill-sm">
-          <div class="tool-switch-inner">
-            <span id="lbl_toolChoice">Velg kalkulator:</span>
-            <select id="toolSelect" onchange="switchTool(this.value)">
-              <option value="ts">TS-kalkulator</option>
-              <option value="fall">Fallkalkulator</option>
-            </select>
-          </div>
-        </div>
-        <select id="lang" class="btn ghost" style="min-width:96px">
-          <option value="no">Norsk</option>
-          <option value="en">English</option>
-        </select>
-      </div>
-
-      <!-- TS-kalkulator -->
-      <div id="tool-ts">
-        <p id="t_intro">Avlest mm-verdi på Hultafors G59 2 m tommestokk omregnet til vinkel i grader.</p>
-
-        <div class="row">
-          <div>
-            <label for="dist" id="t_labelD">Avlest mm-verdi hvor enden treffer skalaen</label>
-            <input type="number" id="dist" inputmode="decimal" min="400" max="800" step="1" value="550">
-            <p class="muted" id="t_rangeHint">Gjelder Hultafors G59 2 m hvor første ledd er ca. 200 mm og andre ledd er 200 mm.</p>
-          </div>
-          <div>
-            <label for="slider" id="t_sliderLabel">Juster ved å dra</label>
-            <input type="range" id="slider" min="400" max="800" step="1" value="550">
-            <p class="muted" id="t_sliderHint">Tommestokken ligger flatt fra 0 mm til 2000 mm. Første ledd er bøyd opp.</p>
-          </div>
-        </div>
-
-        <div class="row" style="align-items:flex-end;margin-top:8px">
-          <div>
-            <div class="value" id="angle">35.0<span>°</span></div>
-            <div class="code">
-              <span id="formula">vinkel f(D) = ...</span>
-            </div>
-          </div>
-          <div>
-            <label id="t_degreeHint">Grader på leddet som er bøyd opp</label>
-            <p class="muted" id="t_precision">Interpolert fra fabrikkens målepunkter. Nøyaktighet ±0,5° i midten av området.</p>
-          </div>
-        </div>
-
-        <div class="svgbox">
-          <svg viewBox="0 0 340 120" width="100%" aria-hidden="true">
-            <defs>
-              <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <path d="M0 0 L6 3 L0 6 Z" fill="#0f172a" />
-              </marker>
-            </defs>
-            <!-- Tommestokk horisontal -->
-            <rect x="20" y="70" width="260" height="10" rx="2" ry="2" fill="#e5e7eb" stroke="#0f172a" stroke-width="0.8"/>
-            <!-- Knekt ledd -->
-            <g id="stickGroup">
-              <rect x="120" y="60" width="60" height="10" rx="2" ry="2" fill="#f97316" stroke="#0f172a" stroke-width="0.8"/>
-            </g>
-            <!-- Skala-markering -->
-            <line x1="20" y1="65" x2="280" y2="65" stroke="#0f172a" stroke-width="0.6"/>
-            <line x1="120" y1="60" x2="120" y2="85" stroke="#0f172a" stroke-width="0.6"/>
-            <text x="120" y="57" font-size="8" text-anchor="middle" fill="#0f172a">200 mm</text>
-
-            <!-- D-markør -->
-            <line id="dLine" x1="20" y1="65" x2="220" y2="65" stroke="#0f172a" stroke-width="0.8" marker-end="url(#arrow)"/>
-            <text id="dText" x="220" y="58" font-size="9" text-anchor="end" fill="#0f172a">D = 550 mm</text>
-
-            <!-- Vinkel-bue -->
-            <path id="angleArc" d="M120 70 A20 20 0 0 1 135 55" fill="none" stroke="#0f172a" stroke-width="0.7"/>
-            <text id="angleText" x="145" y="52" font-size="9" fill="#0f172a">35°</text>
-
-            <!-- Forklaringstekst -->
-            <text x="20" y="18" font-size="10" fill="#0f172a" id="t_svgTitle">Illustrasjon av tommestokken</text>
-            <text x="20" y="30" font-size="8" fill="#4b5563" id="t_svgLine1">Hele tommestokken ligger langs en rett kant.</text>
-            <text x="20" y="40" font-size="8" fill="#4b5563" id="t_svgLine2">Første ledd knekkes opp, og enden treffer skalaen ved D.</text>
-          </svg>
-        </div>
-
-        <p class="warn" id="t_warn">OBS: Denne kalkulatoren er tilpasset Hultafors G59 2 m tommestokk. Bruk på egen risiko.</p>
-      </div>
-
-      <!-- Fallkalkulator -->
-      <div id="tool-fall" style="display:none;">
-        <h2 id="fall_title">Fallkalkulator</h2>
-        <p id="fall_intro" class="fall-info">
-          Regn om mellom høydeforskjell (mm), distanse (m) og fall (mm/m).
-        </p>
-
-        <div class="row">
-          <div>
-            <label for="fall_drop" id="fall_lbl_drop">Høydeforskjell (mm)</label>
-            <input type="number" id="fall_drop" inputmode="decimal" min="0" step="1" value="20">
-          </div>
-          <div>
-            <label for="fall_length" id="fall_lbl_length">Distanse (m)</label>
-            <input type="number" id="fall_length" inputmode="decimal" min="0" step="0.01" value="1.0">
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label for="fall_slope" id="fall_lbl_slope">Fall (mm/m)</label>
-            <input type="number" id="fall_slope" inputmode="decimal" min="0" step="0.1" value="20.0">
-          </div>
-          <div>
-            <label id="fall_lbl_mode">Hva vil du beregne?</label>
-            <select id="fall_mode">
-              <option value="slope" selected>Fall (mm/m) fra høyde og distanse</option>
-              <option value="drop">Høydeforskjell (mm) fra fall og distanse</option>
-              <option value="length">Distanse (m) fra fall og høydeforskjell</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:8px;">
-          <div>
-            <div class="value"><span id="fall_result_value">20.0</span><span id="fall_result_unit">mm/m</span></div>
-            <p class="muted" id="fall_result_text">Standardfall for våtrom er ofte 20 mm/m (2%).</p>
-          </div>
-        </div>
-
-        <div class="fall-footer">
-          <span>
-            <span class="badge badge-info" id="fall_hint_title">Tips</span>
-            <span id="fall_hint_text">Hold enhetene konsekvent i mm og meter for å unngå feil.</span>
-          </span>
-          <span id="fall_hint_note">Resultatene er veiledende. Følg alltid gjeldende regelverk og prosjekteringsgrunnlag.</span>
-        </div>
-      </div>
-
-      <div class="footer">
-        <span>
-          <span id="t_ver">Versjon</span> <span id="ver">4.2.1</span>
-          · <a href="https://github.com/wernerjakobsen-max/TS-Kalkulator" target="_blank" rel="noopener" id="t_repo">Kildekode på GitHub</a>
-        </span>
-        <span id="t_madeby">Laget av Werner Jakobsen</span>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const $ = (id) => document.getElementById(id);
-
-    const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
-    const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
-
-    function pchipSlopes(x,y){
-      const n=x.length,h=new Array(n-1),d=new Array(n-1);
-      for(let i=0;i<n-1;i++){h[i]=x[i+1]-x[i];d[i]=(y[i+1]-y[i])/h[i];}
-      const m=new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
-      for(let i=1;i<n-1;i++){
-        if(d[i-1]*d[i]<=0) m[i]=0;
-        else {
-          const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1];
-          m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);
-        }
+  }
+  for(let i=0;i<n-1;i++){
+    if(d[i]===0){ m[i]=0; m[i+1]=0; }
+    else{
+      const a=m[i]/d[i], b=m[i+1]/d[i], s=a*a+b*b;
+      if(s>9){
+        const t=3/Math.sqrt(s);
+        m[i]=t*a*d[i];
+        m[i+1]=t*b*d[i];
       }
-      return m;
     }
+  }
+  return m;
+}
 
-    const M=pchipSlopes(X,Y);
+const M = pchipSlopes(X,Y);
+function pchipEval(xq){
+  const n=X.length;
+  if(xq<X[0] || xq>X[n-1]) return null;
+  let i=0,j=n-1;
+  while(j-i>1){
+    const k=(i+j)>>1;
+    if(X[k]<=xq) i=k; else j=k;
+  }
+  const h=X[i+1]-X[i], t=(xq-X[i])/h;
+  const h00=(1+2*t)*(1-t)*(1-t),
+        h10=t*(1-t)*(1-t),
+        h01=t*t*(3-2*t),
+        h11=t*t*(t-1);
+  return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
+}
 
-    function pchipEval(xq){
-      const n=X.length;
-      if(xq<X[0]||xq>X[n-1])return null;
-      let i=0,j=n-1;
-      while(j-i>1){
-        const k=(i+j)>>1;
-        if(X[k]<=xq)i=k; else j=k;
-      }
-      const h=X[i+1]-X[i],t=(xq-X[i])/h;
-      const h00=(1+2*t)*(1-t)*(1-t),
-            h10=t*(1-t)*(1-t),
-            h01=t*t*(3-2*t),
-            h11=t*t*(t-1);
-      return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
-    }
+const LANG_KEY='ts_lang', DEC_KEY='ts_dec';
+const themeEl=document.documentElement, themeKey='ts_theme', themeColorTag=document.getElementById('themeColor');
 
-    function render() {
-      const distInput = $('dist');
-      const slider = $('slider');
-      const angleEl = $('angle');
-      const formulaEl = $('formula');
-      const dLine = $('dLine');
-      const dText = $('dText');
-      const angleArc = $('angleArc');
-      const angleText = $('angleText');
+function applyTheme(v){
+  themeEl.setAttribute('data-theme',v);
+  try{ localStorage.setItem(themeKey,v); }catch(e){}
+  if(themeColorTag) themeColorTag.setAttribute('content',(v==='dark')?'#0b1220':'#00FFFF');
+}
+function toggleTheme(){
+  const cur = themeEl.getAttribute('data-theme') || 'auto';
+  applyTheme(cur==='dark'?'light':cur==='light'?'auto':'dark');
+}
+function setLang(c){
+  try{ localStorage.setItem(LANG_KEY,c); }catch(e){}
+  applyLang(c);
+}
+function getLang(){
+  try{ return localStorage.getItem(LANG_KEY) || 'no'; }catch(e){ return 'no'; }
+}
+function getDec(){
+  try{ return parseInt(localStorage.getItem(DEC_KEY)||'0',10); }catch(e){ return 0; }
+}
+function setDec(n){
+  try{ localStorage.setItem(DEC_KEY,String(n)); }catch(e){}
+  updateDecBtn(); render();
+}
+function toggleDec(){
+  setDec(getDec()===0 ? 1 : 0);
+}
+function updateDecBtn(){
+  const b=$('decBtn');
+  if(b) b.textContent = (getDec()===0?'0 des':'1 des');
+}
+function Fdeg(v){
+  const d=getDec();
+  return (d===0?Math.round(v):v.toFixed(d))+'°';
+}
 
-      let D = parseFloat(distInput.value);
-      if (isNaN(D)) D = 550;
-      if (D < 400) D = 400;
-      if (D > 800) D = 800;
+function applyLang(c){
+  const S = (STR[c] || STR.no);
+  document.title = S.app || "TS-kalkulator";
+  const h_sub=$('h_sub'),
+        lbl_D=$('lbl_D'),
+        rangeText=$('rangeText'),
+        lbl_angle=$('lbl_angle'),
+        guide_title=$('guide_title'),
+        guide_list=$('guide_list'),
+        help_text=$('help_text'),
+        toolChoice=$('lbl_toolChoice');
 
-      slider.value = D;
-      distInput.value = D;
-
-      const angle = pchipEval(D);
-      const angleStr = angle !== null ? angle.toFixed(1) : '–';
-      angleEl.innerHTML = angleStr + '<span>°</span>';
-
-      formulaEl.textContent = 'vinkel f(D) ≈ ' + angleStr + '° ved D = ' + D + ' mm';
-
-      const baseX = 120, baseY = 70;
-      const degToRad = Math.PI / 180;
-      const len = 60;
-      const rad = (angle || 0) * degToRad;
-      const endX = baseX + len * Math.cos(-rad);
-      const endY = baseY + len * Math.sin(-rad);
-
-      const rect = angleArc.previousElementSibling;
-      if (rect && rect.tagName === 'rect') {
-        rect.setAttribute('x', Math.min(baseX, endX));
-        rect.setAttribute('y', Math.min(baseY, endY)-5);
-      }
-
-      const arcRadius = 22;
-      const arcEndX = baseX + arcRadius * Math.cos(-rad);
-      const arcEndY = baseY + arcRadius * Math.sin(-rad);
-      const largeArc = angle > 180 ? 1 : 0;
-      angleArc.setAttribute('d', `M${baseX} ${baseY} A${arcRadius} ${arcRadius} 0 ${largeArc} 1 ${arcEndX} ${arcEndY}`);
-
-      angleText.textContent = angleStr + '°';
-      angleText.setAttribute('x', baseX + 40);
-      angleText.setAttribute('y', baseY - 25);
-
-      const dEndX = 20 + (D - 400) * (260 / 400);
-      dLine.setAttribute('x2', dEndX);
-      dText.textContent = 'D = ' + D + ' mm';
-      dText.setAttribute('x', dEndX);
-    }
-
-    $('dist').addEventListener('input', render);
-    $('slider').addEventListener('input', () => {
-      $('dist').value = $('slider').value;
-      render();
+  if(h_sub) h_sub.textContent=S.sub;
+  if(lbl_D) lbl_D.textContent=S.lblD;
+  if(rangeText) rangeText.textContent=S.range;
+  if(lbl_angle) lbl_angle.textContent=S.angle;
+  if(guide_title) guide_title.textContent=S.guide_title;
+  if(guide_list){
+    guide_list.innerHTML='';
+    (S.guide||[]).forEach(t=>{
+      const li=document.createElement('li');
+      li.textContent=t;
+      guide_list.appendChild(li);
     });
+  }
+  if(help_text) help_text.textContent=S.help_text||"";
+  if(toolChoice) toolChoice.textContent=S.toolChoice||"Velg kalkulator:";
 
-    const themeEl=document.documentElement,themeKey='ts_theme',themeColorTag=document.getElementById('themeColor');
-    function applyTheme(v){themeEl.setAttribute('data-theme',v); try{localStorage.setItem(themeKey,v); if(themeColorTag){themeColorTag.setAttribute('content',(v==='dark')?'#0b1220':'#00FFFF');}}catch(e){}}
-    function toggleTheme(){const cur=themeEl.getAttribute('data-theme'); applyTheme(cur==='dark'?'light':cur==='light'?'auto':'dark');}
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  // Fallkalkulator-tekster
+  const fallTitle=$('fallTitle'),
+        fallIntro=$('fallIntro'),
+        fallPercentLabel=$('fallPercentLabel'),
+        fallPercentHint=$('fallPercentHint'),
+        fallDegreesLabel=$('fallDegreesLabel'),
+        fallDegreesHint=$('fallDegreesHint'),
+        fallRatioLabel=$('fallRatioLabel'),
+        fallRatioHint=$('fallRatioHint'),
+        fallHLLabel=$('fallHLLabel'),
+        fallHLHint=$('fallHLHint'),
+        fallFooter=$('fallFooter');
 
-    const STR={
-      no:{
-        app:"TS-kalkulator",
-        trust:"Brukes på byggeplass",
-        intro:"Avlest mm-verdi på Hultafors G59 2 m tommestokk omregnet til vinkel i grader.",
-        labelD:"Avlest mm-verdi hvor enden treffer skalaen",
-        rangeHint:"Gjelder Hultafors G59 2 m hvor første ledd er ca. 200 mm og andre ledd er 200 mm.",
-        sliderLabel:"Juster ved å dra",
-        sliderHint:"Tommestokken ligger flatt fra 0 mm til 2000 mm. Første ledd er bøyd opp.",
-        degreeHint:"Grader på leddet som er bøyd opp",
-        precision:"Interpolert fra fabrikkens målepunkter. Nøyaktighet ±0,5° i midten av området.",
-        svgTitle:"Illustrasjon av tommestokken",
-        svgLine1:"Hele tommestokken ligger langs en rett kant.",
-        svgLine2:"Første ledd knekkes opp, og enden treffer skalaen ved D.",
-        warn:"OBS: Denne kalkulatoren er tilpasset Hultafors G59 2 m tommestokk. Bruk på egen risiko.",
-        qr:"QR-kode",
-        repo:"Kildekode på GitHub",
-        madeby:"Laget av Werner Jakobsen",
-        ver:"Versjon",
-        toolChoice:"Velg kalkulator:",
-        fallTitle:"Fallkalkulator",
-        fallIntro:"Regn om mellom høydeforskjell (mm), distanse (m) og fall (mm/m).",
-        fallLblDrop:"Høydeforskjell (mm)",
-        fallLblLength:"Distanse (m)",
-        fallLblSlope:"Fall (mm/m)",
-        fallLblMode:"Hva vil du beregne?",
-        fallModeSlope:"Fall (mm/m) fra høyde og distanse",
-        fallModeDrop:"Høydeforskjell (mm) fra fall og distanse",
-        fallModeLength:"Distanse (m) fra fall og høydeforskjell",
-        fallResultTextSlope:"Standardfall for våtrom er ofte 20 mm/m (2%).",
-        fallResultTextDrop:"Dette er høydeforskjellen som trengs for valgt fall og distanse.",
-        fallResultTextLength:"Dette er maks lengde for å holde valgt fall med gitt høydeforskjell.",
-        fallHintTitle:"Tips",
-        fallHintText:"Hold enhetene konsekvent i mm og meter for å unngå feil.",
-        fallHintNote:"Resultatene er veiledende. Følg alltid gjeldende regelverk og prosjekteringsgrunnlag."
-      },
-      en:{
-        app:"Folding Rule Angle Calculator",
-        trust:"Used on construction sites",
-        intro:"Measured mm value on Hultafors G59 2 m folding rule converted to angle in degrees.",
-        labelD:"Measured mm value where the end hits the scale",
-        rangeHint:"Applies to Hultafors G59 2 m where the first section is approx. 200 mm and the second section is 200 mm.",
-        sliderLabel:"Adjust by dragging",
-        sliderHint:"The folding rule lies flat from 0 mm to 2000 mm. The first section is bent up.",
-        degreeHint:"Degrees of the section that is bent up",
-        precision:"Interpolated from factory measurement points. Accuracy ±0.5° in the middle of the range.",
-        svgTitle:"Illustration of the folding rule",
-        svgLine1:"The entire folding rule lies along a straight edge.",
-        svgLine2:"The first section is bent up, and the end hits the scale at D.",
-        warn:"NOTE: This calculator is calibrated for the Hultafors G59 2 m folding rule. Use at your own risk.",
-        qr:"QR code",
-        repo:"Source code on GitHub",
-        madeby:"Made by Werner Jakobsen",
-        ver:"Version",
-        toolChoice:"Choose calculator:",
-        fallTitle:"Slope Calculator",
-        fallIntro:"Convert between height difference (mm), distance (m) and slope (mm/m).",
-        fallLblDrop:"Height difference (mm)",
-        fallLblLength:"Distance (m)",
-        fallLblSlope:"Slope (mm/m)",
-        fallLblMode:"What do you want to calculate?",
-        fallModeSlope:"Slope (mm/m) from height and distance",
-        fallModeDrop:"Height difference (mm) from slope and distance",
-        fallModeLength:"Distance (m) from slope and height difference",
-        fallResultTextSlope:"Standard slope for wet rooms is often 20 mm/m (2%).",
-        fallResultTextDrop:"This is the required height difference for the chosen slope and distance.",
-        fallResultTextLength:"This is the maximum distance to keep the chosen slope with the given height difference.",
-        fallHintTitle:"Tip",
-        fallHintText:"Keep units consistently in mm and metres to avoid mistakes.",
-        fallHintNote:"Results are indicative. Always follow applicable regulations and design basis."
-      }
-    };
+  if(fallTitle) fallTitle.textContent = S.fall_title || "Fallkalkulator";
+  if(fallIntro) fallIntro.textContent = S.fall_intro || "";
+  if(fallPercentLabel) fallPercentLabel.textContent = S.fall_percent_label || "";
+  if(fallPercentHint) fallPercentHint.textContent = S.fall_percent_hint || "";
+  if(fallDegreesLabel) fallDegreesLabel.textContent = S.fall_deg_label || "";
+  if(fallDegreesHint) fallDegreesHint.textContent = S.fall_deg_hint || "";
+  if(fallRatioLabel) fallRatioLabel.textContent = S.fall_ratio_label || "";
+  if(fallRatioHint) fallRatioHint.textContent = S.fall_ratio_hint || "";
+  if(fallHLLabel) fallHLLabel.textContent = S.fall_hl_label || "";
+  if(fallHLHint) fallHLHint.textContent = S.fall_hl_hint || "";
+  if(fallFooter) fallFooter.textContent = S.fall_footer || "";
+}
 
-    function applyStrings(lang){
-      const s=STR[lang]||STR.no;
-      $('appTitle').textContent=s.app;
-      $('t_trust').textContent=s.trust;
-      $('t_intro').textContent=s.intro;
-      $('t_labelD').textContent=s.labelD;
-      $('t_rangeHint').textContent=s.rangeHint;
-      $('t_sliderLabel').textContent=s.sliderLabel;
-      $('t_sliderHint').textContent=s.sliderHint;
-      $('t_degreeHint').textContent=s.degreeHint;
-      $('t_precision').textContent=s.precision;
-      $('t_svgTitle').textContent=s.svgTitle;
-      $('t_svgLine1').textContent=s.svgLine1;
-      $('t_svgLine2').textContent=s.svgLine2;
-      $('t_warn').textContent=s.warn;
-      $('t_qr').textContent=s.qr;
-      $('t_repo').textContent=s.repo;
-      $('t_madeby').textContent=s.madeby;
-      $('t_ver').textContent=s.ver;
-      $('lbl_toolChoice').textContent=s.toolChoice;
-      $('fall_title').textContent=s.fallTitle;
-      $('fall_intro').textContent=s.fallIntro;
-      $('fall_lbl_drop').textContent=s.fallLblDrop;
-      $('fall_lbl_length').textContent=s.fallLblLength;
-      $('fall_lbl_slope').textContent=s.fallLblSlope;
-      $('fall_lbl_mode').textContent=s.fallLblMode;
-      $('fall_mode').options[0].textContent=s.fallModeSlope;
-      $('fall_mode').options[1].textContent=s.fallModeDrop;
-      $('fall_mode').options[2].textContent=s.fallModeLength;
-      $('fall_result_text').textContent=s.fallResultTextSlope;
-      $('fall_hint_title').textContent=s.fallHintTitle;
-      $('fall_hint_text').textContent=s.fallHintText;
-      $('fall_hint_note').textContent=s.fallHintNote;
-      document.title=s.app;
-    }
+/* Dynamisk illustrasjon */
+function updateIllustration(deg){
+  const tsRoot=$('tsRoot');
+  const joint200=$('joint200');
+  const joint400=$('joint400');
+  const Dinput=$('D');
+  if(!tsRoot || !joint200 || !joint400 || !Dinput) return;
 
-    $('lang').addEventListener('change', e=>{
-      const lang=e.target.value;
-      localStorage.setItem('ts_lang',lang);
-      applyStrings(lang);
-      render();
+  const Dval=parseFloat(String(Dinput.value).replace(',','.'));
+
+  if(!Number.isFinite(deg) || !Number.isFinite(Dval)){
+    // Fallback-posisjon
+    tsRoot.setAttribute('transform','translate(60,200)');
+    joint200.setAttribute('transform','rotate(-65)');
+    joint400.setAttribute('transform','translate(200,0) rotate(130)');
+    return;
+  }
+
+  const thetaDeg = deg;
+  const thetaSvgDeg = -thetaDeg;
+  const thetaRad = thetaDeg * Math.PI / 180;
+
+  // 200 mm-ledd
+  joint200.setAttribute('transform','rotate('+thetaSvgDeg+')');
+
+  // 400 mm-ledd: relativ rotasjon 2θ
+  const rel400Deg = 2*thetaDeg;
+  joint400.setAttribute('transform','translate(200,0) rotate('+rel400Deg+')');
+
+  // spissens lokale x-koordinat i tsRoot: 400 cos θ
+  const tipLocalX = 400 * Math.cos(thetaRad);
+
+  // spissen skal havne på D langs kanten (baseRuler ved x=60)
+  const Tx = Dval - tipLocalX;
+  tsRoot.setAttribute('transform','translate('+(60+Tx)+',200)');
+}
+
+function render(){
+  const thetaTop=$('thetaTop'),
+        rangeText=$('rangeText'),
+        sliderD=$('sliderD'),
+        inp=$('D');
+  if(!thetaTop||!rangeText||!sliderD||!inp) return;
+
+  const D=parseFloat(String(inp.value).replace(',','.'));
+  if(!Number.isFinite(D)){
+    thetaTop.textContent='–';
+    updateIllustration(NaN);
+    return;
+  }
+  sliderD.value = String(Math.max(400,Math.min(800,D)));
+  const deg=pchipEval(D);
+  if(deg==null){
+    rangeText.classList.add('warn');
+    thetaTop.textContent='–';
+    updateIllustration(NaN);
+  }else{
+    rangeText.classList.remove('warn');
+    thetaTop.textContent=Fdeg(deg);
+    updateIllustration(deg);
+  }
+}
+
+/* QR-modal */
+function openQR(){
+  const url=CANONICAL, enc=encodeURIComponent(url);
+  const box=$('qrUrlBox'),img=$('qrImg'),a=$('qrDownload'),modal=$('qrModal');
+  if(box) box.textContent=url;
+  if(img){
+    img.src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;
+  }
+  if(a && img) a.href=img.src;
+  if(modal) modal.style.display='flex';
+}
+function closeQR(){
+  const m=$('qrModal'); if(m)m.style.display='none';
+}
+function copyUrl(){
+  if(!navigator.clipboard) return;
+  navigator.clipboard.writeText(CANONICAL).then(()=>{
+    const b=$('copyUrl'); if(!b)return;
+    b.textContent='Kopiert!';
+    setTimeout(()=>{b.textContent='Kopier lenke';},1200);
+  }).catch(()=>{});
+}
+
+/* Install (PWA) */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+});
+async function tryInstall(){
+  if(deferredPrompt){
+    await deferredPrompt.prompt();
+    deferredPrompt=null;
+    return;
+  }
+  const m=$('instModal'); if(m)m.style.display='flex';
+}
+
+/* Verktøyvelger: TS / Fall */
+function switchTool(tool){
+  const ts=$('tool-ts'), fall=$('tool-fall');
+  if(!ts||!fall)return;
+  if(tool==='fall'){
+    ts.style.display='none';
+    fall.style.display='block';
+  }else{
+    ts.style.display='block';
+    fall.style.display='none';
+  }
+}
+
+/* Fallkalkulator – hjelpefunksjoner */
+function fallParseInput(id){
+  const el=$(id); if(!el)return NaN;
+  let raw=el.value.trim(); if(!raw)return NaN;
+  raw=raw.replace(",",".");
+  return parseFloat(raw);
+}
+function fallSetNumber(id,value,decimals){
+  const el=$(id); if(!el||!isFinite(value))return;
+  el.value=value.toFixed(decimals);
+}
+function fallSetText(id,value){
+  const el=$(id); if(!el)return;
+  el.value=value;
+}
+
+function fallUpdateAll(stigning){
+  if(!isFinite(stigning)||stigning<0)return;
+  fallSetNumber("fallPercent",stigning*100,3);
+  fallSetNumber("fallDegrees",Math.atan(stigning)*180/Math.PI,3);
+  if(stigning===0){
+    fallSetText("fallRatio","∞");
+  }else{
+    const ratio=1/stigning;
+    fallSetText("fallRatio",ratio.toFixed(3).replace(/\.?0+$/,""));
+  }
+}
+
+function fallFromPercent(){
+  const p=fallParseInput("fallPercent"); if(isNaN(p))return;
+  const s=p/100; fallUpdateAll(s);
+}
+function fallFromDegrees(){
+  const d=fallParseInput("fallDegrees"); if(isNaN(d))return;
+  const s=Math.tan(d*Math.PI/180); fallUpdateAll(s);
+}
+function fallFromRatio(){
+  const el=$("fallRatio"); if(!el)return;
+  let raw=el.value.trim(); if(!raw)return;
+  if(raw.indexOf(":")>=0){
+    const parts=raw.split(":");
+    raw=parts[1]||parts[0];
+  }
+  raw=raw.replace(",",".");
+  const r=parseFloat(raw); if(!isFinite(r)||r<=0)return;
+  const s=1/r; fallUpdateAll(s);
+}
+
+function unitToMeters(value,unit){
+  if(!isFinite(value))return NaN;
+  if(unit==="mm")return value/1000;
+  if(unit==="cm")return value/100;
+  if(unit==="m")return value;
+  return NaN;
+}
+
+function fallFromHeightLength(){
+  const hVal=fallParseInput("fallHeightVal");
+  const LVal=fallParseInput("fallLengthVal");
+  const hUnitEl=$("fallHeightUnit"), LUnitEl=$("fallLengthUnit");
+  const hUnit=hUnitEl?hUnitEl.value:"mm";
+  const LUnit=LUnitEl?LUnitEl.value:"m";
+  if(isNaN(hVal)||isNaN(LVal))return;
+  const hM=unitToMeters(hVal,hUnit);
+  const LM=unitToMeters(LVal,LUnit);
+  if(!isFinite(hM)||!isFinite(LM)||LM<=0)return;
+  const s=hM/LM; fallUpdateAll(s);
+}
+
+/* Init */
+document.addEventListener('DOMContentLoaded',()=>{
+  const langSel=$('lang');
+  const cur=getLang();
+  if(langSel) langSel.value=cur;
+  applyLang(cur);
+
+  if(langSel){
+    langSel.addEventListener('change',(e)=>{
+      setLang(e.target.value);
     });
+  }
+  updateDecBtn();
 
-    function switchTool(tool){
-      const ts=$('tool-ts');
-      const fall=$('tool-fall');
-      if(tool==='fall'){
-        ts.style.display='none';
-        fall.style.display='block';
-      }else{
-        ts.style.display='block';
-        fall.style.display='none';
+  const decBtn=$('decBtn'); if(decBtn)decBtn.addEventListener('click',toggleDec);
+  const themeBtn=$('themeBtn'); if(themeBtn)themeBtn.addEventListener('click',toggleTheme);
+
+  const Dinput=$('D'); if(Dinput)Dinput.addEventListener('input',render);
+  const sliderD=$('sliderD'); if(sliderD)sliderD.addEventListener('input',e=>{
+    Dinput.value=e.target.value;
+    render();
+  });
+
+  const qrBtn=$('qrBtn'); if(qrBtn)qrBtn.addEventListener('click',openQR);
+  const qrClose=$('qrClose'); if(qrClose)qrClose.addEventListener('click',closeQR);
+  const copyBtn=$('copyUrl'); if(copyBtn)copyBtn.addEventListener('click',copyUrl);
+
+  const instBtn=$('installBtn'); if(instBtn)instBtn.addEventListener('click',tryInstall);
+  const instClose=$('instClose'); if(instClose)instClose.addEventListener('click',()=>{
+    const m=$('instModal'); if(m)m.style.display='none';
+  });
+
+  const hardBtn=$('hardRefreshBtn');
+  if(hardBtn)hardBtn.addEventListener('click', async ()=>{
+    try{
+      if('caches' in window){
+        const names=await caches.keys();
+        await Promise.all(names.map(n=>caches.delete(n)));
       }
-    }
-
-    const FALL_STATE = {
-      mode: 'slope',
-      drop: 20,
-      length: 1.0,
-      slope: 20.0
-    };
-
-    function updateFallFromInputs() {
-      const dropInput = $('fall_drop');
-      const lengthInput = $('fall_length');
-      const slopeInput = $('fall_slope');
-      const modeSelect = $('fall_mode');
-
-      let drop = parseFloat(dropInput.value.replace(',', '.'));
-      let length = parseFloat(lengthInput.value.replace(',', '.'));
-      let slope = parseFloat(slopeInput.value.replace(',', '.'));
-
-      if (isNaN(drop)) drop = 0;
-      if (isNaN(length)) length = 0;
-      if (isNaN(slope)) slope = 0;
-
-      FALL_STATE.drop = drop;
-      FALL_STATE.length = length;
-      FALL_STATE.slope = slope;
-      FALL_STATE.mode = modeSelect.value;
-
-      calculateFall();
-    }
-
-    function calculateFall() {
-      const resultValueEl = $('fall_result_value');
-      const resultUnitEl = $('fall_result_unit');
-      const resultTextEl = $('fall_result_text');
-      const mode = FALL_STATE.mode;
-      const lang = $('lang').value;
-      const s = STR[lang] || STR.no;
-
-      let result = 0;
-      let unit = 'mm/m';
-      let text = s.fallResultTextSlope;
-
-      if (mode === 'slope') {
-        if (FALL_STATE.length > 0) {
-          result = (FALL_STATE.drop / (FALL_STATE.length)) ;
-        } else {
-          result = 0;
-        }
-        unit = 'mm/m';
-        text = s.fallResultTextSlope;
-      } else if (mode === 'drop') {
-        result = (FALL_STATE.slope * FALL_STATE.length);
-        unit = 'mm';
-        text = s.fallResultTextDrop;
-      } else if (mode === 'length') {
-        if (FALL_STATE.slope > 0) {
-          result = (FALL_STATE.drop / FALL_STATE.slope);
-        } else {
-          result = 0;
-        }
-        unit = 'm';
-        text = s.fallResultTextLength;
+      if('serviceWorker' in navigator){
+        const regs=await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r=>r.unregister()));
       }
+    }catch(e){}
+    location.href=CANONICAL;
+  });
 
-      resultValueEl.textContent = result.toFixed(2);
-      resultUnitEl.textContent = unit;
-      resultTextEl.textContent = text;
-    }
+  render();
+  const ver=$('ver'); if(ver)ver.textContent='4.2.1';
+});
 
-    $('fall_drop').addEventListener('input', updateFallFromInputs);
-    $('fall_length').addEventListener('input', updateFallFromInputs);
-    $('fall_slope').addEventListener('input', updateFallFromInputs);
-    $('fall_mode').addEventListener('change', updateFallFromInputs);
+/* Service worker */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js');
+  });
+}
 
-    window.switchTool = switchTool;
-
-    (function init(){
-      const savedLang = localStorage.getItem('ts_lang') || 'no';
-      $('lang').value = savedLang;
-      applyStrings(savedLang);
-
-      const initialTool = $('toolSelect').value || 'ts';
-      switchTool(initialTool);
-
-      const url = new URL(location.href);
-      const v = url.searchParams.get('v');
-      if(!v){
-        url.searchParams.set('v','4.2.1');
-        history.replaceState({},'',url.toString());
-      }else if(v!=='4.2.1'){
-        url.searchParams.set('v','4.2.1');
-        history.replaceState({},'',url.toString());
-      }
-
-      const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.1";
-      const ref=url.toString().split('#')[0];
-      if(ref!==CANONICAL && ref.indexOf('localhost')===-1){
-        const btn=document.createElement('button');
-        btn.className='btn';
-        btn.type='button';
-        btn.textContent=savedLang==='en'?'Åpne nyeste versjon':'Åpne nyeste versjon';
-        btn.addEventListener('click',()=>{location.href=CANONICAL;});
-      }
-
-      const qrlink=$('qrlink');
-      if(qrlink){
-        const selfUrl = CANONICAL;
-        qrlink.href = 'qr.html?u=' + encodeURIComponent(selfUrl);
-      }
-
-      render();
-      updateFallFromInputs();
-
-      const ver=$('ver'); if(ver)ver.textContent='4.2.1';
-    })();
-
-    if('serviceWorker' in navigator){
-      window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js');});
-    }
-  </script>
-  <script src="units.js"></script>
-</body>
-</html>
+/* Eksponer funksjoner brukt i inline-onchange */
+window.switchTool = switchTool;
+window.fallFromPercent = fallFromPercent;
+window.fallFromDegrees = fallFromDegrees;
+window.fallFromRatio = fallFromRatio;
+window.fallFromHeightLength = fallFromHeightLength;
