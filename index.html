@@ -7,7 +7,17 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <script>(function(){try{var s=localStorage.getItem('ts_theme')||'auto';document.documentElement.setAttribute('data-theme',s);var tc=document.getElementById('themeColor');var d=s==='dark'||(s==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(tc)tc.setAttribute('content',d?'#0b1220':'#00FFFF');}catch(e){}})();</script>
+  <script>
+    (function(){
+      try{
+        var s=localStorage.getItem('ts_theme')||'auto';
+        document.documentElement.setAttribute('data-theme',s);
+        var tc=document.getElementById('themeColor');
+        var d=s==='dark'||(s==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if(tc)tc.setAttribute('content',d?'#0b1220':'#00FFFF');
+      }catch(e){}
+    })();
+  </script>
   <style>
     :root{--bg:#f8fafc;--card:#fff;--muted:#475569;--text:#0f172a;--ring:#e2e8f0;--brand:#00FFFF;--brandText:#041b1b;}
     @media (prefers-color-scheme:dark){
@@ -119,8 +129,16 @@
         </div>
       </div>
       <select id="lang" class="btn ghost" style="min-width:96px">
-        <option value="no">NO</option><option value="en">EN</option><option value="sv">SV</option>
-        <option value="dk">DK</option><option value="fi">FI</option><option value="de">DE</option>
+        <option value="no">NO</option>
+        <option value="en">EN</option>
+        <option value="sv">SV</option>
+        <option value="dk">DK</option>
+        <option value="fi">FI</option>
+        <option value="de">DE</option>
+        <option value="sr">SR</option>
+        <option value="uk">UK</option>
+        <option value="pl">PL</option>
+        <option value="ar">AR</option>
       </select>
     </div>
 
@@ -139,10 +157,10 @@
       </div>
 
       <section class="card">
-        <label id="lbl_D">Avlest D (mm)</label>
+        <label id="lbl_D">Avlest mm</label>
         <input id="D" inputmode="decimal" value="760">
-        <input id="sliderD" type="range" min="400" max="800" value="760" style="margin-top:12px">
-        <div class="muted" id="rangeText" style="margin-top:6px">måleområde 400-800mm</div>
+        <input id="sliderD" type="range" min="420" max="800" value="760" style="margin-top:12px">
+        <div class="muted" id="rangeText" style="margin-top:6px">måleområde 420–800mm</div>
         <div class="muted" style="margin-top:12px" id="lbl_angle">Vinkel (grader)</div>
         <div class="big" id="thetaTop">–</div>
       </section>
@@ -256,45 +274,285 @@
   const $ = (id) => document.getElementById(id);
   const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.1";
 
-  /* Data for TS-kalkulator (som 3.9.7b) */
-  const X=[400,420,430,500,525,533,536,590,594,623,678,718,743,756,767,779,785,791,796,800];
-  const Y=[0,8,10.5,31,38,41,42,59,60,70,90,107,120,128,135,145,150,157,166,180];
+  /* Nye data for TS-kalkulator – basert på kontrollmålinger */
+  const X=[420,430,453,485,500,525,536,563,594,635,677.5,718,756,779,791,796,800];
+  const Y=[  8, 11,17.5, 27, 31,38.5, 42,50.5, 60, 74,  90,107.5,128,145,158,166,180];
 
   const STR={
-    no:no:{
-  app:"TS-kalkulator",
-  sub:"Avlest vinkel på tommestokk omregnet til grader",
-  lblD:"Avlest mm",
-  range:"måleområde 400–800mm",
-  angle:"Vinkel (grader)",
-  guide_title:"Bruksanvisning",
-  guide:[
-    "Utstyr: plast tommestokk 2m med 15mm leddbredde (f.eks. Hultafors G59).",
-    "Knekk først 200mm-leddet til ønsket vinkel.",
-    "Knekk deretter leddet ved 400mm-punktet til 0-hjørnet treffer tommestokken langs kanten.",
-    "Les av mm langs kanten og skriv de inn her – du får vinkelen i 200-leddet.",
-    "Måleområde: 400–800mm (400≈0°, 800≈180°)."
-  ],
-  help_text:"",      // brukes ikke lenger pga. bilde
-  toolChoice:"Velg kalkulator:",
-  fall_title:"Fallkalkulator",
-  fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",
-  fall_percent_label:"Fall i prosent (%)",
-  fall_percent_hint:"Eksempel: 2 betyr 2 % fall",
-  fall_deg_label:"Fall i grader (°)",
-  fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",
-  fall_ratio_label:"Fallforhold (1 : X)",
-  fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
-  fall_hl_label:"Høydeforskjell og lengde",
-  fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",
-  fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."
-}
-,toolChoice:"Velg kalkulator:",fall_title:"Fallkalkulator",fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",fall_percent_label:"Fall i prosent (%)",fall_percent_hint:"Eksempel: 2 betyr 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",fall_ratio_label:"Fallforhold (1 : X)",fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",fall_hl_label:"Høydeforskjell og lengde",fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."},
-    en:{app:"TS Calculator",sub:"Angle from folding ruler reading (mm → degrees)",lblD:"Reading D (mm)",range:"measuring range 400–800 mm",angle:"Angle (degrees)",guide_title:"Instructions",guide:["Tool: 2 m plastic folding ruler (e.g., Hultafors), joint width ≈ 15 mm.","First bend the 200 mm section to the desired angle (θ).","Then bend the joint at the 400 mm point until the 0-corner meets the ruler edge.","Read D in mm along the edge. Enter D here – you get the angle in the 200 mm section.","Valid range: 400–800 mm (400≈0°, 800≈180°)."],help_text:"The illustration shows the principle: the ruler lies along the edge. The 200 mm section is at angle θ. The joint at 400 mm is bent so that the tip (0-point) meets the edge at D. This D value is calibrated to the angle θ in the 200 mm section.",toolChoice:"Select calculator:",fall_title:"Slope calculator",fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",fall_percent_label:"Slope in percent (%)",fall_percent_hint:"Example: 2 means 2% slope",fall_deg_label:"Slope in degrees (°)",fall_deg_hint:"Example: 1.145 ≈ 2% slope",fall_ratio_label:"Slope ratio (1 : X)",fall_ratio_hint:"Type X. Example: 50 for 1:50",fall_hl_label:"Height difference and length",fall_hl_hint:"Use the same run. Choose units for both.",fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."},
-    sv:{app:"TS-kalkylator",sub:"Avläst vinkel på tumstock omräknad till grader",lblD:"Avläst D (mm)",range:"mätområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Bruksanvisning",guide:["Utrustning: plasttumstock 2 m (t.ex. Hultafors), led-bredd ca 15 mm.","Vik först 200 mm-ledet till önskad vinkel (θ).","Vik sedan leden vid 400 mm-punkten tills 0-hörnet möter tumstocken längs kanten.","Läs av mm längs kanten (D). Skriv in D här – du får vinkeln i 200-ledet.","Giltigt område: 400–800 mm (400≈0°, 800≈180°)."],help_text:"Illustrationen visar principen: tumstocken ligger längs kanten. 200 mm-ledet står i vinkel θ. Leddet vid 400 mm böjs så att spetsen (0-punkten) möter kanten vid D. Detta D-värde är kalibrerat mot vinkeln θ i 200-ledet.",toolChoice:"Välj kalkylator:",fall_title:"Fallkalkylator",fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",fall_percent_label:"Fall i prosent (%)",fall_percent_hint:"Exempel: 2 betyder 2 % fall",fall_deg_label:"Fall i grader (°)",fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",fall_ratio_label:"Fallförhållande (1 : X)",fall_ratio_hint:"Skriv X. Exempel: 50 for 1:50",fall_hl_label:"Höjdskillnad och längd",fall_hl_hint:"Använd samma sträcka. Välj enhet for begge.",fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."},
-    dk:{app:"TS-kalkulator",sub:"Aflæst vinkel på tommestok omregnet til grader",lblD:"Aflæst D (mm)",range:"måleområde 400–800 mm",angle:"Vinkel (grader)",guide_title:"Brugsvejledning",guide:["Udstyr: plasttommestok 2 m (fx Hultafors), led-bredde ca. 15 mm.","Bøj først 200 mm-leddet til ønsket vinkel (θ).","Bøj derefter leddet ved 400 mm-punktet til 0-hjørnet møder tommestokken langs kanten.","Aflæs mm langs kanten (D). Indtast D her – du får vinklen i 200-leddet.","Gyldigt område: 400–800 mm (400≈0°, 800≈180°)."],help_text:"Illustrationen viser princippet: tommestokken ligger langs kanten. 200 mm-leddet står i vinkel θ. Leddet ved 400 mm bøjes, så spidsen (0-punktet) møder kanten ved D. Dette D er kalibreret imod vinklen θ i 200-leddet.",toolChoice:"Vælg lommeregner:",fall_title:"Fald-kalkulator",fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",fall_percent_label:"Fald i prosent (%)",fall_percent_hint:"Eksempel: 2 betyder 2 % fald",fall_deg_label:"Fald i grader (°)",fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",fall_ratio_label:"Faldforhold (1 : X)",fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",fall_hl_label:"Højde-forskel og længde",fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",fall_footer:"Bemærk: 0 % fald giver uendeligt fallforhold (ingen højde-forskel)."},
-    fi:{app:"TS-laskin",sub:"Taittomitan lukema muunnettuna asteiksi",lblD:"Lukema D (mm)",range:"mittausalue 400–800 mm",angle:"Kulma (astetta)",guide_title:"Käyttöohje",guide:["Väline: 2 m muovinen taitettava mitta (esim. Hultafors), nivelleveys n. 15 mm.","Taivuta ensin 200 mm osa haluttuun kulmaan (θ).","Taivuta sitten 400 mm kohdan niveltä, kunnes 0-kulma osuu mittaan reunan kohdalla.","Lue millimetrit reunaa pitkin (D). Syötä D tähän – saat kulman 200 mm osassa.","Sallittu alue: 400–800 mm (400≈0°, 800≈180°)."],help_text:"Kuva havainnollistaa periaatteen: mitta lepää reunan suuntaisesti. 200 mm osa on kulmassa θ. 400 mm kohdan niveltä taivutetaan, kunnes kärki (0-piste) osuu reunaan kohdassa D. Tämä D-arvo on kalibroitu kulmaan θ 200 mm osassa.",toolChoice:"Valitse laskin:",fall_title:"Kaato-laskin",fall_intro:"Syötä arvo johonkin kenttään. Paina Enter eller klikkaa kentän ulkopuolelle päivittääksesi muut.",fall_percent_label:"Kaato prosentteina (%)",fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",fall_deg_label:"Kaato asteina (°)",fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",fall_ratio_label:"Kaatosuhde (1 : X)",fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",fall_hl_label:"Korkeusero ja pituus",fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."},
-    de:{app:"TS-Rechner",sub:"Abgelesener Winkel am Gliedermaßstab in Grad",lblD:"Ablesung D (mm)",range:"Messbereich 400–800 mm",angle:"Winkel (Grad)",guide_title:"Bedienungsanleitung",guide:["Werkzeug: 2-m-Gliedermaßstab aus Kunststoff (z. B. Hultafors), Gelenkbreite ca. 15 mm.","Zuerst 200-mm-Glied auf gewünschten Winkel (θ) biegen.","Dann das Glied bei 400 mm so biegen, bis die 0-mm-Ecke den Maßstab entlang der Kante berührt.","In mm entlang der Kante ablesen (D). Geben Sie D hier ein – Sie erhalten den Winkel im 200-mm-Glied.","Gültiger Bereich: 400–800 mm (400≈0°, 800≈180°)."],help_text:"Die Illustration zeigt das Prinzip: Der Maßstab liegt entlang der Kante. Das 200-mm-Glied steht im Winkel θ. Das Glied bei 400 mm wird so gebogen, dass die Spitze (0-Punkt) die Kante bei D berührt. Dieser D-Wert ist auf den Winkel θ im 200-mm-Glied kalibriert.",toolChoice:"Rechner wählen:",fall_title:"Gefälle-Rechner",fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter eller klicken Sie außerhalb, um die anderen zu aktualisieren.",fall_percent_label:"Gefälle in Prozent (%)",fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",fall_deg_label:"Gefälle in Grad (°)",fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",fall_ratio_label:"Gefälle-Verhältnis (1 : X)",fall_ratio_hint:"X eingeben. Beispiel: 50 for 1:50",fall_hl_label:"Höhenunterschied und Länge",fall_hl_hint:"Gleiche Strecke verwenden. Einheit for begge wählen.",fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."}
+    no:{
+      app:"TS-kalkulator",
+      sub:"Avlest vinkel på tommestokk omregnet til grader",
+      lblD:"Avlest mm",
+      range:"måleområde 420–800mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Bruksanvisning",
+      guide:[
+        "Utstyr: plast tommestokk 2m med 15mm leddbredde (f.eks. Hultafors G59).",
+        "Knekk først 200mm-leddet til ønsket vinkel.",
+        "Knekk deretter leddet ved 400mm-punktet til 0-hjørnet treffer tommestokken langs kanten.",
+        "Les av mm langs kanten og skriv de inn her – du får vinkelen i 200-leddet.",
+        "Måleområde: 420–800mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Velg kalkulator:",
+      fall_title:"Fallkalkulator",
+      fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",
+      fall_percent_label:"Fall i prosent (%)",
+      fall_percent_hint:"Eksempel: 2 betyr 2 % fall",
+      fall_deg_label:"Fall i grader (°)",
+      fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",
+      fall_ratio_label:"Fallforhold (1 : X)",
+      fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
+      fall_hl_label:"Høydeforskjell og lengde",
+      fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",
+      fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."
+    },
+    en:{
+      app:"TS Calculator",
+      sub:"Angle from folding ruler reading (mm → degrees)",
+      lblD:"Reading (mm)",
+      range:"measuring range 420–800 mm",
+      angle:"Angle (degrees)",
+      guide_title:"Instructions",
+      guide:[
+        "Tool: 2 m plastic folding ruler with 15 mm joints (e.g., Hultafors G59).",
+        "First bend the 200 mm section to the desired angle.",
+        "Then bend the joint at the 400 mm point until the 0-corner meets the ruler edge.",
+        "Read the mm value along the edge and enter it here – you get the angle in the 200 mm section.",
+        "Valid range: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Select calculator:",
+      fall_title:"Slope calculator",
+      fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",
+      fall_percent_label:"Slope in percent (%)",
+      fall_percent_hint:"Example: 2 means 2% slope",
+      fall_deg_label:"Slope in degrees (°)",
+      fall_deg_hint:"Example: 1.145 ≈ 2% slope",
+      fall_ratio_label:"Slope ratio (1 : X)",
+      fall_ratio_hint:"Type X. Example: 50 for 1:50",
+      fall_hl_label:"Height difference and length",
+      fall_hl_hint:"Use the same run. Choose units for both.",
+      fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."
+    },
+    sv:{
+      app:"TS-kalkylator",
+      sub:"Avläst vinkel på tumstock omräknad till grader",
+      lblD:"Avläst mm",
+      range:"mätområde 420–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Bruksanvisning",
+      guide:[
+        "Utrustning: plasttumstock 2 m med 15 mm led-bredd (t.ex. Hultafors G59).",
+        "Vik först 200 mm-ledet till önskad vinkel.",
+        "Vik sedan leden vid 400 mm-punkten tills 0-hörnet möter tumstocken längs kanten.",
+        "Läs av mm längs kanten och skriv in dem här – du får vinkeln i 200 mm-ledet.",
+        "Mätområde: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Välj kalkylator:",
+      fall_title:"Fallkalkylator",
+      fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",
+      fall_percent_label:"Fall i procent (%)",
+      fall_percent_hint:"Exempel: 2 betyder 2 % fall",
+      fall_deg_label:"Fall i grader (°)",
+      fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",
+      fall_ratio_label:"Fallförhållande (1 : X)",
+      fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",
+      fall_hl_label:"Höjdskillnad och längd",
+      fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",
+      fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."
+    },
+    dk:{
+      app:"TS-kalkulator",
+      sub:"Aflæst vinkel på tommestok omregnet til grader",
+      lblD:"Aflæst mm",
+      range:"måleområde 420–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Brugsvejledning",
+      guide:[
+        "Udstyr: plasttommestok 2 m med 15 mm led-bredde (fx Hultafors G59).",
+        "Bøj først 200 mm-leddet til ønsket vinkel.",
+        "Bøj derefter leddet ved 400 mm-punktet til 0-hjørnet møder tommestokken langs kanten.",
+        "Aflæs mm langs kanten og skriv dem ind her – du får vinklen i 200 mm-leddet.",
+        "Gyldigt område: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Vælg lommeregner:",
+      fall_title:"Fald-kalkulator",
+      fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",
+      fall_percent_label:"Fald i procent (%)",
+      fall_percent_hint:"Eksempel: 2 betyder 2 % fald",
+      fall_deg_label:"Fald i grader (°)",
+      fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",
+      fall_ratio_label:"Faldforhold (1 : X)",
+      fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",
+      fall_hl_label:"Højdeforskel og længde",
+      fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",
+      fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."
+    },
+    fi:{
+      app:"TS-laskin",
+      sub:"Taittomitan lukema muunnettuna asteiksi",
+      lblD:"Luettu mm-arvo",
+      range:"mittausalue 420–800 mm",
+      angle:"Kulma (astetta)",
+      guide_title:"Käyttöohje",
+      guide:[
+        "Väline: 2 m muovinen taittomitta, nivelten leveys 15 mm (esim. Hultafors G59).",
+        "Taivuta ensin 200 mm osa haluttuun kulmaan.",
+        "Taivuta sitten 400 mm kohdan niveltä, kunnes 0-kulma osuu mittaan reunan kohdalla.",
+        "Lue millimetrit reunaa pitkin ja syötä arvo tähän – saat kulman 200 mm osassa.",
+        "Mittausalue: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Valitse laskin:",
+      fall_title:"Kaato-laskin",
+      fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",
+      fall_percent_label:"Kaato prosentteina (%)",
+      fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",
+      fall_deg_label:"Kaato asteina (°)",
+      fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",
+      fall_ratio_label:"Kaatosuhde (1 : X)",
+      fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",
+      fall_hl_label:"Korkeusero ja pituus",
+      fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",
+      fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."
+    },
+    de:{
+      app:"TS-Rechner",
+      sub:"Abgelesener Winkel am Gliedermaßstab in Grad",
+      lblD:"Ablesung (mm)",
+      range:"Messbereich 420–800 mm",
+      angle:"Winkel (Grad)",
+      guide_title:"Bedienungsanleitung",
+      guide:[
+        "Werkzeug: 2-m-Gliedermaßstab aus Kunststoff mit 15 mm Gelenkbreite (z. B. Hultafors G59).",
+        "Zuerst das 200-mm-Glied auf den gewünschten Winkel biegen.",
+        "Dann das Gelenk bei 400 mm so biegen, bis die 0-mm-Ecke den Maßstab entlang der Kante berührt.",
+        "In mm entlang der Kante ablesen und hier eingeben – Sie erhalten den Winkel im 200-mm-Glied.",
+        "Gültiger Bereich: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Rechner wählen:",
+      fall_title:"Gefälle-Rechner",
+      fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",
+      fall_percent_label:"Gefälle in Prozent (%)",
+      fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",
+      fall_deg_label:"Gefälle in Grad (°)",
+      fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",
+      fall_ratio_label:"Gefälle-Verhältnis (1 : X)",
+      fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",
+      fall_hl_label:"Höhenunterschied und Länge",
+      fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",
+      fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."
+    },
+    /* Serbisk (latin) */
+    sr:{
+      app:"TS kalkulator",
+      sub:"Očitani ugao na sklopivom metru preračunat u stepene",
+      lblD:"Očitano (mm)",
+      range:"merni opseg 420–800 mm",
+      angle:"Ugao (stepeni)",
+      guide_title:"Uputstvo",
+      guide:[
+        "Alat: plastični sklopivi metar 2 m sa šarkama širine 15 mm (npr. Hultafors G59).",
+        "Prvo savij 200 mm segment na željeni ugao.",
+        "Zatim savij zglob na 400 mm tački dok se nulta ivica ne nasloni na skalu duž ivice.",
+        "Očitaj milimetre duž ivice i unesi ih ovde – dobijaš ugao u 200 mm segmentu.",
+        "Važeći opseg: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Izaberi kalkulator:",
+      fall_title:"Kalkulator nagiba",
+      fall_intro:"Unesi vrednost u jedno polje. Pritisni Enter ili klikni van polja da se ostala ažuriraju.",
+      fall_percent_label:"Nagib u procentima (%)",
+      fall_percent_hint:"Primer: 2 znači 2 % nagiba",
+      fall_deg_label:"Nagib u stepenima (°)",
+      fall_deg_hint:"Primer: 1,145 ≈ 2 % nagiba",
+      fall_ratio_label:"Odnos nagiba (1 : X)",
+      fall_ratio_hint:"Upiši X. Primer: 50 za 1:50",
+      fall_hl_label:"Visinska razlika i dužina",
+      fall_hl_hint:"Koristi istu dužinu. Izaberi jedinicu za oba.",
+      fall_footer:"Napomena: 0 % nagiba daje beskonačan odnos (nema visinske razlike)."
+    },
+    /* Ukrainsk */
+    uk:{
+      app:"TS-калькулятор",
+      sub:"Зчитаний кут на складному метрі, переведений у градуси",
+      lblD:"Зчитано (мм)",
+      range:"діапазон вимірювання 420–800 мм",
+      angle:"Кут (градуси)",
+      guide_title:"Інструкція",
+      guide:[
+        "Інструмент: пластиковий складний метр 2 м з шарнірами 15 мм (наприклад, Hultafors G59).",
+        "Спершу зігніть 200-мм секцію до потрібного кута.",
+        "Потім зігніть шарнір у точці 400 мм, доки нульовий кут не торкнеться шкали вздовж краю.",
+        "Зчитайте значення в міліметрах уздовж краю й введіть його тут — отримаєте кут на 200-мм секції.",
+        "Робочий діапазон: 420–800 мм (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Виберіть калькулятор:",
+      fall_title:"Калькулятор ухилу",
+      fall_intro:"Введіть значення в одне поле. Натисніть Enter або клацніть поза полем, щоб оновити інші.",
+      fall_percent_label:"Ухил у відсотках (%)",
+      fall_percent_hint:"Приклад: 2 означає 2 % ухилу",
+      fall_deg_label:"Ухил у градусах (°)",
+      fall_deg_hint:"Приклад: 1,145 ≈ 2 % ухилу",
+      fall_ratio_label:"Співвідношення ухилу (1 : X)",
+      fall_ratio_hint:"Введіть X. Наприклад: 50 для 1:50",
+      fall_hl_label:"Перепад висот і довжина",
+      fall_hl_hint:"Використовуйте ту саму довжину. Оберіть одиниці для обох.",
+      fall_footer:"Примітка: 0 % ухилу дає нескінченне співвідношення (немає перепаду висот)."
+    },
+    /* Polsk */
+    pl:{
+      app:"Kalkulator TS",
+      sub:"Odczytany kąt na miarce składanej przeliczony na stopnie",
+      lblD:"Odczyt (mm)",
+      range:"zakres pomiarowy 420–800 mm",
+      angle:"Kąt (stopnie)",
+      guide_title:"Instrukcja",
+      guide:[
+        "Narzędzie: plastikowy metr składany 2 m z zawiasami 15 mm (np. Hultafors G59).",
+        "Najpierw zegnij odcinek 200 mm do żądanego kąta.",
+        "Następnie zegnij zawias w punkcie 400 mm, aż narożnik 0 trafi w krawędź miarki.",
+        "Odczytaj milimetry wzdłuż krawędzi i wpisz je tutaj – otrzymasz kąt na odcinku 200 mm.",
+        "Zakres: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Wybierz kalkulator:",
+      fall_title:"Kalkulator spadku",
+      fall_intro:"Wpisz wartość w jednym polu. Naciśnij Enter lub kliknij poza polem, aby zaktualizować pozostałe.",
+      fall_percent_label:"Spadek w procentach (%)",
+      fall_percent_hint:"Przykład: 2 oznacza 2 % spadku",
+      fall_deg_label:"Spadek w stopniach (°)",
+      fall_deg_hint:"Przykład: 1,145 ≈ 2 % spadku",
+      fall_ratio_label:"Stosunek spadku (1 : X)",
+      fall_ratio_hint:"Wpisz X. Przykład: 50 dla 1:50",
+      fall_hl_label:"Różnica wysokości i długość",
+      fall_hl_hint:"Używaj tej samej długości. Wybierz jednostkę dla obu.",
+      fall_footer:"Uwaga: spadek 0 % daje nieskończony stosunek (brak różnicy wysokości)."
+    },
+    /* Arabisk – tekst blir RTL, men layouten er fortsatt LTR */
+    ar:{
+      app:"حاسبة TS",
+      sub:"زاوية المتر القابل للطي محسوبة بالدرجات",
+      lblD:"القراءة (مم)",
+      range:"نطاق القياس 420–800 مم",
+      angle:"الزاوية (°)",
+      guide_title:"طريقة الاستخدام",
+      guide:[
+        "الأداة: متر قابل للطي بطول 2 م مع مفصلات عرضها 15 مم (مثل Hultafors G59).",
+        "أولاً، ثنِّي الجزء بطول 200 مم إلى الزاوية المطلوبة.",
+        "ثم ثنِّ المفصل عند نقطة 400 مم حتى تلامس زاوية الصفر حافة المقياس.",
+        "اقرأ قيمة المليمترات على الحافة وأدخلها هنا لتحصل على الزاوية في جزء 200 مم.",
+        "نطاق العمل: 420–800 مم (420≈8°، 800≈180°)."
+      ],
+      toolChoice:"اختر الحاسبة:",
+      fall_title:"حاسبة الميل",
+      fall_intro:"أدخل قيمة في أحد الحقول. اضغط Enter أو انقر خارج الحقل لتحديث البقية.",
+      fall_percent_label:"الميل بالنسبة المئوية (%)",
+      fall_percent_hint:"مثال: 2 تعني ميل 2٪",
+      fall_deg_label:"الميل بالدرجات (°)",
+      fall_deg_hint:"مثال: 1.145 ≈ ميل 2٪",
+      fall_ratio_label:"نسبة الميل (1 : X)",
+      fall_ratio_hint:"اكتب X. مثال: 50 من أجل 1:50",
+      fall_hl_label:"فرق الارتفاع والطول",
+      fall_hl_hint:"استخدم نفس المسافة. اختر نفس وحدة القياس لكليهما.",
+      fall_footer:"ملاحظة: ميل 0٪ يعطي نسبة لا نهائية (لا يوجد فرق ارتفاع)."
+    }
   };
 
   function pchipSlopes(x,y){
@@ -303,23 +561,39 @@
     const m=new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
     for(let i=1;i<n-1;i++){
       if(d[i-1]*d[i]<=0) m[i]=0;
-      else {const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1]; m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);}
+      else {
+        const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1];
+        m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);
+      }
     }
     for(let i=0;i<n-1;i++){
       if(d[i]===0){m[i]=0; m[i+1]=0;}
       else {
         const a=m[i]/d[i],b=m[i+1]/d[i],s=a*a+b*b;
-        if(s>9){const t=3/Math.sqrt(s); m[i]=t*a*d[i]; m[i+1]=t*b*d[i];}
+        if(s>9){
+          const t=3/Math.sqrt(s);
+          m[i]=t*a*d[i]; m[i+1]=t*b*d[i];
+        }
       }
     }
     return m;
   }
+
   const M=pchipSlopes(X,Y);
+
   function pchipEval(xq){
-    const n=X.length; if(xq<X[0]||xq>X[n-1])return null;
-    let i=0,j=n-1; while(j-i>1){const k=(i+j)>>1; if(X[k]<=xq)i=k; else j=k;}
+    const n=X.length;
+    if(xq<X[0]||xq>X[n-1])return null;
+    let i=0,j=n-1;
+    while(j-i>1){
+      const k=(i+j)>>1;
+      if(X[k]<=xq)i=k; else j=k;
+    }
     const h=X[i+1]-X[i],t=(xq-X[i])/h;
-    const h00=(1+2*t)*(1-t)*(1-t),h10=t*(1-t)*(1-t),h01=t*t*(3-2*t),h11=t*t*(t-1);
+    const h00=(1+2*t)*(1-t)*(1-t),
+          h10=t*(1-t)*(1-t),
+          h01=t*t*(3-2*t),
+          h11=t*t*(t-1);
     return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
   }
 
@@ -350,8 +624,14 @@
     updateDecBtn(); render();
   }
   function toggleDec(){setDec(getDec()===0?1:0);}
-  function updateDecBtn(){ const b=$('decBtn'); if(b)b.textContent=(getDec()===0?'0 des':'1 des'); }
-  function Fdeg(v){const d=getDec(); return (d===0?Math.round(v):v.toFixed(d))+'°';}
+  function updateDecBtn(){
+    const b=$('decBtn');
+    if(b)b.textContent=(getDec()===0?'0 des':'1 des');
+  }
+  function Fdeg(v){
+    const d=getDec();
+    return (d===0?Math.round(v):v.toFixed(d))+'°';
+  }
 
   function applyLang(c){
     const S=(STR[c]||STR.no);
@@ -367,7 +647,11 @@
     if(guide_title)guide_title.textContent=S.guide_title;
     if(guide_list){
       guide_list.innerHTML='';
-      (S.guide||[]).forEach(t=>{const li=document.createElement('li'); li.textContent=t; guide_list.appendChild(li);});
+      (S.guide||[]).forEach(t=>{
+        const li=document.createElement('li');
+        li.textContent=t;
+        guide_list.appendChild(li);
+      });
     }
     if(toolChoice)toolChoice.textContent=S.toolChoice||"Velg kalkulator:";
 
@@ -398,8 +682,7 @@
   }
 
   function updateIllustration(deg){
-    // SVG er fjernet og erstattet med bilde.
-    // Vi lar funksjonen eksistere, men den gjør ikke noe lenger.
+    // SVG er fjernet og erstattet med bilde – funksjonen beholdes for kompatibilitet, men gjør ingenting.
     return;
   }
 
@@ -407,12 +690,24 @@
     const thetaTop=$('thetaTop'),rangeText=$('rangeText'),sliderD=$('sliderD'),inp=$('D');
     if(!thetaTop||!rangeText||!sliderD||!inp)return;
     const D=parseFloat(String(inp.value).replace(',','.'));
+    const MIN=420, MAX=800;
+
     if(!Number.isFinite(D)){
       thetaTop.textContent='–';
       updateIllustration(NaN);
       return;
     }
-    sliderD.value=String(Math.max(400,Math.min(800,D)));
+
+    // Vis at verdien er utenfor område ved å slå av vinkelen
+    if(D<MIN || D>MAX){
+      sliderD.value = String(Math.max(MIN,Math.min(MAX,D)));
+      rangeText.classList.add('warn');
+      thetaTop.textContent='–';
+      updateIllustration(NaN);
+      return;
+    }
+
+    sliderD.value=String(D);
     const deg=pchipEval(D);
     if(deg==null){
       rangeText.classList.add('warn');
@@ -545,8 +840,14 @@
     const hardBtn=$('hardRefreshBtn');
     if(hardBtn)hardBtn.addEventListener('click', async ()=>{
       try{
-        if('caches' in window){const names=await caches.keys(); await Promise.all(names.map(n=>caches.delete(n))); }
-        if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r=>r.unregister()));}
+        if('caches' in window){
+          const names=await caches.keys();
+          await Promise.all(names.map(n=>caches.delete(n)));
+        }
+        if('serviceWorker' in navigator){
+          const regs=await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r=>r.unregister()));
+        }
       }catch(e){}
       location.href=CANONICAL;
     });
