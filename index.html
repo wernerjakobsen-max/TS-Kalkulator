@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title id="t_app">TS-kalkulator</title>
+  <title id="t_app">Vinkelkalkulator for tommestokk a-la Hultafors G59 | TS-kalkulator</title>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <meta name="description" content="Gratis vinkelkalkulator for tommestokk a-la Hultafors G59. Gir et praktisk estimat av vinkel basert på avlest millimeter. Et raskt og nyttig hjelpemiddel for bygg, snekkere og håndverkere. Inkluderer fallkalkulator og flerspråklig støtte.">
   <script>
     (function(){
       try{
@@ -182,6 +183,7 @@
         <div id="ver">4.2.1</div>
       </div>
       <div class="small">
+        Denne kalkulatoren gir et praktisk estimat basert på manuelle målinger med en Hultafors G59. Resultatet er veiledende og ikke 100 % nøyaktig. —
         Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
         Hultafors® is a registered trademark of Hultafors Group. This calculator is independent and not affiliated with, endorsed or sponsored by Hultafors.
       </div>
@@ -304,7 +306,9 @@
       fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
       fall_hl_label:"Høydeforskjell og lengde",
       fall_hl_hint:"Bruk samme strekning. Velg enhet for begge.",
-      fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell)."
+      fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).",
+      fall_height_ph:"Høyde",
+      fall_length_ph:"Lengde"
     },
     en:{
       app:"TS Calculator",
@@ -331,7 +335,9 @@
       fall_ratio_hint:"Type X. Example: 50 for 1:50",
       fall_hl_label:"Height difference and length",
       fall_hl_hint:"Use the same run. Choose units for both.",
-      fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference)."
+      fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference).",
+      fall_height_ph:"Height",
+      fall_length_ph:"Length"
     },
     sv:{
       app:"TS-kalkylator",
@@ -358,7 +364,9 @@
       fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",
       fall_hl_label:"Höjdskillnad och längd",
       fall_hl_hint:"Använd samma sträcka. Välj enhet för båda.",
-      fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad)."
+      fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad).",
+      fall_height_ph:"Höjd",
+      fall_length_ph:"Längd"
     },
     dk:{
       app:"TS-kalkulator",
@@ -385,7 +393,9 @@
       fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",
       fall_hl_label:"Højdeforskel og længde",
       fall_hl_hint:"Brug samme strækning. Vælg enhed for begge.",
-      fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel)."
+      fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel).",
+      fall_height_ph:"Højde",
+      fall_length_ph:"Længde"
     },
     fi:{
       app:"TS-laskin",
@@ -412,7 +422,9 @@
       fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",
       fall_hl_label:"Korkeusero ja pituus",
       fall_hl_hint:"Käytä samaa matkaa. Valitse yksikkö molemmille.",
-      fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa)."
+      fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa).",
+      fall_height_ph:"Korkeus",
+      fall_length_ph:"Pituus"
     },
     de:{
       app:"TS-Rechner",
@@ -439,7 +451,9 @@
       fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",
       fall_hl_label:"Höhenunterschied und Länge",
       fall_hl_hint:"Gleiche Strecke verwenden. Einheit für beide wählen.",
-      fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied)."
+      fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied).",
+      fall_height_ph:"Höhe",
+      fall_length_ph:"Länge"
     },
     /* Serbisk (latin) */
     sr:{
@@ -467,7 +481,9 @@
       fall_ratio_hint:"Upiši X. Primer: 50 za 1:50",
       fall_hl_label:"Visinska razlika i dužina",
       fall_hl_hint:"Koristi istu dužinu. Izaberi jedinicu za oba.",
-      fall_footer:"Napomena: 0 % nagiba daje beskonačan odnos (nema visinske razlike)."
+      fall_footer:"Napomena: 0 % nagiba daje beskonačan odnos (nema visinske razlike).",
+      fall_height_ph:"Visina",
+      fall_length_ph:"Dužina"
     },
     /* Ukrainsk */
     uk:{
@@ -495,7 +511,9 @@
       fall_ratio_hint:"Введіть X. Наприклад: 50 для 1:50",
       fall_hl_label:"Перепад висот і довжина",
       fall_hl_hint:"Використовуйте ту саму довжину. Оберіть одиниці для обох.",
-      fall_footer:"Примітка: 0 % ухилу дає нескінченне співвідношення (немає перепаду висот)."
+      fall_footer:"Примітка: 0 % ухилу дає нескінченне співвідношення (немає перепаду висот).",
+      fall_height_ph:"Перепад висоти",
+      fall_length_ph:"Довжина"
     },
     /* Polsk */
     pl:{
@@ -523,7 +541,9 @@
       fall_ratio_hint:"Wpisz X. Przykład: 50 dla 1:50",
       fall_hl_label:"Różnica wysokości i długość",
       fall_hl_hint:"Używaj tej samej długości. Wybierz jednostkę dla obu.",
-      fall_footer:"Uwaga: spadek 0 % daje nieskończony stosunek (brak różnicy wysokości)."
+      fall_footer:"Uwaga: spadek 0 % daje nieskończony stosunek (brak różnicy wysokości).",
+      fall_height_ph:"Różnica wysokości",
+      fall_length_ph:"Długość"
     },
     /* Arabisk – tekst blir RTL, men layouten er fortsatt LTR */
     ar:{
@@ -551,7 +571,9 @@
       fall_ratio_hint:"اكتب X. مثال: 50 من أجل 1:50",
       fall_hl_label:"فرق الارتفاع والطول",
       fall_hl_hint:"استخدم نفس المسافة. اختر نفس وحدة القياس لكليهما.",
-      fall_footer:"ملاحظة: ميل 0٪ يعطي نسبة لا نهائية (لا يوجد فرق ارتفاع)."
+      fall_footer:"ملاحظة: ميل 0٪ يعطي نسبة لا نهائية (لا يوجد فرق ارتفاع).",
+      fall_height_ph:"ارتفاع",
+      fall_length_ph:"طول"
     }
   };
 
@@ -666,7 +688,9 @@
           fallRatioHint=$('fallRatioHint'),
           fallHLLabel=$('fallHLLabel'),
           fallHLHint=$('fallHLHint'),
-          fallFooter=$('fallFooter');
+          fallFooter=$('fallFooter'),
+          fallHeightVal=$('fallHeightVal'),
+          fallLengthVal=$('fallLengthVal');
 
     if(fallTitle)fallTitle.textContent=S.fall_title||"Fallkalkulator";
     if(fallIntro)fallIntro.textContent=S.fall_intro||"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.";
@@ -679,6 +703,10 @@
     if(fallHLLabel)fallHLLabel.textContent=S.fall_hl_label||"Høydeforskjell og lengde";
     if(fallHLHint)fallHLHint.textContent=S.fall_hl_hint||"Bruk samme strekning. Velg enhet for begge.";
     if(fallFooter)fallFooter.textContent=S.fall_footer||"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
+
+    // Høyde / lengde placeholders følger språk
+    if(fallHeightVal)fallHeightVal.placeholder = S.fall_height_ph || "Høyde";
+    if(fallLengthVal)fallLengthVal.placeholder = S.fall_length_ph || "Lengde";
   }
 
   function updateIllustration(deg){
