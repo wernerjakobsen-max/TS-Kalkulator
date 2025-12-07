@@ -3,1225 +3,921 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title id="t_app">TS-kalkulator</title>
+  <title id="t_app">Vinkelkalkulator for tommestokk a-la Hultafors G59 | TS-kalkulator</title>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#00FFFF" id="themeColor">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-
-  <style>
-    :root {
-      --bg: #f5f5f7;
-      --bg-alt: #ffffff;
-      --fg: #111827;
-      --fg-muted: #4b5563;
-      --accent: #00bcd4;
-      --accent-soft: rgba(0, 188, 212, 0.1);
-      --border: #e5e7eb;
-      --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.08);
-      --radius-lg: 1.25rem;
-      --radius-md: 0.75rem;
-      --radius-pill: 999px;
-      --input-bg: #f9fafb;
-      --input-border: #d1d5db;
-      --danger: #ef4444;
-    }
-
-    [data-theme="dark"] {
-      --bg: #020617;
-      --bg-alt: #020617;
-      --fg: #e5e7eb;
-      --fg-muted: #9ca3af;
-      --accent: #22d3ee;
-      --accent-soft: rgba(34, 211, 238, 0.1);
-      --border: #1f2933;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
-      --input-bg: #020617;
-      --input-border: #374151;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 60%), var(--bg);
-      color: var(--fg);
-    }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .app-shell {
-      width: 100%;
-      max-width: 960px;
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.02), transparent 50%), var(--bg-alt);
-      border-radius: 1.75rem;
-      box-shadow: var(--shadow-soft);
-      padding: 20px 18px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      backdrop-filter: blur(16px);
-    }
-
-    @media (min-width: 768px) {
-      .app-shell {
-        padding: 24px 28px 28px;
-        gap: 22px;
-      }
-    }
-
-    header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0;
-    }
-
-    .app-title-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin: 0;
-      letter-spacing: -0.03em;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .badge {
-      font-size: 0.7rem;
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-      color: var(--fg-muted);
-      background: rgba(15, 23, 42, 0.02);
-    }
-
-    .subtitle {
-      font-size: 0.85rem;
-      color: var(--fg-muted);
-      max-width: 32rem;
-    }
-
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    .control-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.35), transparent 52%);
-      border-radius: 999px;
-      padding: 4px 6px 4px 10px;
-      border: 1px solid rgba(148, 163, 184, 0.55);
-    }
-
-    .control-label {
-      font-size: 0.8rem;
-      color: var(--fg-muted);
-      white-space: nowrap;
-    }
-
-    select, input[type="number"] {
-      border-radius: 999px;
-      border: 1px solid var(--input-border);
-      padding: 6px 10px;
-      font-size: 0.85rem;
-      background: var(--input-bg);
-      color: var(--fg);
-      outline: none;
-      min-width: 70px;
-    }
-
-    select:focus, input[type="number"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-    }
-
-    .theme-select {
-      min-width: 90px;
-    }
-
-    main {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .card {
-      background: radial-gradient(circle at top left, var(--accent-soft), transparent 55%), var(--bg-alt);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      padding: 16px 16px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.12);
-    }
-
-    @media (min-width: 768px) {
-      .card {
-        padding: 18px 20px 20px;
-      }
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-title-pill {
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      color: var(--fg-muted);
-    }
-
-    .card-description {
-      font-size: 0.8rem;
-      color: var(--fg-muted);
-      max-width: 30rem;
-    }
-
-    .fall-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 14px;
-    }
-
-    @media (max-width: 768px) {
-      .fall-layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .fall-column {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .fall-field {
-      background: rgba(15, 23, 42, 0.02);
-      border-radius: var(--radius-md);
-      padding: 10px 10px 11px;
-      border: 1px solid rgba(148, 163, 184, 0.55);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .fall-field label {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .fall-field small {
-      font-size: 0.75rem;
-      color: var(--fg-muted);
-    }
-
-    .mini-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .mini-row input[type="number"] {
-      flex: 1;
-      border-radius: 999px;
-    }
-
-    .mini-row select {
-      flex: 0 0 80px;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.02);
-      padding: 6px 11px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-primary {
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--accent), #38bdf8);
-      color: #0f172a;
-      font-weight: 600;
-    }
-
-    .btn:hover {
-      filter: brightness(1.05);
-    }
-
-    .result-box {
-      background: rgba(15, 23, 42, 0.03);
-      border-radius: var(--radius-md);
-      border: 1px dashed rgba(148, 163, 184, 0.9);
-      padding: 10px 11px;
-      font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .result-main {
-      font-weight: 600;
-    }
-
-    .result-sub {
-      font-size: 0.78rem;
-      color: var(--fg-muted);
-    }
-
-    .footer-note {
-      font-size: 0.75rem;
-      color: var(--fg-muted);
-      margin-top: 2px;
-    }
-
-    .danger {
-      color: var(--danger);
-    }
-
-    .muted {
-      color: var(--fg-muted);
-    }
-  </style>
-
+  <meta name="description" content="Gratis vinkelkalkulator for tommestokk a-la Hultafors G59. Gir et praktisk estimat av vinkel basert på avlest millimeter. Et raskt og nyttig hjelpemiddel for bygg, snekkere og håndverkere. Inkluderer fallkalkulator og flerspråklig støtte.">
   <script>
-    // Tema-init før render
-    (function () {
-      try {
-        var s = localStorage.getItem('ts_theme') || 'auto';
-        document.documentElement.setAttribute('data-theme', s);
-        var tc = document.getElementById('themeColor');
-        var preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var isDark = (s === 'dark') || (s === 'auto' && preferDark);
-        if (tc) tc.setAttribute('content', isDark ? '#020617' : '#00FFFF');
-      } catch (e) {
-        // ignorer
-      }
+    (function(){
+      try{
+        var s=localStorage.getItem('ts_theme')||'auto';
+        document.documentElement.setAttribute('data-theme',s);
+        var tc=document.getElementById('themeColor');
+        var d=s==='dark'||(s==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if(tc)tc.setAttribute('content',d?'#0b1220':'#00FFFF');
+      }catch(e){}
     })();
   </script>
+  <style>
+    :root{--bg:#f8fafc;--card:#fff;--muted:#475569;--text:#0f172a;--ring:#e2e8f0;--brand:#00FFFF;--brandText:#041b1b;}
+    @media (prefers-color-scheme:dark){
+      :root{--bg:#0b1220;--card:#0f172a;--muted:#9aa8bf;--text:#ebf0f7;--ring:#1f2937;--brand:#00FFFF;--brandText:#002c2c;}
+    }
+    [data-theme="dark"]{--bg:#0b1220;--card:#0f172a;--muted:#9aa8bf;--text:#ebf0f7;--ring:#1f2937;--brand:#00FFFF;--brandText:#002c2c;}
+    [data-theme="light"]{--bg:#f8fafc;--card:#fff;--muted:#475569;--text:#0f172a;--ring:#e2e8f0;--brand:#00FFFF;--brandText:#041b1b;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif}
+    .wrap{max-width:820px;margin:0 auto;padding:14px 18px}
+    .pill{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:var(--brandText);padding:12px 22px;border-radius:16px;font-weight:800;border:1px solid #9efefe;box-shadow:0 1px 0 rgba(0,0,0,.06);font-size:28px}
+    .pill-sm{font-size:16px;padding:8px 16px;border-radius:14px}
+    .subtitle{color:var(--muted);font-size:16px;margin:10px 0 10px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn{display:inline-block;background:var(--brand);color:var(--brandText);text-decoration:none;padding:10px 14px;border-radius:12px;border:1px solid #9efefe;cursor:pointer}
+    .ghost{background:transparent;border:1px solid var(--ring);color:var(--text)}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);margin-top:12px}
+    label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+    input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);font-size:20px;background:var(--card);color:var(--text)}
+    input[type=range]{padding:0}
+    .muted{color:var(--muted)}
+    .big{font-size:48px;font-weight:900;letter-spacing:.5px}
+    .footer{margin-top:18px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--ring);padding-top:8px}
+    .small{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.35}
+    .svgbox{background:var(--bg);border:1px solid var(--ring);border-radius:12px;padding:8px;overflow:auto;margin-top:8px}
+    .warn{color:#b91c1c}
+
+    /* Verktøyvelger (TS / Fall) */
+    .tool-switch {
+      margin: 4px 0 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .tool-switch-inner{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .tool-switch select {
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid #9efefe;
+      background:rgba(255,255,255,0.85);
+      color:var(--brandText);
+      font-size:14px;
+    }
+
+    /* Fallkalkulator-layout */
+    #tool-fall { margin-top: 8px; }
+    .fall-info,
+    .fall-footer {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .fall-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .fall-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .fall-field label {
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .fall-field small {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .mini-row {
+      display:flex;
+      gap:6px;
+      align-items:center;
+      flex-wrap:nowrap;
+    }
+    .mini-row input{
+      flex:1 1 auto;
+    }
+    .mini-row select{
+      flex:0 0 auto;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid var(--ring);
+      background:var(--card);
+      color:var(--text);
+      font-size:14px;
+    }
+  </style>
 </head>
 <body>
-  <div class="app-shell">
-    <header>
-      <div class="title-block">
-        <div class="app-title-row">
-          <h1 id="appTitle">
-            TS-kalkulator
-            <span class="badge" id="appBadge">Proff verktøy</span>
-          </h1>
-        </div>
-        <div class="subtitle" id="appSubtitle">
-          Praktisk fallkalkulator for håndverkere, montører og kontrollmåling ute på byggeplass.
-        </div>
-      </div>
-
-      <div class="controls-row">
-        <div class="control-group">
-          <span class="control-label" id="langLabel">Språk</span>
-          <select id="langSelect">
-            <option value="no">Norsk</option>
-            <option value="en">English</option>
-            <option value="sv">Svenska</option>
-            <option value="da">Dansk</option>
-            <option value="fi">Suomi</option>
-            <option value="de">Deutsch</option>
-            <option value="pl">Polski</option>
-            <option value="uk">Українська</option>
-            <option value="sr">Srpski</option>
-            <option value="ar">العربية</option>
-            <option value="es">Español</option>
-          </select>
-        </div>
-
-        <div class="control-group">
-          <span class="control-label" id="themeLabel">Tema</span>
-          <select id="themeSelect" class="theme-select">
-            <option value="auto">Auto</option>
-            <option value="light">Lyst</option>
-            <option value="dark">Mørkt</option>
+  <div class="wrap">
+    <!-- Verktøyvelger + språkvelger i cyan pill -->
+    <div class="tool-switch">
+      <div class="pill pill-sm">
+        <div class="tool-switch-inner">
+          <span id="lbl_toolChoice">Velg kalkulator:</span>
+          <select id="toolSelect" onchange="switchTool(this.value)">
+            <option value="ts">TS-kalkulator</option>
+            <option value="fall">Fallkalkulator</option>
           </select>
         </div>
       </div>
-    </header>
+      <select id="lang" class="btn ghost" style="min-width:96px">
+        <option value="no">NO</option>
+        <option value="en">EN</option>
+        <option value="sv">SV</option>
+        <option value="dk">DK</option>
+        <option value="fi">FI</option>
+        <option value="de">DE</option>
+        <option value="sr">SR</option>
+        <option value="uk">UK</option>
+        <option value="pl">PL</option>
+        <option value="ar">AR</option>
+        <option value="es">ES</option>
+      </select>
+    </div>
 
-    <main>
-      <!-- FALLKALKULATOR -->
-      <section class="card" id="fallCard">
-        <div class="card-header">
-          <div>
-            <div class="card-title" id="fallTitle">
-              Fallkalkulator
-              <span class="card-title-pill" id="fallTitlePill">% – mm/m – høyde</span>
-            </div>
-            <div class="card-description" id="fallDescription">
-              Regn ut fall i prosent, fallforhold og høydeforskjell. Velg enheter som passer jobben.
-            </div>
-          </div>
+    <!-- TS-kalkulator -->
+    <div id="tool-ts">
+      <div class="pill">TS-kalkulator</div>
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div class="subtitle" id="h_sub">Avlest vinkel på tommestokk omregnet til grader</div>
+        <div class="row" style="margin:6px 0 4px">
+          <button class="btn" id="qrBtn">QR</button>
+          <button class="btn" id="installBtn">Installer</button>
+          <button class="btn ghost" id="themeBtn">🌓</button>
+          <button class="btn ghost" id="decBtn">0 des</button>
+          <button class="btn ghost" id="hardRefreshBtn">Hard refresh</button>
         </div>
+      </div>
 
-        <div class="fall-layout">
-          <!-- Kolonne 1: Høyde og lengde -->
-          <div class="fall-column">
-            <!-- Høydeforskjell / lengde med enhetsvelger -->
-            <div class="fall-field">
-              <label id="fallHLLabel">Høydeforskjell og horisontal lengde</label>
-              <small id="fallHLHint">
-                Skriv inn høydeforskjell og lengde. Enheten velger du selv.
-              </small>
-              <div class="mini-row">
-                <input
-                  id="fallHeightVal"
-                  type="number"
-                  step="0.1"
-                  inputmode="decimal"
-                  placeholder="Høyde"
-                  onchange="fallFromHeightLength()"
-                >
-                <select id="fallHeightUnit" onchange="fallFromHeightLength()">
-                  <option value="mm">mm</option>
-                  <option value="cm">cm</option>
-                  <option value="m">m</option>
-                </select>
-              </div>
-              <div class="mini-row" style="margin-top:6px;">
-                <input
-                  id="fallLengthVal"
-                  type="number"
-                  step="0.01"
-                  inputmode="decimal"
-                  placeholder="Lengde"
-                  onchange="fallFromHeightLength()"
-                >
-                <select id="fallLengthUnit" onchange="fallFromHeightLength()">
-                  <option value="m">m</option>
-                  <option value="cm">cm</option>
-                  <option value="mm">mm</option>
-                </select>
-              </div>
-              <div class="btn-row">
-                <button class="btn btn-primary" type="button" onclick="fallFromHeightLength()">
-                  <span id="fallFromHLBtnLabel">Beregn fall</span>
-                </button>
-                <button class="btn" type="button" onclick="clearHLInputs()">
-                  <span id="fallClearHLBtnLabel">Nullstill</span>
-                </button>
-              </div>
-            </div>
+      <section class="card">
+        <label id="lbl_D">Avlest mm</label>
+        <input id="D" inputmode="decimal" value="760">
+        <input id="sliderD" type="range" min="420" max="800" value="760" style="margin-top:12px">
+        <div class="muted" id="rangeText" style="margin-top:6px">måleområde 420–800mm</div>
+        <div class="muted" style="margin-top:12px" id="lbl_angle">Vinkel (grader)</div>
+        <div class="big" id="thetaTop">–</div>
+      </section>
 
-            <div class="result-box" id="fallHLResultBox">
-              <div class="result-main" id="fallHLResultMain">
-                Ingen beregning enda.
-              </div>
-              <div class="result-sub" id="fallHLResultSub">
-                Fyll inn høydeforskjell og lengde, så får du % fall og fallforhold.
-              </div>
-            </div>
+      <section class="card">
+        <div class="subtitle" style="font-weight:800" id="guide_title">Bruksanvisning</div>
+        <ul id="guide_list" class="muted"></ul>
 
-            <div class="footer-note" id="fallFooter">
-              Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).
-            </div>
-          </div>
-
-          <!-- Kolonne 2: Fall % og hjelp -->
-          <div class="fall-column">
-            <div class="fall-field">
-              <label id="fallPctLabel">Fall i prosent</label>
-              <small id="fallPctHint">
-                Skriv inn fall i prosent og lengde, så får du høydeforskjell.
-              </small>
-              <div class="mini-row">
-                <input
-                  id="fallPctVal"
-                  type="number"
-                  step="0.01"
-                  inputmode="decimal"
-                  placeholder="Fall %"
-                  onchange="fallFromPercent()"
-                >
-                <span class="muted">%</span>
-              </div>
-              <div class="mini-row" style="margin-top:6px;">
-                <input
-                  id="fallPctLengthVal"
-                  type="number"
-                  step="0.01"
-                  inputmode="decimal"
-                  placeholder="Lengde"
-                  onchange="fallFromPercent()"
-                >
-                <select id="fallPctLengthUnit" onchange="fallFromPercent()">
-                  <option value="m">m</option>
-                  <option value="cm">cm</option>
-                  <option value="mm">mm</option>
-                </select>
-              </div>
-              <div class="btn-row">
-                <button class="btn btn-primary" type="button" onclick="fallFromPercent()">
-                  <span id="fallFromPctBtnLabel">Beregn høyde</span>
-                </button>
-                <button class="btn" type="button" onclick="clearPctInputs()">
-                  <span id="fallClearPctBtnLabel">Nullstill</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="result-box" id="fallPctResultBox">
-              <div class="result-main" id="fallPctResultMain">
-                Ingen beregning enda.
-              </div>
-              <div class="result-sub" id="fallPctResultSub">
-                Fyll inn fall i prosent og lengde, så får du høydeforskjell og fallforhold.
-              </div>
-            </div>
-          </div>
+        <!-- Bilde i stedet for SVG-illustrasjon -->
+        <div class="svgbox">
+          <img src="tsfolded.jpg"
+               alt="Tommestokk med to ledd bøyd opp der måling tas på skalaen"
+               style="max-width:100%;height:auto;display:block;margin:0 auto;">
         </div>
       </section>
-    </main>
+
+      <div class="footer muted">
+        <div>© Stymparen</div>
+        <div id="ver">4.2.1</div>
+      </div>
+      <div class="small">
+        Denne kalkulatoren gir et praktisk estimat basert på manuelle målinger med en Hultafors G59. Resultatet er veiledende og ikke 100 % nøyaktig. —
+        Hultafors® er et registrert varemerke tilhørende Hultafors Group. Denne kalkulatoren er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors. —
+        Hultafors® is a registered trademark of Hultafors Group. This calculator is independent and not affiliated with, endorsed or sponsored by Hultafors.
+      </div>
+    </div>
+
+    <!-- Fallkalkulator -->
+    <div id="tool-fall" style="display:none;">
+      <section class="card">
+        <div class="pill" id="fallTitle">Fallkalkulator</div>
+        <p class="fall-info" id="fallIntro" style="margin-top:8px;">
+          Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.
+        </p>
+
+        <div class="fall-grid">
+          <!-- Prosent -->
+          <div class="fall-field">
+            <label for="fallPercent" id="fallPercentLabel">Fall i prosent (%)</label>
+            <small id="fallPercentHint">Eksempel: 2 betyr 2 % fall</small>
+            <input id="fallPercent" type="number" step="0.001" inputmode="decimal" onchange="fallFromPercent()">
+          </div>
+
+          <!-- Grader -->
+          <div class="fall-field">
+            <label for="fallDegrees" id="fallDegreesLabel">Fall i grader (°)</label>
+            <small id="fallDegreesHint">Eksempel: 1.145 ≈ 2 % fall</small>
+            <input id="fallDegrees" type="number" step="0.001" inputmode="decimal" onchange="fallFromDegrees()">
+          </div>
+
+          <!-- Forhold 1:X -->
+          <div class="fall-field">
+            <label for="fallRatio" id="fallRatioLabel">Fallforhold (1 : X)</label>
+            <small id="fallRatioHint">Skriv X. Eksempel: 50 for 1:50</small>
+            <input id="fallRatio" type="text" inputmode="decimal" onchange="fallFromRatio()">
+          </div>
+
+          <!-- Høydeforskjell / lengde med enhetsvelger -->
+          <div class="fall-field">
+            <label id="fallHLLabel">Høydeforskjell og horisontal lengde</label>
+            <small id="fallHLHint">Skriv inn høydeforskjell og lengde. Enheten velger du selv.</small>
+            <div class="mini-row">
+              <input id="fallHeightVal" type="number" step="0.1" inputmode="decimal" placeholder="Høyde" onchange="fallFromHeightLength()">
+              <select id="fallHeightUnit" onchange="fallFromHeightLength()">
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+              </select>
+            </div>
+            <div class="mini-row" style="margin-top:6px;">
+              <input id="fallLengthVal" type="number" step="0.01" inputmode="decimal" placeholder="Lengde" onchange="fallFromHeightLength()">
+              <select id="fallLengthUnit" onchange="fallFromHeightLength()">
+                <option value="m">m</option>
+                <option value="cm">cm</option>
+                <option value="mm">mm</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <p class="fall-footer" id="fallFooter">
+          Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).
+        </p>
+      </section>
+    </div>
   </div>
 
-  <script>
-    // ---- i18n-tekster ----
-    const translations = {
-      no: {
-        app_title: "TS-kalkulator",
-        app_badge: "Proff verktøy",
-        app_subtitle: "Praktisk fallkalkulator for håndverkere, montører og kontrollmåling ute på byggeplass.",
-        lang_label: "Språk",
-        theme_label: "Tema",
-        theme_light: "Lyst",
-        theme_dark: "Mørkt",
-        theme_auto: "Auto",
+  <!-- QR modal -->
+  <div id="qrModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
+    <div class="card" style="max-width:92vw">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">QR-kode</h3><button class="btn ghost" id="qrClose">Lukk</button></div>
+      <div class="muted" style="border:1px solid var(--ring);border-radius:10px;padding:8px 10px;margin-top:6px" id="qrUrlBox">https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.1</div>
+      <img id="qrImg" alt="QR-kode" style="display:block;margin:12px auto;border:1px solid var(--ring);max-width:72vw;height:auto">
+      <div class="row"><button class="btn" id="copyUrl">Kopier lenke</button><a id="qrDownload" class="btn" download="ts-kalkulator-qr.png">Last ned PNG</a></div>
+    </div>
+  </div>
 
-        fall_title: "Fallkalkulator",
-        fall_pill: "% – mm/m – høyde",
-        fall_desc: "Regn ut fall i prosent, fallforhold og høydeforskjell. Velg enheter som passer jobben.",
-        fall_hl_label: "Høydeforskjell og horisontal lengde",
-        fall_hl_hint: "Skriv inn høydeforskjell og lengde. Enheten velger du selv.",
-        fall_footer: "Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).",
-        fall_height_ph: "Høyde",
-        fall_length_ph: "Lengde",
-        fall_from_hl_btn: "Beregn fall",
-        fall_clear_hl_btn: "Nullstill",
-        fall_hl_result_empty_main: "Ingen beregning enda.",
-        fall_hl_result_empty_sub: "Fyll inn høydeforskjell og lengde, så får du % fall og fallforhold.",
-        fall_pct_label: "Fall i prosent",
-        fall_pct_hint: "Skriv inn fall i prosent og lengde, så får du høydeforskjell.",
-        fall_pct_ph: "Fall %",
-        fall_pct_length_ph: "Lengde",
-        fall_from_pct_btn: "Beregn høyde",
-        fall_clear_pct_btn: "Nullstill",
-        fall_pct_result_empty_main: "Ingen beregning enda.",
-        fall_pct_result_empty_sub: "Fyll inn fall i prosent og lengde, så får du høydeforskjell og fallforhold.",
-        fall_result_height: h => `Høydeforskjell: ${h} mm`,
-        fall_result_pct: p => `Fall: ${p} %`,
-        fall_result_ratio: r => `Fallforhold: 1 : ${r}`,
-        fall_result_error_missing: "Fyll inn både høyde og lengde.",
-        fall_result_error_zero_length: "Lengden kan ikke være 0.",
-        fall_result_error_negative: "Verdier kan ikke være negative."
-      },
+  <!-- Install modal -->
+  <div id="instModal" style="display:none;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999">
+    <div class="card" style="max-width:92vw">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">Installer app</h3><button class="btn ghost" id="instClose">Lukk</button></div>
+      <div class="muted" style="margin-top:8px">
+        Hvis install-knappen ikke dukker opp: <br>
+        <b>Android/Chrome:</b> meny ⋮ → «Legg til på startsiden».<br>
+        <b>iOS (Safari):</b> delingsikonet ⎋ → «Føy til Hjem-skjerm».<br>
+        <b>Desktop:</b> adresselinje «Installer app»-ikon eller meny.
+      </div>
+    </div>
+  </div>
 
-      en: {
-        app_title: "TS Calculator",
-        app_badge: "Pro tool",
-        app_subtitle: "Practical slope calculator for installers, builders and on-site measurements.",
-        lang_label: "Language",
-        theme_label: "Theme",
-        theme_light: "Light",
-        theme_dark: "Dark",
-        theme_auto: "Auto",
+<script>
+  const $ = (id) => document.getElementById(id);
+  const CANONICAL="https://wernerjakobsen-max.github.io/TS-Kalkulator/?v=4.2.1";
 
-        fall_title: "Slope calculator",
-        fall_pill: "% – mm/m – height",
-        fall_desc: "Calculate slope in percent, slope ratio and height difference. Choose units that fit your job.",
-        fall_hl_label: "Height difference and horizontal length",
-        fall_hl_hint: "Enter height difference and length. You can choose the unit for each field.",
-        fall_footer: "Note: 0% slope gives an infinite slope ratio (no height difference).",
-        fall_height_ph: "Height",
-        fall_length_ph: "Length",
-        fall_from_hl_btn: "Calculate slope",
-        fall_clear_hl_btn: "Clear",
-        fall_hl_result_empty_main: "No calculation yet.",
-        fall_hl_result_empty_sub: "Enter height difference and length to get % slope and slope ratio.",
-        fall_pct_label: "Slope in percent",
-        fall_pct_hint: "Enter slope in percent and length to get height difference.",
-        fall_pct_ph: "Slope %",
-        fall_pct_length_ph: "Length",
-        fall_from_pct_btn: "Calculate height",
-        fall_clear_pct_btn: "Clear",
-        fall_pct_result_empty_main: "No calculation yet.",
-        fall_pct_result_empty_sub: "Enter slope in percent and length to get height difference and slope ratio.",
-        fall_result_height: h => `Height difference: ${h} mm`,
-        fall_result_pct: p => `Slope: ${p} %`,
-        fall_result_ratio: r => `Slope ratio: 1 : ${r}`,
-        fall_result_error_missing: "Fill in both height and length.",
-        fall_result_error_zero_length: "Length cannot be 0.",
-        fall_result_error_negative: "Values cannot be negative."
-      },
+  /* Nye data for TS-kalkulator – basert på kontrollmålinger */
+  const X=[420,430,453,485,500,525,536,563,594,635,677.5,718,756,779,791,796,800];
+  const Y=[  8, 11,17.5, 27, 31,38.5, 42,50.5, 60, 74,  90,107.5,128,145,158,166,180];
 
-      sv: {
-        app_title: "TS-kalkylator",
-        app_badge: "Proffsverktyg",
-        app_subtitle: "Praktisk fallkalkylator för hantverkare, montörer och kontrollmätning på byggplats.",
-        lang_label: "Språk",
-        theme_label: "Tema",
-        theme_light: "Ljust",
-        theme_dark: "Mörkt",
-        theme_auto: "Auto",
+  const STR={
+    no:{
+      app:"TS-kalkulator",
+      sub:"Avlest vinkel på tommestokk omregnet til grader",
+      lblD:"Avlest mm",
+      range:"måleområde 420–800mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Bruksanvisning",
+      guide:[
+        "Utstyr: plast tommestokk 2m med 15mm leddbredde (f.eks. Hultafors G59).",
+        "Knekk først 200mm-leddet til ønsket vinkel.",
+        "Knekk deretter leddet ved 400mm-punktet til 0-hjørnet treffer tommestokken langs kanten.",
+        "Les av mm langs kanten og skriv de inn her – du får vinkelen i 200-leddet.",
+        "Måleområde: 420–800mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Velg kalkulator:",
+      fall_title:"Fallkalkulator",
+      fall_intro:"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.",
+      fall_percent_label:"Fall i prosent (%)",
+      fall_percent_hint:"Eksempel: 2 betyr 2 % fall",
+      fall_deg_label:"Fall i grader (°)",
+      fall_deg_hint:"Eksempel: 1.145 ≈ 2 % fall",
+      fall_ratio_label:"Fallforhold (1 : X)",
+      fall_ratio_hint:"Skriv X. Eksempel: 50 for 1:50",
+      fall_hl_label:"Høydeforskjell og horisontal lengde",
+      fall_hl_hint:"Skriv inn høydeforskjell og lengde. Enheten velger du selv.",
+      fall_footer:"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).",
+      fall_height_ph:"Høyde",
+      fall_length_ph:"Lengde"
+    },
+    en:{
+      app:"TS Calculator",
+      sub:"Angle from folding ruler reading (mm → degrees)",
+      lblD:"Reading (mm)",
+      range:"measuring range 420–800 mm",
+      angle:"Angle (degrees)",
+      guide_title:"Instructions",
+      guide:[
+        "Tool: 2 m plastic folding ruler with 15 mm joints (e.g., Hultafors G59).",
+        "First bend the 200 mm section to the desired angle.",
+        "Then bend the joint at the 400 mm point until the 0-corner meets the ruler edge.",
+        "Read the mm value along the edge and enter it here – you get the angle in the 200 mm section.",
+        "Valid range: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Select calculator:",
+      fall_title:"Slope calculator",
+      fall_intro:"Enter a value in one field. Press Enter or click outside the field to update the others.",
+      fall_percent_label:"Slope in percent (%)",
+      fall_percent_hint:"Example: 2 means 2% slope",
+      fall_deg_label:"Slope in degrees (°)",
+      fall_deg_hint:"Example: 1.145 ≈ 2% slope",
+      fall_ratio_label:"Slope ratio (1 : X)",
+      fall_ratio_hint:"Type X. Example: 50 for 1:50",
+      fall_hl_label:"Height difference and horizontal length",
+      fall_hl_hint:"Enter height difference and length. You can choose the unit for each field.",
+      fall_footer:"Note: 0% slope gives infinite slope ratio (no height difference).",
+      fall_height_ph:"Height",
+      fall_length_ph:"Length"
+    },
+    sv:{
+      app:"TS-kalkylator",
+      sub:"Avläst vinkel på tumstock omräknad till grader",
+      lblD:"Avläst mm",
+      range:"mätområde 420–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Bruksanvisning",
+      guide:[
+        "Utrustning: plasttumstock 2 m med 15 mm led-bredd (t.ex. Hultafors G59).",
+        "Vik först 200 mm-ledet till önskad vinkel.",
+        "Vik sedan leden vid 400 mm-punkten tills 0-hörnet möter tumstocken längs kanten.",
+        "Läs av mm längs kanten och skriv in dem här – du får vinkeln i 200 mm-ledet.",
+        "Mätområde: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Välj kalkylator:",
+      fall_title:"Fallkalkylator",
+      fall_intro:"Ange ett värde i ett av fälten. Tryck Enter eller klicka utanför fältet för att uppdatera de andra.",
+      fall_percent_label:"Fall i procent (%)",
+      fall_percent_hint:"Exempel: 2 betyder 2 % fall",
+      fall_deg_label:"Fall i grader (°)",
+      fall_deg_hint:"Exempel: 1,145 ≈ 2 % fall",
+      fall_ratio_label:"Fallförhållande (1 : X)",
+      fall_ratio_hint:"Skriv X. Exempel: 50 för 1:50",
+      fall_hl_label:"Höjdskillnad och horisontell längd",
+      fall_hl_hint:"Ange höjdskillnad och längd. Du väljer enhet själv för varje fält.",
+      fall_footer:"Obs: 0 % fall ger oändligt fallförhållande (ingen höjdskillnad).",
+      fall_height_ph:"Höjd",
+      fall_length_ph:"Längd"
+    },
+    dk:{
+      app:"TS-kalkulator",
+      sub:"Aflæst vinkel på tommestok omregnet til grader",
+      lblD:"Aflæst mm",
+      range:"måleområde 420–800 mm",
+      angle:"Vinkel (grader)",
+      guide_title:"Brugsvejledning",
+      guide:[
+        "Udstyr: plasttommestok 2 m med 15 mm led-bredde (fx Hultafors G59).",
+        "Bøj først 200 mm-leddet til ønsket vinkel.",
+        "Bøj derefter leddet ved 400 mm-punktet til 0-hjørnet møder tommestokken langs kanten.",
+        "Aflæs mm langs kanten og skriv dem ind her – du får vinklen i 200 mm-leddet.",
+        "Gyldigt område: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Vælg lommeregner:",
+      fall_title:"Fald-kalkulator",
+      fall_intro:"Indtast en værdi i ét felt. Tryk Enter eller klik udenfor feltet for at opdatere de andre.",
+      fall_percent_label:"Fald i procent (%)",
+      fall_percent_hint:"Eksempel: 2 betyder 2 % fald",
+      fall_deg_label:"Fald i grader (°)",
+      fall_deg_hint:"Eksempel: 1,145 ≈ 2 % fald",
+      fall_ratio_label:"Faldforhold (1 : X)",
+      fall_ratio_hint:"Skriv X. F.eks. 50 for 1:50",
+      fall_hl_label:"Højdeforskel og horisontal længde",
+      fall_hl_hint:"Indtast højdeforskel og længde. Du vælger selv enhed for hvert felt.",
+      fall_footer:"Bemærk: 0 % fald giver uendeligt faldforhold (ingen højdeforskel).",
+      fall_height_ph:"Højde",
+      fall_length_ph:"Længde"
+    },
+    fi:{
+      app:"TS-laskin",
+      sub:"Taittomitan lukema muunnettuna asteiksi",
+      lblD:"Luettu mm-arvo",
+      range:"mittausalue 420–800 mm",
+      angle:"Kulma (astetta)",
+      guide_title:"Käyttöohje",
+      guide:[
+        "Väline: 2 m muovinen taittomitta, nivelten leveys 15 mm (esim. Hultafors G59).",
+        "Taivuta ensin 200 mm osa haluttuun kulmaan.",
+        "Taivuta sitten 400 mm kohdan niveltä, kunnes 0-kulma osuu mittaan reunan kohdalla.",
+        "Lue millimetrit reunaa pitkin ja syötä arvo tähän – saat kulman 200 mm osassa.",
+        "Mittausalue: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Valitse laskin:",
+      fall_title:"Kaato-laskin",
+      fall_intro:"Syötä arvo johonkin kenttään. Paina Enter tai klikkaa kentän ulkopuolelle päivittääksesi muut.",
+      fall_percent_label:"Kaato prosentteina (%)",
+      fall_percent_hint:"Esim.: 2 tarkoittaa 2 % kaatoa",
+      fall_deg_label:"Kaato asteina (°)",
+      fall_deg_hint:"Esim.: 1,145 ≈ 2 % kaato",
+      fall_ratio_label:"Kaatosuhde (1 : X)",
+      fall_ratio_hint:"Kirjoita X. Esim.: 50 vastaa 1:50",
+      fall_hl_label:"Korkeusero ja vaakasuora pituus",
+      fall_hl_hint:"Syötä korkeusero ja pituus. Voit valita yksikön kumpaankin kenttään erikseen.",
+      fall_footer:"Huom: 0 % kaato antaa äärettömän suhteen (ei korkeuseroa).",
+      fall_height_ph:"Korkeus",
+      fall_length_ph:"Pituus"
+    },
+    de:{
+      app:"TS-Rechner",
+      sub:"Abgelesener Winkel am Gliedermaßstab in Grad",
+      lblD:"Ablesung (mm)",
+      range:"Messbereich 420–800 mm",
+      angle:"Winkel (Grad)",
+      guide_title:"Bedienungsanleitung",
+      guide:[
+        "Werkzeug: 2-m-Gliedermaßstab aus Kunststoff mit 15 mm Gelenkbreite (z. B. Hultafors G59).",
+        "Zuerst das 200-mm-Glied auf den gewünschten Winkel biegen.",
+        "Dann das Gelenk bei 400 mm so biegen, bis die 0-mm-Ecke den Maßstab entlang der Kante berührt.",
+        "In mm entlang der Kante ablesen und hier eingeben – Sie erhalten den Winkel im 200-mm-Glied.",
+        "Gültiger Bereich: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Rechner wählen:",
+      fall_title:"Gefälle-Rechner",
+      fall_intro:"Geben Sie einen Wert in ein Feld ein. Drücken Sie Enter oder klicken Sie außerhalb, um die anderen zu aktualisieren.",
+      fall_percent_label:"Gefälle in Prozent (%)",
+      fall_percent_hint:"Beispiel: 2 bedeutet 2 % Gefälle",
+      fall_deg_label:"Gefälle in Grad (°)",
+      fall_deg_hint:"Beispiel: 1,145 ≈ 2 % Gefälle",
+      fall_ratio_label:"Gefälle-Verhältnis (1 : X)",
+      fall_ratio_hint:"X eingeben. Beispiel: 50 für 1:50",
+      fall_hl_label:"Höhenunterschied und horizontale Länge",
+      fall_hl_hint:"Geben Sie Höhenunterschied und Länge ein. Sie können für jedes Feld die Einheit wählen.",
+      fall_footer:"Hinweis: 0 % Gefälle ergibt ein unendliches Verhältnis (kein Höhenunterschied).",
+      fall_height_ph:"Höhe",
+      fall_length_ph:"Länge"
+    },
+    /* Serbisk (latin) */
+    sr:{
+      app:"TS kalkulator",
+      sub:"Očitani ugao na sklopivom metru preračunat u stepene",
+      lblD:"Očitano (mm)",
+      range:"merni opseg 420–800 mm",
+      angle:"Ugao (stepeni)",
+      guide_title:"Uputstvo",
+      guide:[
+        "Alat: plastični sklopivi metar 2 m sa šarkama širine 15 mm (npr. Hultafors G59).",
+        "Prvo savij 200 mm segment na željeni ugao.",
+        "Zatim savij zglob na 400 mm tački dok se nulta ivica ne nasloni na skalu duž ivice.",
+        "Očitaj milimetre duž ivice i unesi ih ovde – dobijaš ugao u 200 mm segmentu.",
+        "Važeći opseg: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Izaberi kalkulator:",
+      fall_title:"Kalkulator nagiba",
+      fall_intro:"Unesi vrednost u jedno polje. Pritisni Enter ili klikni van polja da se ostala ažuriraju.",
+      fall_percent_label:"Nagib u procentima (%)",
+      fall_percent_hint:"Primer: 2 znači 2 % nagiba",
+      fall_deg_label:"Nagib u stepenima (°)",
+      fall_deg_hint:"Primer: 1,145 ≈ 2 % nagiba",
+      fall_ratio_label:"Odnos nagiba (1 : X)",
+      fall_ratio_hint:"Upiši X. Primer: 50 za 1:50",
+      fall_hl_label:"Visinska razlika i horizontalna dužina",
+      fall_hl_hint:"Unesite visinsku razliku i dužinu. Jedinicu možete izabrati za svako polje.",
+      fall_footer:"Napomena: 0 % nagiba daje beskonačan odnos (nema visinske razlike).",
+      fall_height_ph:"Visina",
+      fall_length_ph:"Dužina"
+    },
+    /* Ukrainsk */
+    uk:{
+      app:"TS-калькулятор",
+      sub:"Зчитаний кут на складному метрі, переведений у градуси",
+      lblD:"Зчитано (мм)",
+      range:"діапазон вимірювання 420–800 мм",
+      angle:"Кут (градуси)",
+      guide_title:"Інструкція",
+      guide:[
+        "Інструмент: пластиковий складний метр 2 м з шарнірами 15 мм (наприклад, Hultafors G59).",
+        "Спершу зігніть 200-мм секцію до потрібного кута.",
+        "Потім зігніть шарнір у точці 400 мм, доки нульовий кут не торкнеться шкали вздовж краю.",
+        "Зчитайте значення в міліметрах уздовж краю й введіть його тут — отримаєте кут на 200-мм секції.",
+        "Робочий діапазон: 420–800 мм (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Виберіть калькулятор:",
+      fall_title:"Калькулятор ухилу",
+      fall_intro:"Введіть значення в одне поле. Натисніть Enter або клацніть поза полем, щоб оновити інші.",
+      fall_percent_label:"Ухил у відсотках (%)",
+      fall_percent_hint:"Приклад: 2 означає 2 % ухилу",
+      fall_deg_label:"Ухил у градусах (°)",
+      fall_deg_hint:"Приклад: 1,145 ≈ 2 % ухилу",
+      fall_ratio_label:"Співвідношення ухилу (1 : X)",
+      fall_ratio_hint:"Введіть X. Наприклад: 50 для 1:50",
+      fall_hl_label:"Перепад висоти та горизонтальна довжина",
+      fall_hl_hint:"Введіть перепад висоти та довжину. Одиницю вимірювання можна обрати для кожного поля.",
+      fall_footer:"Примітка: 0 % ухилу дає нескінченне співвідношення (немає перепаду висот).",
+      fall_height_ph:"Перепад висоти",
+      fall_length_ph:"Довжина"
+    },
+    /* Polsk */
+    pl:{
+      app:"Kalkulator TS",
+      sub:"Odczytany kąt na miarce składanej przeliczony na stopnie",
+      lblD:"Odczyt (mm)",
+      range:"zakres pomiarowy 420–800 mm",
+      angle:"Kąt (stopnie)",
+      guide_title:"Instrukcja",
+      guide:[
+        "Narzędzie: plastikowy metr składany 2 m z zawiasami 15 mm (np. Hultafors G59).",
+        "Najpierw zegnij odcinek 200 mm do żądanego kąta.",
+        "Następnie zegnij zawias w punkcie 400 mm, aż narożnik 0 trafi w krawędź miarki.",
+        "Odczytaj milimetry wzdłuż krawędzi i wpisz je tutaj – otrzymasz kąt na odcinku 200 mm.",
+        "Zakres: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Wybierz kalkulator:",
+      fall_title:"Kalkulator spadku",
+      fall_intro:"Wpisz wartość w jednym polu. Naciśnij Enter lub kliknij poza polem, aby zaktualizować pozostałe.",
+      fall_percent_label:"Spadek w procentach (%)",
+      fall_percent_hint:"Przykład: 2 oznacza 2 % spadku",
+      fall_deg_label:"Spadek w stopniach (°)",
+      fall_deg_hint:"Przykład: 1,145 ≈ 2 % spadku",
+      fall_ratio_label:"Stosunek spadku (1 : X)",
+      fall_ratio_hint:"Wpisz X. Przykład: 50 dla 1:50",
+      fall_hl_label:"Różnica wysokości i długość pozioma",
+      fall_hl_hint:"Wprowadź różnicę wysokości i długość. Jednostkę możesz wybrać osobno dla każdego pola.",
+      fall_footer:"Uwaga: spadek 0 % daje nieskończony stosunek (brak różnicy wysokości).",
+      fall_height_ph:"Różnica wysokości",
+      fall_length_ph:"Długość"
+    },
+    /* Arabisk – tekst blir RTL, men layouten er fortsatt LTR */
+    ar:{
+      app:"حاسبة TS",
+      sub:"زاوية المتر القابل للطي محسوبة بالدرجات",
+      lblD:"القراءة (مم)",
+      range:"نطاق القياس 420–800 مم",
+      angle:"الزاوية (°)",
+      guide_title:"طريقة الاستخدام",
+      guide:[
+        "الأداة: متر قابل للطي بطول 2 م مع مفصلات عرضها 15 مم (مثل Hultafors G59).",
+        "أولاً، ثنِّي الجزء بطول 200 مم إلى الزاوية المطلوبة.",
+        "ثم ثنِّ المفصل عند نقطة 400 مم حتى تلامس زاوية الصفر حافة المقياس.",
+        "اقرأ قيمة المليمترات على الحافة وأدخلها هنا لتحصل على الزاوية في جزء 200 مم.",
+        "نطاق العمل: 420–800 مم (420≈8°، 800≈180°)."
+      ],
+      toolChoice:"اختر الحاسبة:",
+      fall_title:"حاسبة الميل",
+      fall_intro:"أدخل قيمة في أحد الحقول. اضغط Enter أو انقر خارج الحقل لتحديث البقية.",
+      fall_percent_label:"الميل بالنسبة المئوية (%)",
+      fall_percent_hint:"مثال: 2 تعني ميل 2٪",
+      fall_deg_label:"الميل بالدرجات (°)",
+      fall_deg_hint:"مثال: 1.145 ≈ ميل 2٪",
+      fall_ratio_label:"نسبة الميل (1 : X)",
+      fall_ratio_hint:"اكتب X. مثال: 50 من أجل 1:50",
+      fall_hl_label:"فرق الارتفاع والطول الأفقي",
+      fall_hl_hint:"أدخل فرق الارتفاع والطول. يمكنك اختيار وحدة القياس لكل خانة على حدة.",
+      fall_footer:"ملاحظة: ميل 0٪ يعطي نسبة لا نهائية (لا يوجد فرق ارتفاع).",
+      fall_height_ph:"ارتفاع",
+      fall_length_ph:"طول"
+    },
+    /* Spansk */
+    es:{
+      app:"Calculadora TS",
+      sub:"Ángulo a partir de la lectura de la regla plegable (mm → grados)",
+      lblD:"Lectura (mm)",
+      range:"rango de medida 420–800 mm",
+      angle:"Ángulo (grados)",
+      guide_title:"Instrucciones",
+      guide:[
+        "Herramienta: metro plegable de plástico de 2 m con juntas de 15 mm (por ejemplo, Hultafors G59).",
+        "Primero, dobla el tramo de 200 mm al ángulo deseado.",
+        "Luego dobla la junta en el punto de 400 mm hasta que la esquina de 0 toque el borde de la regla.",
+        "Lee el valor en milímetros a lo largo del borde e introdúcelo aquí: obtendrás el ángulo en el tramo de 200 mm.",
+        "Rango válido: 420–800 mm (420≈8°, 800≈180°)."
+      ],
+      toolChoice:"Selecciona calculadora:",
+      fall_title:"Calculadora de pendiente",
+      fall_intro:"Introduce un valor en uno de los campos. Pulsa Enter o haz clic fuera del campo para actualizar los demás.",
+      fall_percent_label:"Pendiente en porcentaje (%)",
+      fall_percent_hint:"Ejemplo: 2 significa una pendiente del 2 %",
+      fall_deg_label:"Pendiente en grados (°)",
+      fall_deg_hint:"Ejemplo: 1,145 ≈ pendiente del 2 %",
+      fall_ratio_label:"Relación de pendiente (1 : X)",
+      fall_ratio_hint:"Escribe X. Ejemplo: 50 para 1:50",
+      fall_hl_label:"Diferencia de altura y longitud horizontal",
+      fall_hl_hint:"Introduce la diferencia de altura y la longitud. Puedes elegir la unidad para cada campo.",
+      fall_footer:"Nota: una pendiente del 0 % da una relación de pendiente infinita (sin diferencia de altura).",
+      fall_height_ph:"Altura",
+      fall_length_ph:"Longitud"
+    }
+  };
 
-        fall_title: "Fallkalkylator",
-        fall_pill: "% – mm/m – höjd",
-        fall_desc: "Beräkna fall i procent, fallförhållande och höjdskillnad. Välj enheter som passar jobbet.",
-        fall_hl_label: "Höjdskillnad och horisontell längd",
-        fall_hl_hint: "Ange höjdskillnad och längd. Du väljer enhet själv för varje fält.",
-        fall_footer: "Obs: 0 % fall ger ett oändligt fallförhållande (ingen höjdskillnad).",
-        fall_height_ph: "Höjd",
-        fall_length_ph: "Längd",
-        fall_from_hl_btn: "Beräkna fall",
-        fall_clear_hl_btn: "Nollställ",
-        fall_hl_result_empty_main: "Ingen beräkning ännu.",
-        fall_hl_result_empty_sub: "Fyll i höjdskillnad och längd för att få % fall och fallförhållande.",
-        fall_pct_label: "Fall i procent",
-        fall_pct_hint: "Ange fall i procent och längd för att få höjdskillnad.",
-        fall_pct_ph: "Fall %",
-        fall_pct_length_ph: "Längd",
-        fall_from_pct_btn: "Beräkna höjd",
-        fall_clear_pct_btn: "Nollställ",
-        fall_pct_result_empty_main: "Ingen beräkning ännu.",
-        fall_pct_result_empty_sub: "Fyll i fall i procent och längd för att få höjdskillnad och fallförhållande.",
-        fall_result_height: h => `Höjdskillnad: ${h} mm`,
-        fall_result_pct: p => `Fall: ${p} %`,
-        fall_result_ratio: r => `Fallförhållande: 1 : ${r}`,
-        fall_result_error_missing: "Fyll i både höjd och längd.",
-        fall_result_error_zero_length: "Längden kan inte vara 0.",
-        fall_result_error_negative: "Värden kan inte vara negativa."
-      },
-
-      da: {
-        app_title: "TS-kalkulator",
-        app_badge: "Proffsværktøj",
-        app_subtitle: "Praktisk faldkalkulator til håndværkere, montører og kontrolmåling på byggepladsen.",
-        lang_label: "Sprog",
-        theme_label: "Tema",
-        theme_light: "Lyst",
-        theme_dark: "Mørkt",
-        theme_auto: "Auto",
-
-        fall_title: "Faldkalkulator",
-        fall_pill: "% – mm/m – højde",
-        fall_desc: "Beregn fald i procent, faldforhold og højdeforskel. Vælg enheder der passer til opgaven.",
-        fall_hl_label: "Højdeforskel og horisontal længde",
-        fall_hl_hint: "Indtast højdeforskel og længde. Du vælger selv enhed for hvert felt.",
-        fall_footer: "Bemærk: 0 % fald giver et uendeligt faldforhold (ingen højdeforskel).",
-        fall_height_ph: "Højde",
-        fall_length_ph: "Længde",
-        fall_from_hl_btn: "Beregn fald",
-        fall_clear_hl_btn: "Nulstil",
-        fall_hl_result_empty_main: "Ingen beregning endnu.",
-        fall_hl_result_empty_sub: "Udfyld højdeforskel og længde for at få % fald og faldforhold.",
-        fall_pct_label: "Fald i procent",
-        fall_pct_hint: "Indtast fald i procent og længde for at få højdeforskel.",
-        fall_pct_ph: "Fald %",
-        fall_pct_length_ph: "Længde",
-        fall_from_pct_btn: "Beregn højde",
-        fall_clear_pct_btn: "Nulstil",
-        fall_pct_result_empty_main: "Ingen beregning endnu.",
-        fall_pct_result_empty_sub: "Udfyld fald i procent og længde for at få højdeforskel og faldforhold.",
-        fall_result_height: h => `Højdeforskel: ${h} mm`,
-        fall_result_pct: p => `Fald: ${p} %`,
-        fall_result_ratio: r => `Faldforhold: 1 : ${r}`,
-        fall_result_error_missing: "Udfyld både højde og længde.",
-        fall_result_error_zero_length: "Længden kan ikke være 0.",
-        fall_result_error_negative: "Værdier kan ikke være negative."
-      },
-
-      fi: {
-        app_title: "TS-laskin",
-        app_badge: "Ammattilaisille",
-        app_subtitle: "Käytännöllinen kaltevuuslaskin asentajille, rakentajille ja mittauksiin työmaalla.",
-        lang_label: "Kieli",
-        theme_label: "Teema",
-        theme_light: "Vaalea",
-        theme_dark: "Tumma",
-        theme_auto: "Auto",
-
-        fall_title: "Kaltevuuslaskin",
-        fall_pill: "% – mm/m – korkeus",
-        fall_desc: "Laske kaltevuus prosentteina, suhdelukuna ja korkeuserona. Valitse työhön sopivat yksiköt.",
-        fall_hl_label: "Korkeusero ja vaakasuora pituus",
-        fall_hl_hint: "Syötä korkeusero ja pituus. Voit valita yksikön kumpaankin kenttään erikseen.",
-        fall_footer: "Huom: 0 % kaltevuus antaa äärettömän suhteen (ei korkeuseroa).",
-        fall_height_ph: "Korkeus",
-        fall_length_ph: "Pituus",
-        fall_from_hl_btn: "Laske kaltevuus",
-        fall_clear_hl_btn: "Tyhjennä",
-        fall_hl_result_empty_main: "Ei vielä laskentaa.",
-        fall_hl_result_empty_sub: "Syötä korkeusero ja pituus, niin saat % kaltevuuden ja suhdeluvun.",
-        fall_pct_label: "Kaltevuus prosentteina",
-        fall_pct_hint: "Syötä kaltevuus prosentteina ja pituus, niin saat korkeuseron.",
-        fall_pct_ph: "Kaltevuus %",
-        fall_pct_length_ph: "Pituus",
-        fall_from_pct_btn: "Laske korkeus",
-        fall_clear_pct_btn: "Tyhjennä",
-        fall_pct_result_empty_main: "Ei vielä laskentaa.",
-        fall_pct_result_empty_sub: "Syötä kaltevuus prosentteina ja pituus, niin saat korkeuseron ja suhdeluvun.",
-        fall_result_height: h => `Korkeusero: ${h} mm`,
-        fall_result_pct: p => `Kaltevuus: ${p} %`,
-        fall_result_ratio: r => `Suhdeluku: 1 : ${r}`,
-        fall_result_error_missing: "Täytä sekä korkeus että pituus.",
-        fall_result_error_zero_length: "Pituus ei voi olla 0.",
-        fall_result_error_negative: "Arvot eivät voi olla negatiivisia."
-      },
-
-      de: {
-        app_title: "TS-Rechner",
-        app_badge: "Profi-Tool",
-        app_subtitle: "Praktischer Gefällerechner für Handwerker, Monteure und Kontrollen auf der Baustelle.",
-        lang_label: "Sprache",
-        theme_label: "Thema",
-        theme_light: "Hell",
-        theme_dark: "Dunkel",
-        theme_auto: "Auto",
-
-        fall_title: "Gefällerechner",
-        fall_pill: "% – mm/m – Höhe",
-        fall_desc: "Berechnen Sie Gefälle in Prozent, Gefälleverhältnis und Höhenunterschied. Wählen Sie passende Einheiten.",
-        fall_hl_label: "Höhenunterschied und horizontale Länge",
-        fall_hl_hint: "Geben Sie Höhenunterschied und Länge ein. Sie können für jedes Feld die Einheit wählen.",
-        fall_footer: "Hinweis: 0 % Gefälle ergibt ein unendliches Gefälleverhältnis (kein Höhenunterschied).",
-        fall_height_ph: "Höhe",
-        fall_length_ph: "Länge",
-        fall_from_hl_btn: "Gefälle berechnen",
-        fall_clear_hl_btn: "Zurücksetzen",
-        fall_hl_result_empty_main: "Noch keine Berechnung.",
-        fall_hl_result_empty_sub: "Geben Sie Höhenunterschied und Länge ein, um % Gefälle und Gefälleverhältnis zu erhalten.",
-        fall_pct_label: "Gefälle in Prozent",
-        fall_pct_hint: "Geben Sie Gefälle in Prozent und Länge ein, um den Höhenunterschied zu erhalten.",
-        fall_pct_ph: "Gefälle %",
-        fall_pct_length_ph: "Länge",
-        fall_from_pct_btn: "Höhe berechnen",
-        fall_clear_pct_btn: "Zurücksetzen",
-        fall_pct_result_empty_main: "Noch keine Berechnung.",
-        fall_pct_result_empty_sub: "Geben Sie Gefälle in Prozent und Länge ein, um Höhenunterschied und Gefälleverhältnis zu erhalten.",
-        fall_result_height: h => `Höhenunterschied: ${h} mm`,
-        fall_result_pct: p => `Gefälle: ${p} %`,
-        fall_result_ratio: r => `Gefälleverhältnis: 1 : ${r}`,
-        fall_result_error_missing: "Bitte sowohl Höhe als auch Länge ausfüllen.",
-        fall_result_error_zero_length: "Die Länge darf nicht 0 sein.",
-        fall_result_error_negative: "Werte dürfen nicht negativ sein."
-      },
-
-      pl: {
-        app_title: "Kalkulator TS",
-        app_badge: "Narzędzie pro",
-        app_subtitle: "Praktyczny kalkulator spadku dla fachowców, monterów i kontroli na budowie.",
-        lang_label: "Język",
-        theme_label: "Motyw",
-        theme_light: "Jasny",
-        theme_dark: "Ciemny",
-        theme_auto: "Auto",
-
-        fall_title: "Kalkulator spadku",
-        fall_pill: "% – mm/m – wysokość",
-        fall_desc: "Oblicz spadek w procentach, stosunek spadku i różnicę wysokości. Wybierz jednostki odpowiednie do pracy.",
-        fall_hl_label: "Różnica wysokości i długość pozioma",
-        fall_hl_hint: "Wprowadź różnicę wysokości i długość. Jednostkę możesz wybrać osobno dla każdego pola.",
-        fall_footer: "Uwaga: spadek 0% daje nieskończony stosunek spadku (brak różnicy wysokości).",
-        fall_height_ph: "Wysokość",
-        fall_length_ph: "Długość",
-        fall_from_hl_btn: "Oblicz spadek",
-        fall_clear_hl_btn: "Wyczyść",
-        fall_hl_result_empty_main: "Brak obliczeń.",
-        fall_hl_result_empty_sub: "Wprowadź różnicę wysokości i długość, aby otrzymać spadek % i stosunek spadku.",
-        fall_pct_label: "Spadek w procentach",
-        fall_pct_hint: "Wprowadź spadek w procentach i długość, aby otrzymać różnicę wysokości.",
-        fall_pct_ph: "Spadek %",
-        fall_pct_length_ph: "Długość",
-        fall_from_pct_btn: "Oblicz wysokość",
-        fall_clear_pct_btn: "Wyczyść",
-        fall_pct_result_empty_main: "Brak obliczeń.",
-        fall_pct_result_empty_sub: "Wprowadź spadek w procentach i długość, aby otrzymać różnicę wysokości i stosunek spadku.",
-        fall_result_height: h => `Różnica wysokości: ${h} mm`,
-        fall_result_pct: p => `Spadek: ${p} %`,
-        fall_result_ratio: r => `Stosunek spadku: 1 : ${r}`,
-        fall_result_error_missing: "Wypełnij zarówno wysokość, jak i długość.",
-        fall_result_error_zero_length: "Długość nie może wynosić 0.",
-        fall_result_error_negative: "Wartości nie mogą być ujemne."
-      },
-
-      uk: {
-        app_title: "TS-калькулятор",
-        app_badge: "Профі-інструмент",
-        app_subtitle: "Практичний калькулятор ухилу для майстрів, монтажників та контролю на будівельному майданчику.",
-        lang_label: "Мова",
-        theme_label: "Тема",
-        theme_light: "Світла",
-        theme_dark: "Темна",
-        theme_auto: "Авто",
-
-        fall_title: "Калькулятор ухилу",
-        fall_pill: "% – мм/м – висота",
-        fall_desc: "Розрахунок ухилу у відсотках, співвідношення падіння та перепаду висоти. Оберіть зручні одиниці.",
-        fall_hl_label: "Перепад висоти та горизонтальна довжина",
-        fall_hl_hint: "Введіть перепад висоти та довжину. Одиницю вимірювання можна обрати для кожного поля.",
-        fall_footer: "Примітка: ухил 0% дає нескінченне співвідношення падіння (немає перепаду висоти).",
-        fall_height_ph: "Висота",
-        fall_length_ph: "Довжина",
-        fall_from_hl_btn: "Розрахувати ухил",
-        fall_clear_hl_btn: "Очистити",
-        fall_hl_result_empty_main: "Поки що немає розрахунку.",
-        fall_hl_result_empty_sub: "Введіть перепад висоти та довжину, щоб отримати % ухилу та співвідношення падіння.",
-        fall_pct_label: "Ухил у відсотках",
-        fall_pct_hint: "Введіть ухил у відсотках і довжину, щоб отримати перепад висоти.",
-        fall_pct_ph: "Ухил %",
-        fall_pct_length_ph: "Довжина",
-        fall_from_pct_btn: "Розрахувати висоту",
-        fall_clear_pct_btn: "Очистити",
-        fall_pct_result_empty_main: "Поки що немає розрахунку.",
-        fall_pct_result_empty_sub: "Введіть ухил у відсотках і довжину, щоб отримати перепад висоти та співвідношення падіння.",
-        fall_result_height: h => `Перепад висоти: ${h} мм`,
-        fall_result_pct: p => `Ухил: ${p} %`,
-        fall_result_ratio: r => `Співвідношення падіння: 1 : ${r}`,
-        fall_result_error_missing: "Заповніть і висоту, і довжину.",
-        fall_result_error_zero_length: "Довжина не може бути 0.",
-        fall_result_error_negative: "Значення не можуть бути від’ємними."
-      },
-
-      sr: {
-        app_title: "TS-kalkulator",
-        app_badge: "Pro alat",
-        app_subtitle: "Praktičan kalkulator pada za majstore, montere i kontrolna merenja na gradilištu.",
-        lang_label: "Jezik",
-        theme_label: "Tema",
-        theme_light: "Svetla",
-        theme_dark: "Tamna",
-        theme_auto: "Auto",
-
-        fall_title: "Kalkulator pada",
-        fall_pill: "% – mm/m – visina",
-        fall_desc: "Izračunajte pad u procentima, odnos pada i visinsku razliku. Birajte jedinice koje vam odgovaraju.",
-        fall_hl_label: "Visinska razlika i horizontalna dužina",
-        fall_hl_hint: "Unesite visinsku razliku i dužinu. Jedinicu možete izabrati za svako polje.",
-        fall_footer: "Napomena: pad od 0% daje beskonačan odnos pada (nema visinske razlike).",
-        fall_height_ph: "Visina",
-        fall_length_ph: "Dužina",
-        fall_from_hl_btn: "Izračunaj pad",
-        fall_clear_hl_btn: "Poništi",
-        fall_hl_result_empty_main: "Još nema izračuna.",
-        fall_hl_result_empty_sub: "Unesite visinsku razliku i dužinu da biste dobili % pada i odnos pada.",
-        fall_pct_label: "Pad u procentima",
-        fall_pct_hint: "Unesite pad u procentima i dužinu da biste dobili visinsku razliku.",
-        fall_pct_ph: "Pad %",
-        fall_pct_length_ph: "Dužina",
-        fall_from_pct_btn: "Izračunaj visinu",
-        fall_clear_pct_btn: "Poništi",
-        fall_pct_result_empty_main: "Još nema izračuna.",
-        fall_pct_result_empty_sub: "Unesite pad u procentima i dužinu da biste dobili visinsku razliku i odnos pada.",
-        fall_result_height: h => `Visinska razlika: ${h} mm`,
-        fall_result_pct: p => `Pad: ${p} %`,
-        fall_result_ratio: r => `Odnos pada: 1 : ${r}`,
-        fall_result_error_missing: "Popunite i visinu i dužinu.",
-        fall_result_error_zero_length: "Dužina ne može biti 0.",
-        fall_result_error_negative: "Vrednosti ne mogu biti negativne."
-      },
-
-      ar: {
-        app_title: "حاسبة TS",
-        app_badge: "أداة للمحترفين",
-        app_subtitle: "حاسبة ميل عملية للعمال والفنيين وقياسات الموقع في مشاريع البناء.",
-        lang_label: "اللغة",
-        theme_label: "السمة",
-        theme_light: "فاتح",
-        theme_dark: "داكن",
-        theme_auto: "تلقائي",
-
-        fall_title: "حاسبة الميل",
-        fall_pill: "% – ملم/متر – ارتفاع",
-        fall_desc: "احسب الميل بالنسبة المئوية، ونسبة الميل، وفارق الارتفاع. اختر الوحدات المناسبة للعمل.",
-        fall_hl_label: "فرق الارتفاع والطول الأفقي",
-        fall_hl_hint: "أدخل فرق الارتفاع والطول. يمكنك اختيار وحدة القياس لكل خانة على حدة.",
-        fall_footer: "ملاحظة: ميل بنسبة 0٪ يعطي نسبة سقوط لا نهائية (لا يوجد فرق في الارتفاع).",
-        fall_height_ph: "الارتفاع",
-        fall_length_ph: "الطول",
-        fall_from_hl_btn: "احسب الميل",
-        fall_clear_hl_btn: "إعادة تعيين",
-        fall_hl_result_empty_main: "لا توجد عملية حسابية بعد.",
-        fall_hl_result_empty_sub: "أدخل فرق الارتفاع والطول للحصول على نسبة الميل بالمئة ونسبة السقوط.",
-        fall_pct_label: "الميل بالنسبة المئوية",
-        fall_pct_hint: "أدخل الميل بالنسبة المئوية والطول للحصول على فرق الارتفاع.",
-        fall_pct_ph: "الميل %",
-        fall_pct_length_ph: "الطول",
-        fall_from_pct_btn: "احسب الارتفاع",
-        fall_clear_pct_btn: "إعادة تعيين",
-        fall_pct_result_empty_main: "لا توجد عملية حسابية بعد.",
-        fall_pct_result_empty_sub: "أدخل الميل بالنسبة المئوية والطول للحصول على فرق الارتفاع ونسبة السقوط.",
-        fall_result_height: h => `فرق الارتفاع: ${h} ملم`,
-        fall_result_pct: p => `الميل: ${p} ٪`,
-        fall_result_ratio: r => `نسبة السقوط: 1 : ${r}`,
-        fall_result_error_missing: "يجب ملء كل من الارتفاع والطول.",
-        fall_result_error_zero_length: "لا يمكن أن يكون الطول صفراً.",
-        fall_result_error_negative: "لا يمكن أن تكون القيم سالبة."
-      },
-
-      es: {
-        app_title: "Calculadora TS",
-        app_badge: "Herramienta pro",
-        app_subtitle: "Práctica calculadora de pendiente para instaladores, constructores y mediciones en obra.",
-        lang_label: "Idioma",
-        theme_label: "Tema",
-        theme_light: "Claro",
-        theme_dark: "Oscuro",
-        theme_auto: "Auto",
-
-        fall_title: "Calculadora de pendiente",
-        fall_pill: "% – mm/m – altura",
-        fall_desc: "Calcula la pendiente en porcentaje, la relación de pendiente y la diferencia de altura. Elige las unidades que encajen con tu trabajo.",
-        fall_hl_label: "Diferencia de altura y longitud horizontal",
-        fall_hl_hint: "Introduce la diferencia de altura y la longitud. Puedes elegir la unidad para cada campo.",
-        fall_footer: "Nota: una pendiente del 0% da una relación de pendiente infinita (sin diferencia de altura).",
-        fall_height_ph: "Altura",
-        fall_length_ph: "Longitud",
-        fall_from_hl_btn: "Calcular pendiente",
-        fall_clear_hl_btn: "Borrar",
-        fall_hl_result_empty_main: "Sin cálculos todavía.",
-        fall_hl_result_empty_sub: "Introduce diferencia de altura y longitud para obtener la pendiente % y la relación de pendiente.",
-        fall_pct_label: "Pendiente en porcentaje",
-        fall_pct_hint: "Introduce la pendiente en porcentaje y la longitud para obtener la diferencia de altura.",
-        fall_pct_ph: "Pendiente %",
-        fall_pct_length_ph: "Longitud",
-        fall_from_pct_btn: "Calcular altura",
-        fall_clear_pct_btn: "Borrar",
-        fall_pct_result_empty_main: "Sin cálculos todavía.",
-        fall_pct_result_empty_sub: "Introduce la pendiente en porcentaje y la longitud para obtener la diferencia de altura y la relación de pendiente.",
-        fall_result_height: h => `Diferencia de altura: ${h} mm`,
-        fall_result_pct: p => `Pendiente: ${p} %`,
-        fall_result_ratio: r => `Relación de pendiente: 1 : ${r}`,
-        fall_result_error_missing: "Rellena tanto la altura como la longitud.",
-        fall_result_error_zero_length: "La longitud no puede ser 0.",
-        fall_result_error_negative: "Los valores no pueden ser negativos."
+  function pchipSlopes(x,y){
+    const n=x.length,h=new Array(n-1),d=new Array(n-1);
+    for(let i=0;i<n-1;i++){h[i]=x[i+1]-x[i];d[i]=(y[i+1]-y[i])/h[i];}
+    const m=new Array(n); m[0]=d[0]; m[n-1]=d[n-2];
+    for(let i=1;i<n-1;i++){
+      if(d[i-1]*d[i]<=0) m[i]=0;
+      else {
+        const w1=2*h[i]+h[i-1],w2=h[i]+2*h[i-1];
+        m[i]=(w1+w2)/(w1/d[i-1]+w2/d[i]);
       }
-    };
-
-    let currentLang = 'no';
-
-    function applyLanguage(lang) {
-      const S = translations[lang] || translations.no;
-      currentLang = lang;
-
-      // Tittel + header
-      document.getElementById('t_app').textContent = S.app_title;
-      document.getElementById('appTitle').textContent = S.app_title;
-      document.getElementById('appBadge').textContent = S.app_badge;
-      document.getElementById('appSubtitle').textContent = S.app_subtitle;
-      document.getElementById('langLabel').textContent = S.lang_label;
-      document.getElementById('themeLabel').textContent = S.theme_label;
-
-      // Tema-label i select (kun tekst i options ved init – vi lar verdiene være)
-      const themeSelect = document.getElementById('themeSelect');
-      if (themeSelect) {
-        for (const opt of themeSelect.options) {
-          if (opt.value === 'auto') opt.textContent = S.theme_auto;
-          if (opt.value === 'light') opt.textContent = S.theme_light;
-          if (opt.value === 'dark') opt.textContent = S.theme_dark;
+    }
+    for(let i=0;i<n-1;i++){
+      if(d[i]===0){m[i]=0; m[i+1]=0;}
+      else {
+        const a=m[i]/d[i],b=m[i+1]/d[i],s=a*a+b*b;
+        if(s>9){
+          const t=3/Math.sqrt(s);
+          m[i]=t*a*d[i]; m[i+1]=t*b*d[i];
         }
       }
+    }
+    return m;
+  }
 
-      // Fall-kort
-      document.getElementById('fallTitle').firstChild.textContent = S.fall_title + ' ';
-      document.getElementById('fallTitlePill').textContent = S.fall_pill;
-      document.getElementById('fallDescription').textContent = S.fall_desc;
+  const M=pchipSlopes(X,Y);
 
-      const fallHLLabel = document.getElementById('fallHLLabel');
-      const fallHLHint = document.getElementById('fallHLHint');
-      const fallFooter = document.getElementById('fallFooter');
-      const fallHeightVal = document.getElementById('fallHeightVal');
-      const fallLengthVal = document.getElementById('fallLengthVal');
+  function pchipEval(xq){
+    const n=X.length;
+    if(xq<X[0]||xq>X[n-1])return null;
+    let i=0,j=n-1;
+    while(j-i>1){
+      const k=(i+j)>>1;
+      if(X[k]<=xq)i=k; else j=k;
+    }
+    const h=X[i+1]-X[i],t=(xq-X[i])/h;
+    const h00=(1+2*t)*(1-t)*(1-t),
+          h10=t*(1-t)*(1-t),
+          h01=t*t*(3-2*t),
+          h11=t*t*(t-1);
+    return h00*Y[i]+h10*h*M[i]+h01*Y[i+1]+h11*h*M[i+1];
+  }
 
-      if (fallHLLabel) fallHLLabel.textContent = S.fall_hl_label || "Høydeforskjell og horisontal lengde";
-      if (fallHLHint) fallHLHint.textContent = S.fall_hl_hint || "Skriv inn høydeforskjell og lengde. Enheten velger du selv.";
-      if (fallFooter) fallFooter.textContent = S.fall_footer || "Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
+  const LANG_KEY='ts_lang', DEC_KEY='ts_dec';
+  const themeEl=document.documentElement,themeKey='ts_theme',themeColorTag=document.getElementById('themeColor');
 
-      if (fallHeightVal) fallHeightVal.placeholder = S.fall_height_ph || "Høyde";
-      if (fallLengthVal) fallLengthVal.placeholder = S.fall_length_ph || "Lengde";
+  function applyTheme(v){
+    themeEl.setAttribute('data-theme',v);
+    try{localStorage.setItem(themeKey,v);}catch(e){}
+    if(themeColorTag)themeColorTag.setAttribute('content',(v==='dark')?'#0b1220':'#00FFFF');
+  }
+  function toggleTheme(){
+    const cur=themeEl.getAttribute('data-theme')||'auto';
+    applyTheme(cur==='dark'?'light':cur==='light'?'auto':'dark');
+  }
+  function setLang(c){
+    try{localStorage.setItem(LANG_KEY,c);}catch(e){}
+    applyLang(c);
+  }
+  function getLang(){
+    try{return localStorage.getItem(LANG_KEY)||'no';}catch(e){return'no';}
+  }
+  function getDec(){
+    try{return parseInt(localStorage.getItem(DEC_KEY)||'0',10);}catch(e){return 0;}
+  }
+  function setDec(n){
+    try{localStorage.setItem(DEC_KEY,String(n));}catch(e){}
+    updateDecBtn(); render();
+  }
+  function toggleDec(){setDec(getDec()===0?1:0);}
+  function updateDecBtn(){
+    const b=$('decBtn');
+    if(b)b.textContent=(getDec()===0?'0 des':'1 des');
+  }
+  function Fdeg(v){
+    const d=getDec();
+    return (d===0?Math.round(v):v.toFixed(d))+'°';
+  }
 
-      document.getElementById('fallFromHLBtnLabel').textContent = S.fall_from_hl_btn;
-      document.getElementById('fallClearHLBtnLabel').textContent = S.fall_clear_hl_btn;
+  function applyLang(c){
+    const S=(STR[c]||STR.no);
+    document.title = S.app || "TS-kalkulator";
+    const h_sub=$('h_sub'),lbl_D=$('lbl_D'),rangeText=$('rangeText'),lbl_angle=$('lbl_angle'),
+          guide_title=$('guide_title'),guide_list=$('guide_list'),
+          toolChoice=$('lbl_toolChoice');
 
-      // Tom-tekst for HL-resultat (hvis ingen beregning gjort)
-      if (!document.getElementById('fallHLResultBox').dataset.hasResult) {
-        document.getElementById('fallHLResultMain').textContent = S.fall_hl_result_empty_main;
-        document.getElementById('fallHLResultSub').textContent = S.fall_hl_result_empty_sub;
-      }
+    if(h_sub)h_sub.textContent=S.sub;
+    if(lbl_D)lbl_D.textContent=S.lblD;
+    if(rangeText)rangeText.textContent=S.range;
+    if(lbl_angle)lbl_angle.textContent=S.angle;
+    if(guide_title)guide_title.textContent=S.guide_title;
+    if(guide_list){
+      guide_list.innerHTML='';
+      (S.guide||[]).forEach(t=>{
+        const li=document.createElement('li');
+        li.textContent=t;
+        guide_list.appendChild(li);
+      });
+    }
+    if(toolChoice)toolChoice.textContent=S.toolChoice||"Velg kalkulator:";
 
-      // Prosent-del
-      document.getElementById('fallPctLabel').textContent = S.fall_pct_label;
-      document.getElementById('fallPctHint').textContent = S.fall_pct_hint;
-      document.getElementById('fallPctVal').placeholder = S.fall_pct_ph;
-      document.getElementById('fallPctLengthVal').placeholder = S.fall_pct_length_ph;
-      document.getElementById('fallFromPctBtnLabel').textContent = S.fall_from_pct_btn;
-      document.getElementById('fallClearPctBtnLabel').textContent = S.fall_clear_pct_btn;
+    // Fallkalkulator-tekster
+    const fallTitle=$('fallTitle'),
+          fallIntro=$('fallIntro'),
+          fallPercentLabel=$('fallPercentLabel'),
+          fallPercentHint=$('fallPercentHint'),
+          fallDegreesLabel=$('fallDegreesLabel'),
+          fallDegreesHint=$('fallDegreesHint'),
+          fallRatioLabel=$('fallRatioLabel'),
+          fallRatioHint=$('fallRatioHint'),
+          fallHLLabel=$('fallHLLabel'),
+          fallHLHint=$('fallHLHint'),
+          fallFooter=$('fallFooter'),
+          fallHeightVal=$('fallHeightVal'),
+          fallLengthVal=$('fallLengthVal');
 
-      if (!document.getElementById('fallPctResultBox').dataset.hasResult) {
-        document.getElementById('fallPctResultMain').textContent = S.fall_pct_result_empty_main;
-        document.getElementById('fallPctResultSub').textContent = S.fall_pct_result_empty_sub;
-      }
+    if(fallTitle)fallTitle.textContent=S.fall_title||"Fallkalkulator";
+    if(fallIntro)fallIntro.textContent=S.fall_intro||"Legg inn verdi i ett av feltene. Trykk Enter eller klikk utenfor feltet for å oppdatere de andre.";
+    if(fallPercentLabel)fallPercentLabel.textContent=S.fall_percent_label||"Fall i prosent (%)";
+    if(fallPercentHint)fallPercentHint.textContent=S.fall_percent_hint||"Eksempel: 2 betyr 2 % fall";
+    if(fallDegreesLabel)fallDegreesLabel.textContent=S.fall_deg_label||"Fall i grader (°)";
+    if(fallDegreesHint)fallDegreesHint.textContent=S.fall_deg_hint||"Eksempel: 1.145 ≈ 2 % fall";
+    if(fallRatioLabel)fallRatioLabel.textContent=S.fall_ratio_label||"Fallforhold (1 : X)";
+    if(fallRatioHint)fallRatioHint.textContent=S.fall_ratio_hint||"Skriv X. Eksempel: 50 for 1:50";
+    if(fallHLLabel)fallHLLabel.textContent=S.fall_hl_label||"Høydeforskjell og horisontal lengde";
+    if(fallHLHint)fallHLHint.textContent=S.fall_hl_hint||"Skriv inn høydeforskjell og lengde. Enheten velger du selv.";
+    if(fallFooter)fallFooter.textContent=S.fall_footer||"Merk: 0 % fall gir uendelig fallforhold (ingen høydeforskjell).";
+
+    // Høyde / lengde placeholders følger språk
+    if(fallHeightVal)fallHeightVal.placeholder = S.fall_height_ph || "Høyde";
+    if(fallLengthVal)fallLengthVal.placeholder = S.fall_length_ph || "Lengde";
+  }
+
+  function updateIllustration(deg){
+    // SVG er fjernet og erstattet med bilde – funksjonen beholdes for kompatibilitet, men gjør ingenting.
+    return;
+  }
+
+  function render(){
+    const thetaTop=$('thetaTop'),rangeText=$('rangeText'),sliderD=$('sliderD'),inp=$('D');
+    if(!thetaTop||!rangeText||!sliderD||!inp)return;
+    const D=parseFloat(String(inp.value).replace(',','.'));
+    const MIN=420, MAX=800;
+
+    if(!Number.isFinite(D)){
+      thetaTop.textContent='–';
+      updateIllustration(NaN);
+      return;
     }
 
-    // ---- Tema ----
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      try {
-        localStorage.setItem('ts_theme', theme);
-        const tc = document.getElementById('themeColor');
-        const preferDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const isDark = (theme === 'dark') || (theme === 'auto' && preferDark);
-        if (tc) tc.setAttribute('content', isDark ? '#020617' : '#00FFFF');
-      } catch (e) {}
+    // Vis at verdien er utenfor område ved å slå av vinkelen
+    if(D<MIN || D>MAX){
+      sliderD.value = String(Math.max(MIN,Math.min(MAX,D)));
+      rangeText.classList.add('warn');
+      thetaTop.textContent='–';
+      updateIllustration(NaN);
+      return;
     }
 
-    // ---- Fall-beregninger ----
-    function unitToMeters(value, unit) {
-      const v = parseFloat(value);
-      if (isNaN(v)) return NaN;
-      if (unit === 'mm') return v / 1000;
-      if (unit === 'cm') return v / 100;
-      return v; // m
+    sliderD.value=String(D);
+    const deg=pchipEval(D);
+    if(deg==null){
+      rangeText.classList.add('warn');
+      thetaTop.textContent='–';
+      updateIllustration(NaN);
+    }else{
+      rangeText.classList.remove('warn');
+      thetaTop.textContent=Fdeg(deg);
+      updateIllustration(deg);
     }
+  }
 
-    function unitToMillimeters(value, unit) {
-      const v = parseFloat(value);
-      if (isNaN(v)) return NaN;
-      if (unit === 'mm') return v;
-      if (unit === 'cm') return v * 10;
-      if (unit === 'm') return v * 1000;
-      return v;
+  function openQR(){
+    const url=CANONICAL, enc=encodeURIComponent(url);
+    const box=$('qrUrlBox'),img=$('qrImg'),a=$('qrDownload'),modal=$('qrModal');
+    if(box)box.textContent=url;
+    if(img){img.src=`https://api.qrserver.com/v1/create-qr-code/?size=512x512&margin=10&data=${enc}`;}
+    if(a && img)a.href=img.src;
+    if(modal)modal.style.display='flex';
+  }
+  function closeQR(){const m=$('qrModal'); if(m)m.style.display='none';}
+  function copyUrl(){
+    if(!navigator.clipboard)return;
+    navigator.clipboard.writeText(CANONICAL).then(()=>{
+      const b=$('copyUrl'); if(!b)return;
+      b.textContent='Kopiert!'; setTimeout(()=>{b.textContent='Kopier lenke';},1200);
+    }).catch(()=>{});
+  }
+
+  let deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;});
+  async function tryInstall(){
+    if(deferredPrompt){await deferredPrompt.prompt();deferredPrompt=null;return;}
+    const m=$('instModal'); if(m)m.style.display='flex';
+  }
+
+  /* Verktøyvelger: TS / Fall */
+  function switchTool(tool){
+    const ts=$('tool-ts'),fall=$('tool-fall');
+    if(!ts||!fall)return;
+    if(tool==='fall'){ts.style.display='none';fall.style.display='block';}
+    else{ts.style.display='block';fall.style.display='none';}
+  }
+
+  /* Fallkalkulator – hjelpefunksjoner */
+  function fallParseInput(id){
+    const el=$(id); if(!el)return NaN;
+    let raw=el.value.trim(); if(!raw)return NaN;
+    raw=raw.replace(",",".");
+    return parseFloat(raw);
+  }
+  function fallSetNumber(id,value,decimals){
+    const el=$(id); if(!el||!isFinite(value))return;
+    el.value=value.toFixed(decimals);
+  }
+  function fallSetText(id,value){
+    const el=$(id); if(!el)return;
+    el.value=value;
+  }
+
+  function fallUpdateAll(stigning){
+    if(!isFinite(stigning)||stigning<0)return;
+    fallSetNumber("fallPercent",stigning*100,3);
+    fallSetNumber("fallDegrees",Math.atan(stigning)*180/Math.PI,3);
+    if(stigning===0){fallSetText("fallRatio","∞");}
+    else{
+      const ratio=1/stigning;
+      fallSetText("fallRatio",ratio.toFixed(3).replace(/\.?0+$/,""));
     }
+  }
 
-    function fallFromHeightLength() {
-      const lang = currentLang;
-      const S = translations[lang] || translations.no;
+  function fallFromPercent(){
+    const p=fallParseInput("fallPercent"); if(isNaN(p))return;
+    const s=p/100; fallUpdateAll(s);
+  }
+  function fallFromDegrees(){
+    const d=fallParseInput("fallDegrees"); if(isNaN(d))return;
+    const s=Math.tan(d*Math.PI/180); fallUpdateAll(s);
+  }
+  function fallFromRatio(){
+    const el=$("fallRatio"); if(!el)return;
+    let raw=el.value.trim(); if(!raw)return;
+    if(raw.indexOf(":")>=0){const parts=raw.split(":"); raw=parts[1]||parts[0];}
+    raw=raw.replace(",",".");
+    const r=parseFloat(raw); if(!isFinite(r)||r<=0)return;
+    const s=1/r; fallUpdateAll(s);
+  }
 
-      const hVal = document.getElementById('fallHeightVal').value;
-      const hUnit = document.getElementById('fallHeightUnit').value;
-      const lVal = document.getElementById('fallLengthVal').value;
-      const lUnit = document.getElementById('fallLengthUnit').value;
+  function unitToMeters(value,unit){
+    if(!isFinite(value))return NaN;
+    if(unit==="mm")return value/1000;
+    if(unit==="cm")return value/100;
+    if(unit==="m")return value;
+    return NaN;
+  }
 
-      const resultMainEl = document.getElementById('fallHLResultMain');
-      const resultSubEl = document.getElementById('fallHLResultSub');
-      const box = document.getElementById('fallHLResultBox');
+  function fallFromHeightLength(){
+    const hVal=fallParseInput("fallHeightVal");
+    const LVal=fallParseInput("fallLengthVal");
+    const hUnitEl=$("fallHeightUnit"),LUnitEl=$("fallLengthUnit");
+    const hUnit=hUnitEl?hUnitEl.value:"mm";
+    const LUnit=LUnitEl?LUnitEl.value:"m";
+    if(isNaN(hVal)||isNaN(LVal))return;
+    const hM=unitToMeters(hVal,hUnit);
+    const LM=unitToMeters(LVal,LUnit);
+    if(!isFinite(hM)||!isFinite(LM)||LM<=0)return;
+    const s=hM/LM; fallUpdateAll(s);
+  }
 
-      const hMm = unitToMillimeters(hVal, hUnit);
-      const lM = unitToMeters(lVal, lUnit);
+  document.addEventListener('DOMContentLoaded',()=>{
+    const langSel=$('lang'); const cur=getLang();
+    if(langSel)langSel.value=cur;
+    applyLang(cur);
+    if(langSel){langSel.addEventListener('change',(e)=>{setLang(e.target.value);});}
+    updateDecBtn();
 
-      if (!hVal || !lVal) {
-        resultMainEl.textContent = S.fall_result_error_missing;
-        resultSubEl.textContent = "";
-        box.dataset.hasResult = "1";
-        resultMainEl.classList.add('danger');
-        return;
-      }
+    const decBtn=$('decBtn'); if(decBtn)decBtn.addEventListener('click',toggleDec);
+    const themeBtn=$('themeBtn'); if(themeBtn)themeBtn.addEventListener('click',toggleTheme);
 
-      if (lM === 0) {
-        resultMainEl.textContent = S.fall_result_error_zero_length;
-        resultSubEl.textContent = "";
-        box.dataset.hasResult = "1";
-        resultMainEl.classList.add('danger');
-        return;
-      }
+    const Dinput=$('D'); if(Dinput)Dinput.addEventListener('input',render);
+    const sliderD=$('sliderD'); if(sliderD)sliderD.addEventListener('input',e=>{Dinput.value=e.target.value;render();});
 
-      if (hMm < 0 || lM < 0) {
-        resultMainEl.textContent = S.fall_result_error_negative;
-        resultSubEl.textContent = "";
-        box.dataset.hasResult = "1";
-        resultMainEl.classList.add('danger');
-        return;
-      }
+    const qrBtn=$('qrBtn'); if(qrBtn)qrBtn.addEventListener('click',openQR);
+    const qrClose=$('qrClose'); if(qrClose)qrClose.addEventListener('click',closeQR);
+    const copyBtn=$('copyUrl'); if(copyBtn)copyBtn.addEventListener('click',copyUrl);
 
-      resultMainEl.classList.remove('danger');
+    const instBtn=$('installBtn'); if(instBtn)instBtn.addEventListener('click',tryInstall);
+    const instClose=$('instClose'); if(instClose)instClose.addEventListener('click',()=>{const m=$('instModal');if(m)m.style.display='none';});
 
-      const pct = (hMm / (lM * 1000)) * 100; // h(mm) / L(mm) * 100
-      const ratio = (lM * 1000) / hMm; // L(mm) / h(mm)
-
-      const pctRounded = Math.round(pct * 100) / 100;
-      const ratioRounded = ratio === Infinity ? '∞' : Math.round(ratio * 10) / 10;
-
-      const hText = S.fall_result_height(Math.round(hMm));
-      const pText = S.fall_result_pct(pctRounded.toString().replace('.', ','));
-      const rText = ratio === Infinity
-        ? S.fall_result_ratio("∞")
-        : S.fall_result_ratio(ratioRounded.toString().replace('.', ','));
-
-      resultMainEl.textContent = `${pText}`;
-      resultSubEl.textContent = `${hText} · ${rText}`;
-      box.dataset.hasResult = "1";
-    }
-
-    function fallFromPercent() {
-      const lang = currentLang;
-      const S = translations[lang] || translations.no;
-
-      const pVal = document.getElementById('fallPctVal').value;
-      const lVal = document.getElementById('fallPctLengthVal').value;
-      const lUnit = document.getElementById('fallPctLengthUnit').value;
-
-      const resultMainEl = document.getElementById('fallPctResultMain');
-      const resultSubEl = document.getElementById('fallPctResultSub');
-      const box = document.getElementById('fallPctResultBox');
-
-      if (!pVal || !lVal) {
-        resultMainEl.textContent = S.fall_result_error_missing;
-        resultSubEl.textContent = "";
-        box.dataset.hasResult = "1";
-        resultMainEl.classList.add('danger');
-        return;
-      }
-
-      const p = parseFloat(pVal);
-      const lM = unitToMeters(lVal, lUnit);
-
-      if (lM === 0) {
-        resultMainEl.textContent = S.fall_result_error_zero_length;
-        resultSubEl.textContent = "";
-        box.dataset.hasResult = "1";
-        resultMainEl.classList.add('danger');
-        return;
-      }
-
-      if (p < 0 || lM < 0) {
-        resultMainEl.textContent = S.fall_result_error_negative;
-        resultSubEl.textContent = "";
-        box.dataset.hasResult = "1";
-        resultMainEl.classList.add('danger');
-        return;
-      }
-
-      resultMainEl.classList.remove('danger');
-
-      // h = p% * L / 100  (L in mm)
-      const hMm = (p / 100) * (lM * 1000);
-      const ratio = (lM * 1000) / hMm;
-      const hRounded = Math.round(hMm);
-      const ratioRounded = ratio === Infinity ? '∞' : Math.round(ratio * 10) / 10;
-
-      const hText = S.fall_result_height(hRounded);
-      const pText = S.fall_result_pct(p.toString().replace('.', ','));
-      const rText = ratio === Infinity
-        ? S.fall_result_ratio("∞")
-        : S.fall_result_ratio(ratioRounded.toString().replace('.', ','));
-
-      resultMainEl.textContent = `${hText}`;
-      resultSubEl.textContent = `${pText} · ${rText}`;
-      box.dataset.hasResult = "1";
-    }
-
-    function clearHLInputs() {
-      document.getElementById('fallHeightVal').value = '';
-      document.getElementById('fallLengthVal').value = '';
-      const box = document.getElementById('fallHLResultBox');
-      box.dataset.hasResult = "";
-      applyLanguage(currentLang);
-    }
-
-    function clearPctInputs() {
-      document.getElementById('fallPctVal').value = '';
-      document.getElementById('fallPctLengthVal').value = '';
-      const box = document.getElementById('fallPctResultBox');
-      box.dataset.hasResult = "";
-      applyLanguage(currentLang);
-    }
-
-    // ---- Init ----
-    window.addEventListener('DOMContentLoaded', () => {
-      // Init språk fra localStorage
-      const savedLang = (function () {
-        try { return localStorage.getItem('ts_lang') || 'no'; } catch (e) { return 'no'; }
-      })();
-
-      const langSelect = document.getElementById('langSelect');
-      if (langSelect) {
-        langSelect.value = translations[savedLang] ? savedLang : 'no';
-        langSelect.addEventListener('change', (e) => {
-          const val = e.target.value;
-          applyLanguage(val);
-          try { localStorage.setItem('ts_lang', val); } catch (err) {}
-        });
-      }
-
-      // Init tema fra localStorage
-      const savedTheme = (function () {
-        try { return localStorage.getItem('ts_theme') || 'auto'; } catch (e) { return 'auto'; }
-      })();
-
-      const themeSelect = document.getElementById('themeSelect');
-      if (themeSelect) {
-        themeSelect.value = savedTheme;
-        themeSelect.addEventListener('change', (e) => {
-          applyTheme(e.target.value);
-        });
-      }
-
-      // Første gangs apply
-      applyLanguage(savedLang);
-      applyTheme(savedTheme);
+    const hardBtn=$('hardRefreshBtn');
+    if(hardBtn)hardBtn.addEventListener('click', async ()=>{
+      try{
+        if('caches' in window){
+          const names=await caches.keys();
+          await Promise.all(names.map(n=>caches.delete(n)));
+        }
+        if('serviceWorker' in navigator){
+          const regs=await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r=>r.unregister()));
+        }
+      }catch(e){}
+      location.href=CANONICAL;
     });
-  </script>
+
+    render();
+    const ver=$('ver'); if(ver)ver.textContent='4.2.1';
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js');});
+  }
+</script>
 </body>
 </html>
