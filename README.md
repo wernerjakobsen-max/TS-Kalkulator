@@ -12,7 +12,7 @@ En liten nettbasert kalkulator laget for byggebransjen.
   - forhold (1 : X)
   - høydeforskjell og lengde med mm / cm / m
 
-Verktøyet er laget med tanke på byggfag, (tømrere, blikkenslagere, rørleggere og andre som bruker tommestokk som vinkelmåler i hverdagen.
+Verktøyet er laget med tanke på byggfag- tømrere, blikkenslagere, rørleggere og andre som bruker tommestokk som vinkelmåler i hverdagen.
 
 ## Bruk (nettside)
 
