@@ -1,20 +1,44 @@
-# TS-Kalkulator
+# TS-kalkulator – vinkel fra tommestokk + fallkalkulator
 
-Statisk PWA for tommestokk-vinkel (a-la Hultafors 2 m med 20 cm-ledd).
-Regn ut grader ved bruk av tommestokk.
+En liten nettbasert kalkulator laget for byggebransjen.
 
-## Hurtigoppsett på GitHub Pages
-1. Opprett repo (f.eks. `TS-Kalkulator`) på GitHub.
-2. Last opp **alle filene i denne mappen** til repo-roten (`index.html` må ligge i rot).
-3. Gå til **Settings → Pages**:
-   - Source: **Deploy from a branch**
-   - Branch: **main** og folder: **/** (root)
-4. Vent et lite øyeblikk, åpne: `https://<brukernavn>.github.io/<repo>/`
-5. På mobil: **Legg til på Hjem-skjerm** for app-opplevelse (offline).
+## Hva gjør den?
 
-## Oppdateringer
-- Når du endrer filer, committer du til `main`. GitHub Pages bygger automatisk på nytt.
-- PWA cache styres i `sw.js` (endrer du noe stort, bump `CACHE`-navnet).
+- Regner om **avlest millimeter på tommestokk a-la Hultafors G59** til vinkel i grader.
+- Bruker manuelle målinger og interpolasjon for å gi et praktisk estimat mellom ca. **8° og 180°**.
+- Innebygget **fallkalkulator**:
+  - fall i prosent
+  - fall i grader
+  - forhold (1 : X)
+  - høydeforskjell og lengde med mm / cm / m
 
-## QR-kode
-- Åpne `qr.html` lokalt, lim inn den publiserte URL-en, og last ned PNG.
+Verktøyet er laget med tanke på byggfag, (tømrere, blikkenslagere, rørleggere og andre som bruker tommestokk som vinkelmåler i hverdagen.
+
+## Bruk (nettside)
+
+Åpne her:
+
+https://wernerjakobsen-max.github.io/TS-Kalkulator/
+
+Kan installeres som “app” (PWA) på mobil og desktop.
+
+## Språk
+
+Per nå støttes blant annet:
+
+- Norsk
+- Engelsk
+- Svensk, dansk, finsk, tysk
+- Serbisk, ukrainsk, polsk
+- Arabisk
+
+Språk velges i menyen øverst til høyre.
+
+## Juridisk / varemerke
+
+> Denne kalkulatoren gir et praktisk estimat basert på manuelle målinger med en Hultafors G59. Resultatet er veiledende og ikke 100 % nøyaktig.  
+> Hultafors® er et registrert varemerke tilhørende Hultafors Group. Dette verktøyet er uavhengig og ikke tilknyttet, godkjent av eller sponset av Hultafors.
+
+## Lisens
+
+Se `LICENSE`.
