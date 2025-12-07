@@ -41,4 +41,4 @@ Språk velges i menyen øverst til høyre.
 
 ## Lisens
 
-Se `LICENSE`.
+Se `LICENCE`.
