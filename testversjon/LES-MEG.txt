@@ -1,0 +1,30 @@
+TS Kalkulator – lokal testversjon 15.11.2026
+
+Åpne TS-Testversjon.html fra mappen over denne i en vanlig nettleser.
+Filen har all kode innebygd og trenger verken server eller nett.
+På mobil: overfør HTML-filen og åpne den i nettleseren. En filforhåndsvisning
+som ikke kjører JavaScript kan ikke brukes som kalkulator.
+
+Tommestokk: 420–798 mm, 8–170°. Monoton interpolasjon med nye kontrollpunkter
+430 mm / 11°, 486 mm / 27°, 798 mm / 170°. Øvrige punkter kommer fra den eldre
+kurven. Forventet ±0,5° er et praktisk anslag, ikke dokumentert overalt.
+Illustrasjonen er en idealisert modell med stive ledd. Den oppgir sitt eget
+kontaktmål eksplisitt fordi det kan avvike litt fra den kalibrerte kurven.
+
+Fall: ny kode, ny tekst og ny utforming. Bruker grunnleggende formler for
+forhold, prosent, tangens/arctangens og Pytagoras. Ingen kode eller grafikk
+er hentet fra enebo.no under denne implementasjonen.
+
+Testversjonen registrerer ingen service worker, bruker ingen eksterne
+ressurser og sender ingen inndata. Publisert hovedgren er ikke endret.
+Dette er en lokal testutgave, ikke en ferdig installérbar PWA.
+
+Kildekode: filene i denne mappen.
+Kontroller: node testversjon/check.mjs
+Bygg enkeltfilen: node testversjon/build.mjs
+Valgfri lokal forhåndsvisning: node testversjon/serve.mjs
+
+Kontrollert: 37 801 verdier gjennom måleområdet, kontrollpunkter, leddlengder,
+vinkelgeometri, fallkonverteringer og ugyldige verdier. I nettleseren:
+798 → 170°, avvisning av 799, 2:50 → 4 %, avvisning av 90° fallvinkel,
+20 mm over 2 m → 1 %, animasjon start/stopp, 390 og 1100 px layout.

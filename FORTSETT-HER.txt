@@ -1,0 +1,48 @@
+TS-Kalkulator – felles arbeidsgrunnlag, 15.11.2026
+
+Repository: https://github.com/wernerjakobsen-max/TS-Kalkulator
+Arbeidsgren: codex/analyse-prototype-v5
+Utkast til PR: https://github.com/wernerjakobsen-max/TS-Kalkulator/pull/1
+Privat testadresse: https://ts-kalkulator-werner-test.werner-jakob-6451.chatgpt.site
+
+Videre arbeid skal skje på arbeidsgrenen. Ikke endre eller merge main uten
+Werner sin uttrykkelige bestilling. Publisert hovedkalkulator er uendret.
+
+Gjeldende nye testversjon finnes i testversjon/. prototype/ er det eldre
+målelaboratoriet fra 13.11, og dokumenterer den opprinnelige kurven.
+TS-Testversjon.html er en selvstendig fil bygget fra testversjon/.
+Kjør fra repo-roten: node testversjon/check.mjs
+Bygg etter endringer: node testversjon/build.mjs
+Forhåndsvisning: node testversjon/serve.mjs
+
+Werner bekreftet med tre tommestokker:
+430 mm = 11 grader; 486 mm = 27 grader; 798 mm = 170 grader.
+175 grader ga omtrent 798+ mm. Øvre grense er derfor satt til 170 grader,
+med inndata 420–798 mm. Ikke ekstrapoler over dette området.
+Forventet praktisk nøyaktighet er ca. ±0,5 grader, med tydelig forbehold om
+avlesning, slark og slitasje. Dette er ikke en garanti i hele området.
+Andre kontrollpunkter er beholdt fra den opprinnelige kurven.
+
+Fallkalkulatorens kode, forklaring og utforming er skrevet på nytt for TS.
+Den bruker høydeforskjell / HORISONTAL lengde; begge tall i a:b benyttes.
+Geometriillustrasjonen bruker stive ledd. Kontaktmål fra idealisert geometri
+vises separat fra den kalibrerte kurven.
+
+37 801 kurveverdier, geometri, kontrollpunkter og fallkonverteringer er
+kontrollert med Node. Mobilbredde og sentrale inndata er kontrollert i nettleser.
+Faktisk testing på Werner sin telefon gjenstår.
+
+Testadressen er en separat privat Site. Hosting-ID:
+appgprj_6af98541bd2c8191b6de7623bd12d54d
+Sites-kilden ligger i lokal sites/ts-kalkulator-test og en separat kildekodelagring
+administrert av Sites. GitHub-push alene publiserer ikke denne adressen.
+Etter appendringer må filen bygges og samme versjon publiseres med Sites.
+Ingen verkstedbilder eller innloggingsopplysninger skal lastes opp i repoet.
+
+For en ny chat på mobil eller PC kan du sende:
+Fortsett TS-Kalkulator fra grenen codex/analyse-prototype-v5 i
+wernerjakobsen-max/TS-Kalkulator. Les FORTSETT-HER.txt først. Bruk testversjon/.
+Ikke endre main. Hent siste grenversjon før du redigerer.
+
+GitHub deler filer og versjonshistorikk, ikke historikken i lokale chatter.
+Denne lokale chatten kan ikke automatisk flyttes til skyen.
