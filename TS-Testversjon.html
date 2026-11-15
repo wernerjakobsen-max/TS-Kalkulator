@@ -20,12 +20,12 @@
 <details><summary>Målegrunnlag i testversjonen</summary><p>Jevn, monoton interpolasjon mellom kontrollpunkter. Nye bekreftelser fra tre tommestokker: 430 mm → 11°, 486 mm → 27° og 798 mm → 170°. Øvrige punkter er beholdt fra den tidligere kurven. Punktet 485 mm → 27° er erstattet, og området over 798 mm er fjernet.</p><p>±0,5° er foreløpig forventet praktisk nøyaktighet. Punktene dokumenterer ikke denne feilmarginen mellom alle målingene.</p></details>
 </section>
 <section id="fall" hidden aria-labelledby="fall-title"><p class="eyebrow">Egen beregning · samme enheter i alle visninger</p><h2 id="fall-title">Fall og stigning</h2><p>Beregn størrelsen på en helning. Lengden på bakken oppgis som <strong>horisontal lengde</strong>.</p>
-<div class="grid"><div><label for="fall-mode">Hva kjenner du?</label><select id="fall-mode"><option value="percent">Prosent</option><option value="degrees">Vinkel i grader</option><option value="ratio">Forhold a:b</option><option value="height">Høydeforskjell og lengde</option></select>
+<div class="grid"><div><label for="fall-mode">Hva kjenner du?</label><select id="fall-mode"><option value="percent">Prosent</option><option value="degrees">Grader og horisontal lengde</option><option value="degrees-height">Grader og høydeforskjell</option><option value="ratio">Forhold a:b</option><option value="height">Høydeforskjell og lengde</option></select>
 <div id="single-fields"><label id="single-label" for="fall-a">Helning (%)</label><input id="fall-a" inputmode="decimal" type="text" value="2"></div>
 <div id="ratio-fields" hidden><div class="pair"><div><label for="ratio-a">Høyde · a</label><input id="ratio-a" inputmode="decimal" value="1"></div><span>:</span><div><label for="ratio-b">Lengde · b</label><input id="ratio-b" inputmode="decimal" value="50"></div></div><small>Forholdet 2:50 betyr 4 %. Begge tallene brukes.</small></div>
 <div id="height-fields" hidden><label for="height">Høydeforskjell</label><div class="unit"><input id="height" inputmode="decimal" value="20"><select id="height-unit" aria-label="Enhet for høydeforskjell"><option value="1">mm</option><option value="10">cm</option><option value="1000">m</option></select></div></div>
-<label for="length">Horisontal lengde</label><div class="unit"><input id="length" inputmode="decimal" value="1"><select id="length-unit" aria-label="Enhet for lengde"><option value="1000">m</option><option value="10">cm</option><option value="1">mm</option></select></div><small>Lengden brukes til å beregne høydeforskjellen.</small><div id="fall-error" class="error" role="status"></div></div>
-<div><div id="fall-results" aria-live="polite"><div class="fall-primary"><output id="percent"></output><span>prosent</span></div><dl><div><dt>Vinkel</dt><dd id="degrees"></dd></div><div><dt>Forhold høyde : lengde</dt><dd id="ratio"></dd></div><div><dt>Høydeforskjell</dt><dd id="height-result"></dd></div><div><dt>Lengde langs skråningen</dt><dd id="slope-length"></dd></div></dl></div>
+<div id="length-fields"><label for="length">Horisontal lengde</label><div class="unit"><input id="length" inputmode="decimal" value="1"><select id="length-unit" aria-label="Enhet for lengde"><option value="1000">m</option><option value="10">cm</option><option value="1">mm</option></select></div><small>Lengden brukes til å beregne høydeforskjellen.</small></div><div id="fall-error" class="error" role="status"></div></div>
+<div><div id="fall-results" aria-live="polite"><div class="fall-primary"><output id="percent"></output><span>prosent</span></div><dl><div><dt>Vinkel</dt><dd id="degrees"></dd></div><div><dt>Forhold høyde : lengde</dt><dd id="ratio"></dd></div><div><dt>Høydeforskjell</dt><dd id="height-result"></dd></div><div><dt>Horisontal lengde</dt><dd id="horizontal-result"></dd></div><div><dt>Lengde langs skråningen</dt><dd id="slope-length"></dd></div></dl></div>
 <div class="diagram-top fall-diagram-top"><h3>Slik henger målene sammen</h3><button id="fall-play" class="quiet" aria-pressed="false">Vis sammenhengen</button></div>
 <p id="fall-step" class="muted" aria-live="polite"></p>
 <div id="fall-visual"><svg id="fall-diagram" viewBox="0 0 520 285" role="img" aria-labelledby="fall-svg-title fall-svg-desc"><title id="fall-svg-title">Helning med mål, grader, prosent og forhold</title><desc id="fall-svg-desc"></desc>
@@ -33,7 +33,7 @@
 <text x="65" y="25" fill="#6ce0c0" font-size="22" font-weight="700">Vinkel: <tspan id="fall-angle-label"/></text><text id="fall-height-label" fill="#efbf64" font-size="20" paint-order="stroke" stroke="#19313a" stroke-width="4" stroke-linejoin="round"/><text id="fall-length-label" x="65" y="260" fill="#b9cdd0" font-size="20"/></svg>
 <div class="fall-live"><div><span>Prosent</span><strong id="fall-live-percent"></strong></div><div><span>Forhold høyde : lengde</span><strong id="fall-live-ratio"></strong></div></div>
 <small>Figuren viser helningens størrelse med lik målestokk på begge akser. Ved små fall er vinkelen og høydeforskjellen naturlig små. Høydeforskjellen er merket i gult.</small></div></div></div>
-<details><summary>Hvordan regnes det?</summary><p>Forholdet r = høydeforskjell / horisontal lengde. Prosent = 100 × r. Vinkel = arctan(r). Ved kjent vinkel er r = tan(vinkel). Lengden langs skråningen beregnes med Pytagoras.</p><p>0 % betyr flatt. Vinkler må være fra 0° til under 90°. Kalkulatoren viser helningens størrelse; retningen velger du selv.</p></details></section>
+<details><summary>Hvordan regnes det?</summary><p>Forholdet r = høydeforskjell / horisontal lengde. Prosent = 100 × r. Vinkel = arctan(r). Ved kjent vinkel er r = tan(vinkel). Ved kjent vinkel og høydeforskjell er horisontal lengde = høydeforskjell / tan(vinkel). Lengden langs skråningen beregnes med Pytagoras.</p><p>0 % betyr flatt. Vinkler må være fra 0° til under 90°. Ved kjent vinkel og høyde må både vinkelen og høyden være større enn null; 0° kan ikke gi en positiv høydeforskjell over en endelig lengde. Kalkulatoren viser helningens størrelse; retningen velger du selv.</p></details></section>
 <footer>Testversjon · måleverdier behandles i nettleseren · fungerer uten nett når HTML-filen er lagret.<br>Fallkalkulatorens kode, tekst og utforming er laget på nytt for TS.</footer>
 </main><script type="module">
 // TS testversjon. Eldre kontrollpunkter beholdes; 27° og øvre grense
@@ -82,6 +82,14 @@ function pose(deg,beta){
   return {A,B,E,C,beta,edgeY:h,reading:400+C.x};
 }
 // Egen fallberegning: stigning = høydeforskjell / HORISONTAL lengde.
+function slopeFromHeight(degrees,height){
+  const result=slope('degrees',degrees);
+  if(degrees<=0)throw Error('Ved kjent høyde må vinkelen være større enn 0° og mindre enn 90°.');
+  if(!Number.isFinite(height)||height<=0)throw Error('Skriv en høydeforskjell større enn null.');
+  const length=height/result.r,along=Math.hypot(length,height);
+  if(!Number.isFinite(length)||!Number.isFinite(along)||length<=0)throw Error('Tallene er for store eller for små.');
+  return {result,length,h:height,along};
+}
 function slope(mode,a,b){
   if(!Number.isFinite(a)||a<0)throw Error('Skriv et gyldig, positivt tall eller null.');
   let r;
@@ -202,30 +210,34 @@ $('fall-play').addEventListener('click',()=>{
 function renderFall(){
   stopFall();fallCurrent=null;
   const mode=$('fall-mode').value;
-  $('single-fields').hidden=!['percent','degrees'].includes(mode);
-  $('ratio-fields').hidden=mode!=='ratio';$('height-fields').hidden=mode!=='height';
-  $('single-label').textContent=mode==='degrees'?'Vinkel (°)':'Helning (%)';
+  const fromHeight=mode==='degrees-height';
+  $('single-fields').hidden=!['percent','degrees','degrees-height'].includes(mode);
+  $('ratio-fields').hidden=mode!=='ratio';$('height-fields').hidden=mode!=='height'&&!fromHeight;
+  $('length-fields').hidden=fromHeight;
+  $('single-label').textContent=['degrees','degrees-height'].includes(mode)?'Vinkel (°)':'Helning (%)';
   ['fall-a','ratio-a','ratio-b','height','length'].forEach(id=>$(id).removeAttribute('aria-invalid'));
   try{
-    const length=number('length')*Number($('length-unit').value);
-    if(!Number.isFinite(length)||length<=0){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null.');}
-    let a,b;
+    let length=number('length')*Number($('length-unit').value);
+    if(!fromHeight&&(!Number.isFinite(length)||length<=0)){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null.');}
+    let a,b,result,h,along;
     if(mode==='height'){a=number('height')*Number($('height-unit').value);b=length;}
     else if(mode==='ratio'){a=number('ratio-a');b=number('ratio-b');}
     else a=number('fall-a');
-    const result=slope(mode,a,b),h=result.r*length,along=Math.hypot(h,length);
+    if(fromHeight){({result,length,h,along}=slopeFromHeight(number('fall-a'),number('height')*Number($('height-unit').value)));}
+    else {result=slope(mode,a,b);h=result.r*length;along=Math.hypot(h,length);}
     if(!Number.isFinite(h)||!Number.isFinite(along))throw Error('Tallene er for store.');
     $('percent').textContent=fmt(result.percent,3)+' %';$('degrees').textContent=fmt(result.degrees,3)+'°';
     $('ratio').textContent=result.ratio===null?'Flatt (0 : 1)':'1 : '+fmt(result.ratio,3);
     $('height-result').textContent=fmt(h,2)+' mm';$('slope-length').textContent=fmt(along/1000,3)+' m';
+    $('horizontal-result').textContent=fmt(length/1000,3)+' m';
     fallCurrent={result,length};drawFall(result,length);$('fall-visual').hidden=false;$('fall-play').disabled=false;
     $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
     $('fall-error').textContent='';
   }catch(e){
     $('fall-visual').hidden=true;$('fall-play').disabled=true;$('fall-step').textContent='Skriv inn gyldige mål for å vise figuren.';
     $('fall-error').textContent=e.message;
-    ['percent','degrees','ratio','height-result','slope-length'].forEach(id=>$(id).textContent='–');
-    const ids=mode==='ratio'?['ratio-a','ratio-b']:mode==='height'?['height']:['fall-a'];
+    ['percent','degrees','ratio','height-result','horizontal-result','slope-length'].forEach(id=>$(id).textContent='–');
+    const ids=fromHeight?['fall-a','height']:mode==='ratio'?['ratio-a','ratio-b']:mode==='height'?['height']:['fall-a'];
     ids.forEach(id=>$(id).setAttribute('aria-invalid','true'));
   }
 }

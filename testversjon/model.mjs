@@ -44,6 +44,14 @@ export function pose(deg,beta){
   return {A,B,E,C,beta,edgeY:h,reading:400+C.x};
 }
 // Egen fallberegning: stigning = høydeforskjell / HORISONTAL lengde.
+export function slopeFromHeight(degrees,height){
+  const result=slope('degrees',degrees);
+  if(degrees<=0)throw Error('Ved kjent høyde må vinkelen være større enn 0° og mindre enn 90°.');
+  if(!Number.isFinite(height)||height<=0)throw Error('Skriv en høydeforskjell større enn null.');
+  const length=height/result.r,along=Math.hypot(length,height);
+  if(!Number.isFinite(length)||!Number.isFinite(along)||length<=0)throw Error('Tallene er for store eller for små.');
+  return {result,length,h:height,along};
+}
 export function slope(mode,a,b){
   if(!Number.isFinite(a)||a<0)throw Error('Skriv et gyldig, positivt tall eller null.');
   let r;

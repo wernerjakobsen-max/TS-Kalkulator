@@ -1,4 +1,4 @@
-import {angle,geometry,pose,parseNumber,slope} from './model.mjs';
+import {angle,geometry,pose,parseNumber,slope,slopeFromHeight} from './model.mjs';
 const $=id=>document.getElementById(id),fmt=(v,n=1)=>v.toLocaleString('nb-NO',{minimumFractionDigits:n,maximumFractionDigits:n});
 let playing=false,frame=0;
 function stop(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Vis måletrinn';$('play').setAttribute('aria-pressed','false');$('diagram').setAttribute('viewBox','-100 -235 540 295');renderTS();}
@@ -100,30 +100,34 @@ $('fall-play').addEventListener('click',()=>{
 function renderFall(){
   stopFall();fallCurrent=null;
   const mode=$('fall-mode').value;
-  $('single-fields').hidden=!['percent','degrees'].includes(mode);
-  $('ratio-fields').hidden=mode!=='ratio';$('height-fields').hidden=mode!=='height';
-  $('single-label').textContent=mode==='degrees'?'Vinkel (°)':'Helning (%)';
+  const fromHeight=mode==='degrees-height';
+  $('single-fields').hidden=!['percent','degrees','degrees-height'].includes(mode);
+  $('ratio-fields').hidden=mode!=='ratio';$('height-fields').hidden=mode!=='height'&&!fromHeight;
+  $('length-fields').hidden=fromHeight;
+  $('single-label').textContent=['degrees','degrees-height'].includes(mode)?'Vinkel (°)':'Helning (%)';
   ['fall-a','ratio-a','ratio-b','height','length'].forEach(id=>$(id).removeAttribute('aria-invalid'));
   try{
-    const length=number('length')*Number($('length-unit').value);
-    if(!Number.isFinite(length)||length<=0){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null.');}
-    let a,b;
+    let length=number('length')*Number($('length-unit').value);
+    if(!fromHeight&&(!Number.isFinite(length)||length<=0)){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null.');}
+    let a,b,result,h,along;
     if(mode==='height'){a=number('height')*Number($('height-unit').value);b=length;}
     else if(mode==='ratio'){a=number('ratio-a');b=number('ratio-b');}
     else a=number('fall-a');
-    const result=slope(mode,a,b),h=result.r*length,along=Math.hypot(h,length);
+    if(fromHeight){({result,length,h,along}=slopeFromHeight(number('fall-a'),number('height')*Number($('height-unit').value)));}
+    else {result=slope(mode,a,b);h=result.r*length;along=Math.hypot(h,length);}
     if(!Number.isFinite(h)||!Number.isFinite(along))throw Error('Tallene er for store.');
     $('percent').textContent=fmt(result.percent,3)+' %';$('degrees').textContent=fmt(result.degrees,3)+'°';
     $('ratio').textContent=result.ratio===null?'Flatt (0 : 1)':'1 : '+fmt(result.ratio,3);
     $('height-result').textContent=fmt(h,2)+' mm';$('slope-length').textContent=fmt(along/1000,3)+' m';
+    $('horizontal-result').textContent=fmt(length/1000,3)+' m';
     fallCurrent={result,length};drawFall(result,length);$('fall-visual').hidden=false;$('fall-play').disabled=false;
     $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
     $('fall-error').textContent='';
   }catch(e){
     $('fall-visual').hidden=true;$('fall-play').disabled=true;$('fall-step').textContent='Skriv inn gyldige mål for å vise figuren.';
     $('fall-error').textContent=e.message;
-    ['percent','degrees','ratio','height-result','slope-length'].forEach(id=>$(id).textContent='–');
-    const ids=mode==='ratio'?['ratio-a','ratio-b']:mode==='height'?['height']:['fall-a'];
+    ['percent','degrees','ratio','height-result','horizontal-result','slope-length'].forEach(id=>$(id).textContent='–');
+    const ids=fromHeight?['fall-a','height']:mode==='ratio'?['ratio-a','ratio-b']:mode==='height'?['height']:['fall-a'];
     ids.forEach(id=>$(id).setAttribute('aria-invalid','true'));
   }
 }

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {angle,geometry,pose,slope,parseNumber} from './model.mjs';
+import {angle,geometry,pose,slope,slopeFromHeight,parseNumber} from './model.mjs';
 for(const [mm,deg] of [[420,8],[430,11],[486,27],[677.5,90],[798,170]])assert.equal(angle(mm),deg);
 let last=0;
 for(let k=0;k<=37800;k++){const v=angle(420+k/100);assert.ok(v>=last&&v>=8&&v<=170);last=v;}
@@ -33,4 +33,18 @@ for(const p of [0,.01,2,4,100,1000]){
   assert.ok(Math.abs(slope('height',a.r*7000,7000).percent-p)<1e-10);
 }
 for(const args of [['degrees',90],['degrees',200],['ratio',1,0],['height',20,0],['percent',NaN],['percent',-2]])assert.throws(()=>slope(...args));
-console.log('OK: 37 801 kurveverdier, kontrollpunkter, stiv geometri, fallkonverteringer og ugyldige inndata.');
+// Inverse calculation across the full angle range, with independent 3-4-5 triangle.
+const triangle=slopeFromHeight(Math.atan2(3,4)*180/Math.PI,3000);
+assert.ok(Math.abs(triangle.length-4000)<1e-8);
+assert.ok(Math.abs(triangle.along-5000)<1e-8);
+const example=slopeFromHeight(35,3200);
+assert.ok(Math.abs(example.length-4570.0736216)<1e-6);
+for(const deg of [.001,.1,1,10,35,45,70,89,89.999]){
+  for(const height of [1,3200,1e6]){
+    const v=slopeFromHeight(deg,height);
+    assert.ok(Math.abs(slope('height',height,v.length).degrees-deg)<1e-9);
+    assert.ok(Math.abs(v.along**2-v.length**2-height**2)/v.along**2<1e-12);
+  }
+}
+for(const args of [[0,3200],[90,3200],[-1,3200],[35,0],[35,-2],[NaN,1],[35,Infinity]])assert.throws(()=>slopeFromHeight(...args));
+console.log('OK: 37 801 kurveverdier, kontrollpunkter, stiv geometri, fallkonverteringer, grader/høyde og ugyldige inndata.');
