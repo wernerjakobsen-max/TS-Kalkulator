@@ -1,7 +1,7 @@
 import {angle,geometry,pose,parseNumber,slope} from './model.mjs';
 const $=id=>document.getElementById(id),fmt=(v,n=1)=>v.toLocaleString('nb-NO',{minimumFractionDigits:n,maximumFractionDigits:n});
 let playing=false,frame=0;
-function stop(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Vis måletrinn';$('play').setAttribute('aria-pressed','false');$('diagram').setAttribute('viewBox','-35 -235 470 295');renderTS();}
+function stop(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Vis måletrinn';$('play').setAttribute('aria-pressed','false');$('diagram').setAttribute('viewBox','-100 -235 540 295');renderTS();}
 function draw(deg,mm,shape=geometry(deg)){
   const {A,B,E,C,reading}=shape,p=v=>`${v.x},${v.y}`;
   $('links').setAttribute('d',`M${p(A)} L${p(B)} L${p(E)}`);
