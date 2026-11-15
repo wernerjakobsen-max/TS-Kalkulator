@@ -6,10 +6,21 @@ const standalone=html.replace('<link rel="stylesheet" href="style.css">',`<style
 const stamp = text => text.replaceAll('__VERSION__', VERSION).replace('Testversjon · 15.11.2026', 'Testversjon · ' + VERSION);
 await fs.writeFile(new URL('../TS-Testversjon.html',import.meta.url),stamp(standalone));
 const updater = await read('update.mjs');
+const manifest=await read('manifest.webmanifest'),icon=await read('icon.svg');
+const license=await read('LICENCE.txt');
 const controls = '<aside aria-label="Oppdateringer"><strong>Versjon ' + VERSION + '</strong><p id="update-status" role="status">Ser etter oppdateringer …</p><button id="apply-update" hidden>Oppdater nå</button> <button id="check-update" class="quiet">Se etter oppdatering</button></aside>';
-const hosted = stamp(standalone).replace('</main>',controls+'</main>').replace('</body>',()=>`<script type="module">${stamp(updater)}</script></body>`);
+const hosted = stamp(standalone).replace('</head>','<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"></head>').replace('</main>',controls+'</main>').replace('</body>',()=>`<script type="module">${stamp(updater)}</script></body>`);
 await fs.mkdir(new URL('./dist/',import.meta.url),{recursive:true});
 await fs.writeFile(new URL('./dist/index.html',import.meta.url),hosted);
 await fs.writeFile(new URL('./dist/sw.js',import.meta.url),stamp(await read('sw.js')));
 await fs.writeFile(new URL('./dist/version.json',import.meta.url),JSON.stringify({version:VERSION}));
+await fs.writeFile(new URL('./dist/manifest.webmanifest',import.meta.url),manifest);
+await fs.writeFile(new URL('./dist/icon.svg',import.meta.url),icon);
+await fs.writeFile(new URL('./dist/LICENCE.txt',import.meta.url),license);
+// Publiseringspakken er separat. Dette endrer ikke rotfilene som main publiserer.
+const publicUrl='https://wernerjakobsen-max.github.io/TS-Kalkulator/';
+const candidate=hosted.replace('<meta name="robots" content="noindex,nofollow">','<meta name="description" content="Beregn vinkel med tommestokk, fall, stigning, grader, prosent og fallforhold. Måleveiledning og animerte illustrasjoner."><link rel="canonical" href="'+publicUrl+'">');
+await fs.mkdir(new URL('../lansering/',import.meta.url),{recursive:true});
+for(const [name,body] of Object.entries({'index.html':candidate,'sw.js':stamp(await read('sw.js')),'version.json':JSON.stringify({version:VERSION}),'manifest.webmanifest':manifest,'icon.svg':icon,'robots.txt':'User-agent: *\nAllow: /\nSitemap: '+publicUrl+'sitemap.xml\n','sitemap.xml':'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>'+publicUrl+'</loc></url></urlset>'}))await fs.writeFile(new URL('../lansering/'+name,import.meta.url),body);
+await fs.writeFile(new URL('../lansering/LICENCE.txt',import.meta.url),license);
 console.log('Laget TS-Testversjon.html – åpnes direkte uten server eller nett.');

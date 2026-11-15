@@ -31,7 +31,7 @@ vinkelgeometri, fallkonverteringer og ugyldige verdier. I nettleseren:
 
 OPPDATERINGER ETTER UTRULLING
 Målegrunnlaget gjelder tre tommestokker med 15 mm brede ledd.
-Nettutgaven bygges til testversjon/dist/ med versjonsnummer, service worker
+Nettutgaven bygges til testversjon/dist/ med manifest, ikon, versjonsnummer, service worker
 og version.json. Hele kalkulatoren er samlet i én HTML-fil per versjon.
 Nye versjoner lastes i bakgrunnen. Brukeren velger «Oppdater nå»;
 innskrevne felt og valgt kalkulator beholdes hvis nettleseren tillater øktlagring.
@@ -42,8 +42,8 @@ En lagret enkeltfil må erstattes manuelt og har ingen nettoppdatering.
 Utgivelsesrutine:
 1. Gjør endringer på arbeidsgrenen; behold main urørt til godkjent utrulling.
 2. Øk VERSION i release.mjs hver gang noe skal publiseres, også ved rollback.
-3. Kjør node testversjon/check.mjs og node testversjon/check-update.mjs.
-4. Kjør node testversjon/build.mjs. Publiser ALLE tre filer i dist samlet.
+3. Kjør check.mjs, check-update.mjs og check-release.mjs etter bygg.
+4. Kjør node testversjon/build.mjs. Publiser HELE innholdet i dist samlet.
 5. Prøv oppdatering fra forrige versjon, uten nett, og på mobil og PC.
 6. Ta vare på tidligere kildekode i Git. Tilbakerulling er en ny utgivelse
    med tidligere funksjoner og et nytt versjonsnummer.
@@ -62,5 +62,10 @@ aksepteres. En feil i valgfri lengde fjerner ikke gyldige helningsverdier.
 Kalibrering 15.11: 798 mm justert fra 170° til 170,3° etter Werners avtale.
 Dette er en foreløpig kalibreringsverdi, ikke en presist bekreftet måling.
 Nye uavhengige kontroller på tre 15 mm tommestokker (ikke lagt inn som nye knutepunkter):
-782 mm=147,8°; 786 mm=151,9°; 792 mm=159,3°; 795 mm=164,3°; 797 mm=168,5°.
+782 mm=147,8°; 786 mm=151,9°; 792 mm=159,3°; 795 mm=164,3°; 796 mm=165,8°; 797 mm=168,3° (korrigert fra 168,5°).
 Første innsendte 1797 er tolket som 797 mm. Øvrige knutepunkter er uendret.
+
+LANSERINGSKANDIDAT 5.0.0-rc.1: oppdatert manifest bevarer appidentiteten.
+Bygg lager separat publiseringspakke i lansering/. Testadressen bruker dist/
+med noindex. Kontroller hele pakken med node testversjon/check-release.mjs.
+Manuelle kontrollmålinger er samlet i measurements.json. Beregningskurven er uendret siden test.4.

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://wernerjakobsen-max.github.io/TS-Kalkulator/sitemap.xml

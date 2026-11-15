@@ -50,3 +50,5 @@ Denne lokale chatten kan ikke automatisk flyttes til skyen.
 Oppdatering 15.11: nettutgave bygges til testversjon/dist. Versjon styres i release.mjs og må økes ved hver utgivelse. Se utgivelsesrutine i testversjon/LES-MEG.txt. Målegrunnlaget gjelder 15 mm brede ledd. Fallkonvertering krever ikke lengde. Main er fortsatt urørt.
 
 SENESTE KALIBRERING 15.11: tidligere 798 mm = 170° er erstattet med 170,3° etter avtale. Dette er et usikkert, foreløpig endepunkt; ikke presist bekreftet måling. Området er nå 420–798 mm / 8–170,3°. Se LES-MEG.txt for fem nye uavhengige kontrollmålinger.
+
+Lanseringskandidat 5.0.0-rc.1: measurement.json (filnavn measurements.json) dokumenterer 796=165,8° og korrigert 797=168,3°. Kurven uendret. Publiseringspakke i lansering/; ikke lagt over produksjonsfilene. Ny kontroll: node testversjon/check-release.mjs.

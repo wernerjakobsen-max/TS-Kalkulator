@@ -1,0 +1,62 @@
+TS-Kalkulator – lanseringskontroll 15.11.2026
+Kandidat: 5.0.0-rc.1. Ikke offentlig lansert. Main er urørt.
+
+FERDIG KONTROLLERT
+- 37 801 punkter: monoton kurve og avgrensning 420–798 mm / 8–170,3°.
+- Seks uavhengige fysiske kontroller 782–797 mm har største absolutte avvik
+  ca. 0,219°. 796=165,8° og korrigert 797=168,3° er dokumentert.
+  798=170,3° er avtalt kalibrering, ikke et uavhengig kontrollmål.
+  Dette beviser ikke ±0,5° gjennom hele skalaen; anslaget har forbehold.
+- Fall: uavhengig 3–4–5-kontroll, inverse beregninger, enheter,
+  komma/punktum, valgfri lengde og ugyldige tall.
+- PWA-manifest bevarer gammel identitet under /TS-Kalkulator/.
+- Ny service worker henter komplett utgave før aktivering, rydder bare
+  egne eldre cacher og den identifiserte gamle TS-cachen.
+- Lokal nettlesertest med gammel main-kode under samme origin og scope:
+  gammel versjon 4.2.1 åpnet også ved simulert nettfeil (aktiv gammel cache).
+  Byttet deretter til ny kandidat. Første gjenlasting beholdt gammel side.
+  Etter lukking av gammel fane og ny åpning kom kandidaten frem, også med
+  gammel ?v=4.2.1-adresse. Kandidaten åpnet og regnet ved simulert nettfeil.
+  Dette er lokal migreringskontroll, ikke en test på produksjonsserveren.
+- Mobilbredde 390 px: 798 -> 170,3° og 35° / 3,2 m -> 4,570 m horisontalt.
+  Nettleserkontroll fant ingen horisontal overflyt.
+- Testutgaven har noindex. Separat pakke i lansering/ har beskrivelse,
+  canonical, robots og sitemap for den eksisterende GitHub Pages-adressen.
+
+KJØR FØR HVER UTGIVELSE
+node testversjon/build.mjs
+node testversjon/check.mjs
+node testversjon/check-update.mjs
+node testversjon/check-release.mjs
+
+SISTE PILOTKONTROLL PÅ WERNERS TELEFON
+1. Åpne privat testadresse og kontroller versjon 5.0.0-rc.1.
+2. Prøv begge kalkulatorer og animasjonene på den faktiske telefonen.
+3. Prøv legg til på startskjerm / installer dersom nettleseren tilbyr det.
+   Manifest og SVG-ikon er kontrollert, men native installasjon på
+   Android/iOS er ikke verifisert fra denne PC-en.
+4. Åpne én gang med nett, slå på flymodus og åpne igjen. Prøv et nytt tall.
+5. Første overgang fra gammel produksjonsapp må sluttkontrolleres på
+   produksjonsadressen etter utrulling. Lukk alle gamle faner/appvinduer.
+
+PUBLISERING ETTER AVTALT LANSERING
+- Behold eksisterende GitHub Pages-adresse og manifestidentitet.
+- Sett release.mjs til 5.0.0 og kjør bygg og alle kontroller over på nytt.
+- Lag en egen commit på arbeidsgrenen som legger filene i lansering/
+  i repo-roten. Ikke kopier testutgavens noindex-side til produksjon.
+- Kontroller diff og eksisterende QR-lenker før PR-en merges til main.
+  Kandidaten er bare på norsk. Den gamle språkvelgeren og tema-/QR-/
+  installasjonsknappene er ikke videreført i denne utgaven. Installer via
+  nettleserens meny. Avklar eventuelt behov for disse før offentlig bytte.
+- Behold tidligere commit som referanse. Tilbakerulling utgis med et NYTT
+  versjonsnummer og ny worker, ikke bare gjenbruk av en gammel cache.
+- Kontroller offentlig side, versjon, gamle bokmerker, installert app og
+  offlineåpning på mobil straks etter utrulling.
+
+FORSLAG TIL KORT BESKJED TIL BRUKERE (ikke sendt)
+Ny TS-Kalkulator: tydeligere måleveiledning, animerte figurer og ny
+fallkalkulator. Målegrunnlaget gjelder 15 mm brede tommestokkledd.
+Vinkelmålingen er veiledende, med forventet praktisk nøyaktighet ca. ±0,5°
+ved korrekt bruk; slark, slitasje og avlesning kan gi større avvik.
+Ved første oppgradering: ha nett, lukk alle åpne TS-faner/appvinduer og
+åpne kalkulatoren igjen. Senere oppdateringer varsles med «Oppdater nå».
