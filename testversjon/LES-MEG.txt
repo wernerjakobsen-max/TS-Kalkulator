@@ -5,8 +5,8 @@ Filen har all kode innebygd og trenger verken server eller nett.
 På mobil: overfør HTML-filen og åpne den i nettleseren. En filforhåndsvisning
 som ikke kjører JavaScript kan ikke brukes som kalkulator.
 
-Tommestokk: 420–798 mm, 8–170°. Monoton interpolasjon med nye kontrollpunkter
-430 mm / 11°, 486 mm / 27°, 798 mm / 170°. Øvrige punkter kommer fra den eldre
+Tommestokk: 420–798 mm, 8–170,3°. Monoton interpolasjon med nye kontrollpunkter
+430 mm / 11°, 486 mm / 27°, 798 mm / 170,3° (avtalt justering, usikkert endepunkt). Øvrige punkter kommer fra den eldre
 kurven. Forventet ±0,5° er et praktisk anslag, ikke dokumentert overalt.
 Illustrasjonen er en idealisert modell med stive ledd. Den oppgir sitt eget
 kontaktmål eksplisitt fordi det kan avvike litt fra den kalibrerte kurven.
@@ -26,7 +26,7 @@ Valgfri lokal forhåndsvisning: node testversjon/serve.mjs
 
 Kontrollert: 37 801 verdier gjennom måleområdet, kontrollpunkter, leddlengder,
 vinkelgeometri, fallkonverteringer og ugyldige verdier. I nettleseren:
-798 → 170°, avvisning av 799, 2:50 → 4 %, avvisning av 90° fallvinkel,
+798 → 170,3°, avvisning av 799, 2:50 → 4 %, avvisning av 90° fallvinkel,
 20 mm over 2 m → 1 %, animasjon start/stopp, 390 og 1100 px layout.
 
 OPPDATERINGER ETTER UTRULLING
@@ -59,3 +59,8 @@ Fall: prosent, grader og fallforhold krever ingen lengde. Lengde er valgfri
 ved kjent helning. Høydeforskjell + lengde krever begge målene. Grader +
 høydeforskjell beregner lengdene når høyden er lagt inn. Komma og punktum
 aksepteres. En feil i valgfri lengde fjerner ikke gyldige helningsverdier.
+Kalibrering 15.11: 798 mm justert fra 170° til 170,3° etter Werners avtale.
+Dette er en foreløpig kalibreringsverdi, ikke en presist bekreftet måling.
+Nye uavhengige kontroller på tre 15 mm tommestokker (ikke lagt inn som nye knutepunkter):
+782 mm=147,8°; 786 mm=151,9°; 792 mm=159,3°; 795 mm=164,3°; 797 mm=168,5°.
+Første innsendte 1797 er tolket som 797 mm. Øvrige knutepunkter er uendret.

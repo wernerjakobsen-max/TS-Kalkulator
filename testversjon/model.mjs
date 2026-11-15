@@ -1,7 +1,8 @@
+// 15.11.2026: 798 mm = 170,3° etter avtale; usikkert endepunkt, ikke en ny presis måling.
 // TS testversjon. Eldre kontrollpunkter beholdes; 27° og øvre grense
 // er oppdatert etter brukerens kontroll på tre tommestokker 14.11.2026.
 export const X=[420,430,453,486,500,525,536,563,594,635,677.5,718,756,779,791,796,798];
-export const Y=[8,11,17.5,27,31,38.5,42,50.5,60,74,90,107.5,128,145,158,166,170];
+export const Y=[8,11,17.5,27,31,38.5,42,50.5,60,74,90,107.5,128,145,158,166,170.3];
 function tangents(x,y){
   const h=x.slice(1).map((v,i)=>v-x[i]),d=h.map((v,i)=>(y[i+1]-y[i])/v),m=[d[0]];
   for(let i=1;i<x.length-1;i++){
