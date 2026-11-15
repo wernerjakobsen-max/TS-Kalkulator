@@ -10,6 +10,10 @@ function draw(deg,mm,shape=geometry(deg)){
   $('contact').setAttribute('cx',C.x);$('contact').setAttribute('cy',C.y);
   const a=Math.atan2(A.y-B.y,A.x-B.x),r=25,t=deg*Math.PI/180;
   $('arc').setAttribute('d',`M${B.x+r*Math.cos(a)},${B.y+r*Math.sin(a)} A${r},${r} 0 0 1 ${B.x+r*Math.cos(a+t)},${B.y+r*Math.sin(a+t)}`);
+  const labelRadius=46,mid=a+t/2;
+  $('arc-degrees').setAttribute('x',B.x+labelRadius*Math.cos(mid));
+  $('arc-degrees').setAttribute('y',-(B.y+labelRadius*Math.sin(mid)));
+  $('arc-degrees').textContent=fmt(deg)+'°';
   $('hinge-label').setAttribute('x',B.x-22);$('hinge-label').setAttribute('y',-B.y-16);$('hinge-label').textContent='200 mm';
   $('zero-label').setAttribute('x',Math.min(320,C.x+8));$('zero-label').setAttribute('y',-C.y+22);$('zero-label').textContent='Nullhjørne';
   $('geometry-note').textContent=`Avlest ${fmt(mm)} mm → ${fmt(deg)}°. Modellskissen gir kontakt ved ${fmt(reading)} mm for denne vinkelen.`;
@@ -21,11 +25,11 @@ function renderTS(){
   $('angle').textContent=valid?`${fmt(deg)}°`:'–';
   if(!valid){$('sensitivity').textContent='';$('geometry-note').textContent='';return;}
   $('slider').value=mm;draw(deg,mm);
-  $('animation-step').textContent='Vinkelen måles i leddet ved 200 mm. Nullhjørnet berører kanten ved avlesningen.';
+  $('animation-step').textContent='Vinkelen måles i leddet ved 200 mm. Nullhjørnet berører den øvre kanten ved avlesningen.';
   const lo=Math.max(420,mm-1),hi=Math.min(798,mm+1);
   $('sensitivity').textContent=`Avlesningsfølsomhet: ${fmt(lo)}–${fmt(hi)} mm gir ${fmt(angle(lo))}–${fmt(angle(hi))}°. Dette viser virkningen av opptil ±1 mm, avgrenset til måleområdet.`;
 }
-$('ticks').setAttribute('d',Array.from({length:41},(_,i)=>`M${i*10},-7.5 v${i%10===0?11:5}`).join(' '));
+$('ticks').setAttribute('d',Array.from({length:41},(_,i)=>`M${i*10},7.5 v-${i%10===0?11:5}`).join(' '));
 $('reading').addEventListener('input',()=>{stop();renderTS();});
 $('slider').addEventListener('input',()=>{stop();$('reading').value=$('slider').value;renderTS();});
 document.querySelectorAll('[data-mm]').forEach(b=>b.addEventListener('click',()=>{stop();$('reading').value=b.dataset.mm;renderTS();}));
@@ -42,9 +46,9 @@ $('play').addEventListener('click',()=>{
     let deg=180,beta=Math.PI;
     if(seconds<1){$('animation-step').textContent='1. Legg tommestokken ned med alle ledd rett utover.';}
     else if(seconds<5){deg=180+(target-180)*ease(Math.min(1,(seconds-1)/3));$('animation-step').textContent=`2. Bøy leddet ved 200 mm til ${fmt(target)}°. Dette er vinkelen vi måler.`;}
-    else {deg=target;beta=Math.PI+(end.beta-Math.PI)*ease(Math.min(1,(seconds-5)/4));$('animation-step').textContent='3. Behold vinkelen ved 200 mm. Bøy leddet ved 400 mm til nullhjørnet møter kanten. Les av der.';}
+    else {deg=target;beta=Math.PI+(end.beta-Math.PI)*ease(Math.min(1,(seconds-5)/4));$('animation-step').textContent='3. Behold vinkelen ved 200 mm. Bøy leddet ved 400 mm til nullhjørnet møter den øvre kanten. Les av der.';}
     draw(deg,mm,pose(deg,beta)); 
-    $('geometry-note').textContent='Animasjonen viser fremgangsmåten for valgt vinkel. Les av først når nullhjørnet treffer kanten.';
+    $('geometry-note').textContent='Animasjonen viser fremgangsmåten for valgt vinkel. Les av først når nullhjørnet treffer den øvre kanten.';
     if(seconds<10)frame=requestAnimationFrame(tick);else{stop();renderTS();}
   };frame=requestAnimationFrame(tick);
 });

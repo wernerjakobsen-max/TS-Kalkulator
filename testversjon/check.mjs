@@ -10,7 +10,7 @@ for(let t=8;t<=170;t+=.25){
   const {A,B,E,C}=geometry(t);
   assert.ok(Math.abs(Math.hypot(B.x-A.x,B.y-A.y)-200)<1e-8);
   assert.ok(Math.abs(Math.hypot(E.x-B.x,E.y-B.y)-200)<1e-8);
-  assert.ok(Math.abs(C.y+7.5)<1e-8); // Null corner meets the visible edge.
+  assert.ok(Math.abs(C.y-7.5)<1e-8); // Null corner meets the visible UPPER edge.
   const dot=((A.x-B.x)*(E.x-B.x)+(A.y-B.y)*(E.y-B.y))/40000;
   assert.ok(Math.abs(Math.acos(Math.max(-1,Math.min(1,dot)))*180/Math.PI-t)<1e-7);
 }

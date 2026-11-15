@@ -32,8 +32,8 @@ export function parseNumber(raw){
 export function geometry(deg){
   const t=deg*Math.PI/180,L=200,h=7.5;
   const zx=L-L*Math.cos(t)-h*Math.sin(t),zy=-L*Math.sin(t)+h*Math.cos(t);
-  // Baseline centre is y=0; its visible lower edge is y=-h.
-  const beta=Math.asin(-h/Math.hypot(zx,zy))-Math.atan2(zy,zx);
+  // The SVG flips y: the visible upper edge is model y=+h.
+  const beta=Math.asin(h/Math.hypot(zx,zy))-Math.atan2(zy,zx);
   return pose(deg,beta);
 }
 // Rotating at 40 cm changes beta while the angle at 20 cm stays fixed.
@@ -41,7 +41,7 @@ export function pose(deg,beta){
   const t=deg*Math.PI/180,L=200,h=7.5;
   const g=beta-Math.PI+t,A={x:0,y:0},B={x:L*Math.cos(beta),y:L*Math.sin(beta)};
   const E={x:B.x+L*Math.cos(g),y:B.y+L*Math.sin(g)},C={x:E.x+h*Math.sin(g),y:E.y-h*Math.cos(g)};
-  return {A,B,E,C,beta,edgeY:-h,reading:400+C.x};
+  return {A,B,E,C,beta,edgeY:h,reading:400+C.x};
 }
 // Egen fallberegning: stigning = høydeforskjell / HORISONTAL lengde.
 export function slope(mode,a,b){
