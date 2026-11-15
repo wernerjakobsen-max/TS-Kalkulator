@@ -46,3 +46,5 @@ Ikke endre main. Hent siste grenversjon før du redigerer.
 
 GitHub deler filer og versjonshistorikk, ikke historikken i lokale chatter.
 Denne lokale chatten kan ikke automatisk flyttes til skyen.
+
+Oppdatering 15.11: nettutgave bygges til testversjon/dist. Versjon styres i release.mjs og må økes ved hver utgivelse. Se utgivelsesrutine i testversjon/LES-MEG.txt. Målegrunnlaget gjelder 15 mm brede ledd. Fallkonvertering krever ikke lengde. Main er fortsatt urørt.

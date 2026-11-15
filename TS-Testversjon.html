@@ -3,7 +3,7 @@
 .fall-diagram-top{margin-top:24px}.fall-live{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}.fall-live>div{padding:12px;background:#10282e;border-radius:9px;min-width:0}.fall-live span{display:block;color:#b9cdd0;font-size:12px}.fall-live strong{display:block;color:#6ce0c0;font-size:20px;overflow-wrap:anywhere}button:disabled{opacity:.5;cursor:default}#fall-step{font-size:13px;min-height:42px}
 </style></head>
 <body><main>
-<header><a class="brand" href="#">TS<span>Kalkulator</span></a><span class="badge">Testversjon · 15.11.2026</span></header>
+<header><a class="brand" href="#">TS<span>Kalkulator</span></a><span class="badge">Testversjon · 5.0.0-test.3</span></header>
 <h1>Små mål. Tydelige vinkler.</h1><p class="intro">To verktøy for praktiske målinger med tommestokk og beregning av fall.</p>
 <nav aria-label="Velg kalkulator"><button id="tab-ts" aria-pressed="true" aria-controls="ts">Tommestokk</button><button id="tab-fall" aria-pressed="false" aria-controls="fall">Fall og stigning</button></nav>
 <section id="ts" aria-labelledby="ts-title">
@@ -15,16 +15,16 @@
 <div class="illustration"><div class="diagram-top"><h3>Slik ligger tommestokken</h3><button id="play" class="quiet" aria-pressed="false">Vis måletrinn</button></div>
 <p id="animation-step" class="muted" aria-live="polite"></p><svg id="diagram" viewBox="-100 -235 540 295" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Tommestokkens vinkel og kontaktpunkt</title><desc id="diagram-desc">Still først inn vinkelen i leddet ved 200 mm. Behold denne vinkelen mens leddet ved 400 mm bøyes til nullhjørnet møter den øvre kanten. Grønn bue viser vinkelen ved 200 mm.</desc><g transform="scale(1,-1)"><line x1="0" y1="0" x2="405" y2="0" stroke="#45636b" stroke-width="15"/><line x1="0" y1="7.5" x2="405" y2="7.5" stroke="#6ce0c0" stroke-width="1.5"/><path id="ticks" stroke="#b9cdd0" stroke-width="1"/><path id="links" fill="none" stroke="#efbf64" stroke-width="15" stroke-linejoin="round"/><path id="offset" stroke="#fff0d0" stroke-width="2"/><path id="arc" fill="none" stroke="#6ce0c0" stroke-width="2"/><g id="joints" fill="#10232a" stroke="#fff" stroke-width="2"></g><circle id="contact" r="4" fill="#6ce0c0"/></g><g fill="#b9cdd0" font-size="11"><text x="-9" y="50">40 cm</text><text x="190" y="50">60 cm</text><text x="385" y="50">80 cm</text></g><text id="arc-degrees" fill="#6ce0c0" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="middle" paint-order="stroke" stroke="#10232a" stroke-width="4" stroke-linejoin="round"/><text id="hinge-label" fill="#fff0d0" font-size="12"/><text id="zero-label" fill="#6ce0c0" font-size="12"/></svg>
 <p id="geometry-note" class="muted"></p><small>Grønn linje viser den øvre avlesningskanten. Nullhjørnet møter denne kanten. Illustrasjonen viser en idealisert geometri med to ledd på 200 mm og 15 mm bredde. Vinkelresultatet følger kontrollpunktene; geometrien kan gi et litt annet kontaktmål.</small></div></div>
-<aside id="precision"><strong>Veiledende vinkelmåling</strong><p>Forventet nøyaktighet ca. ±0,5° ved korrekt avlesning. Slark, slitasje og forskjeller mellom tommestokker kan gi større avvik. Dette er et praktisk anslag, ikke en garantert feilmargin gjennom hele måleområdet.</p><p id="sensitivity"></p></aside>
+<aside id="precision"><strong>Veiledende vinkelmåling</strong><p>Målegrunnlaget er kontrollert med tre tommestokker med 15 mm brede ledd. Andre leddbredder er ikke kontrollert.</p><p>Forventet nøyaktighet ca. ±0,5° ved korrekt avlesning. Slark, slitasje og forskjeller mellom tommestokker kan gi større avvik. Dette er et praktisk anslag, ikke en garantert feilmargin gjennom hele måleområdet.</p><p id="sensitivity"></p></aside>
 <details><summary>Slik måler du</summary><p><strong>Det er den innvendige vinkelen i leddet ved 200 mm (20 cm) vi måler.</strong></p><ol><li>Brett ut tre–fire ledd fra nullenden og legg dem rett utover. Resten av tommestokken kan være sammenbrettet. Bruk fire ledd når avlesningen er over 60 cm.</li><li>Bøy leddet ved 200 mm (20 cm) til vinkelen du vil måle.</li><li>La vinkelen ved 200 mm være uendret mens du bøyer leddet ved 400 mm (40 cm), til hjørnet på nullenden treffer den øvre kanten av den rette delen av tommestokken.</li><li>Les av skalaen langs kanten, akkurat der nullhjørnet treffer. Skriv målet i millimeter. Eksempel: 67,75 cm = 677,5 mm.</li></ol><p>Hold leddene i ro under avlesningen. Nær 170° gir små forskyvninger større utslag. Avlesninger utenfor 420–798 mm får ingen beregnet vinkel.</p></details>
 <details><summary>Målegrunnlag i testversjonen</summary><p>Jevn, monoton interpolasjon mellom kontrollpunkter. Nye bekreftelser fra tre tommestokker: 430 mm → 11°, 486 mm → 27° og 798 mm → 170°. Øvrige punkter er beholdt fra den tidligere kurven. Punktet 485 mm → 27° er erstattet, og området over 798 mm er fjernet.</p><p>±0,5° er foreløpig forventet praktisk nøyaktighet. Punktene dokumenterer ikke denne feilmarginen mellom alle målingene.</p></details>
 </section>
 <section id="fall" hidden aria-labelledby="fall-title"><p class="eyebrow">Egen beregning · samme enheter i alle visninger</p><h2 id="fall-title">Fall og stigning</h2><p>Beregn størrelsen på en helning. Lengden på bakken oppgis som <strong>horisontal lengde</strong>.</p>
-<div class="grid"><div><label for="fall-mode">Hva kjenner du?</label><select id="fall-mode"><option value="percent">Prosent</option><option value="degrees">Grader og horisontal lengde</option><option value="degrees-height">Grader og høydeforskjell</option><option value="ratio">Forhold a:b</option><option value="height">Høydeforskjell og lengde</option></select>
+<div class="grid"><div><label for="fall-mode">Hva kjenner du?</label><select id="fall-mode"><option value="percent">Prosent</option><option value="degrees">Grader (lengde er valgfritt)</option><option value="degrees-height">Grader og høydeforskjell</option><option value="ratio">Forhold a:b</option><option value="height">Høydeforskjell og lengde</option></select>
 <div id="single-fields"><label id="single-label" for="fall-a">Helning (%)</label><input id="fall-a" inputmode="decimal" type="text" value="2"></div>
 <div id="ratio-fields" hidden><div class="pair"><div><label for="ratio-a">Høyde · a</label><input id="ratio-a" inputmode="decimal" value="1"></div><span>:</span><div><label for="ratio-b">Lengde · b</label><input id="ratio-b" inputmode="decimal" value="50"></div></div><small>Forholdet 2:50 betyr 4 %. Begge tallene brukes.</small></div>
 <div id="height-fields" hidden><label for="height">Høydeforskjell</label><div class="unit"><input id="height" inputmode="decimal" value="20"><select id="height-unit" aria-label="Enhet for høydeforskjell"><option value="1">mm</option><option value="10">cm</option><option value="1000">m</option></select></div></div>
-<div id="length-fields"><label for="length">Horisontal lengde</label><div class="unit"><input id="length" inputmode="decimal" value="1"><select id="length-unit" aria-label="Enhet for lengde"><option value="1000">m</option><option value="10">cm</option><option value="1">mm</option></select></div><small>Lengden brukes til å beregne høydeforskjellen.</small></div><div id="fall-error" class="error" role="status"></div></div>
+<div id="length-fields"><label for="length">Horisontal lengde (valgfritt ved kjent helning)</label><div class="unit"><input id="length" inputmode="decimal" value=""><select id="length-unit" aria-label="Enhet for lengde"><option value="1000">m</option><option value="10">cm</option><option value="1">mm</option></select></div><small>La feltet stå tomt for kun prosent, grader og fallforhold. Ved kjent høydeforskjell er lengde nødvendig.</small></div><div id="fall-error" class="error" role="status"></div></div>
 <div><div id="fall-results" aria-live="polite"><div class="fall-primary"><output id="percent"></output><span>prosent</span></div><dl><div><dt>Vinkel</dt><dd id="degrees"></dd></div><div><dt>Forhold høyde : lengde</dt><dd id="ratio"></dd></div><div><dt>Høydeforskjell</dt><dd id="height-result"></dd></div><div><dt>Horisontal lengde</dt><dd id="horizontal-result"></dd></div><div><dt>Lengde langs skråningen</dt><dd id="slope-length"></dd></div></dl></div>
 <div class="diagram-top fall-diagram-top"><h3>Slik henger målene sammen</h3><button id="fall-play" class="quiet" aria-pressed="false">Vis sammenhengen</button></div>
 <p id="fall-step" class="muted" aria-live="polite"></p>
@@ -172,8 +172,10 @@ let fallFrame=0,fallPlaying=false,fallCurrent=null;
 function stopFall(){
   cancelAnimationFrame(fallFrame);fallPlaying=false;
   $('fall-play').textContent='Vis sammenhengen';$('fall-play').setAttribute('aria-pressed','false');
-  $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
-  if(fallCurrent)drawFall(fallCurrent.result,fallCurrent.length);
+  if(fallCurrent){
+    $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
+    drawFall(fallCurrent.result,fallCurrent.length);
+  }
 }
 function drawFall(result,length){
   // One scale for both axes: small gradients stay small, steep slopes stay steep.
@@ -217,22 +219,42 @@ function renderFall(){
   $('single-label').textContent=['degrees','degrees-height'].includes(mode)?'Vinkel (°)':'Helning (%)';
   ['fall-a','ratio-a','ratio-b','height','length'].forEach(id=>$(id).removeAttribute('aria-invalid'));
   try{
-    let length=number('length')*Number($('length-unit').value);
-    if(!fromHeight&&(!Number.isFinite(length)||length<=0)){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null.');}
+    let length;
+    const hasLength=$('length').value.trim()!=='';
+    if(mode==='height')length=number('length')*Number($('length-unit').value);
     let a,b,result,h,along;
     if(mode==='height'){a=number('height')*Number($('height-unit').value);b=length;}
     else if(mode==='ratio'){a=number('ratio-a');b=number('ratio-b');}
     else a=number('fall-a');
-    if(fromHeight){({result,length,h,along}=slopeFromHeight(number('fall-a'),number('height')*Number($('height-unit').value)));}
-    else {result=slope(mode,a,b);h=result.r*length;along=Math.hypot(h,length);}
-    if(!Number.isFinite(h)||!Number.isFinite(along))throw Error('Tallene er for store.');
+    result=slope(fromHeight?'degrees':mode,a,b);
     $('percent').textContent=fmt(result.percent,3)+' %';$('degrees').textContent=fmt(result.degrees,3)+'°';
     $('ratio').textContent=result.ratio===null?'Flatt (0 : 1)':'1 : '+fmt(result.ratio,3);
+    ['height-result','horizontal-result','slope-length'].forEach(id=>$(id).textContent='–');
+    $('fall-error').textContent='';
+    $('fall-visual').hidden=true;$('fall-play').disabled=true;
+    $('fall-step').textContent='Legg eventuelt til lengde for å vise mål og illustrasjon.';
+    try {
+    if(fromHeight){
+      if($('height').value.trim()===''){$('fall-step').textContent='Legg til høydeforskjell for å beregne lengdene.';return;}
+      ({result,length,h,along}=slopeFromHeight(a,number('height')*Number($('height-unit').value)));
+    }
+    else {
+      if(!hasLength&&mode!=='height')return;
+      length=number('length')*Number($('length-unit').value);
+      if(!Number.isFinite(length)||length<=0){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null, eller la feltet stå tomt.');}
+      h=result.r*length;along=Math.hypot(h,length);
+    }
+    if(!Number.isFinite(h)||!Number.isFinite(along))throw Error('Tallene er for store.');
     $('height-result').textContent=fmt(h,2)+' mm';$('slope-length').textContent=fmt(along/1000,3)+' m';
     $('horizontal-result').textContent=fmt(length/1000,3)+' m';
     fallCurrent={result,length};drawFall(result,length);$('fall-visual').hidden=false;$('fall-play').disabled=false;
     $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
     $('fall-error').textContent='';
+    } catch(e) {
+      $('fall-error').textContent=e.message;
+      $('fall-step').textContent='Helningen er beregnet. Korriger målene for å vise illustrasjonen.';
+      if(fromHeight)$('height').setAttribute('aria-invalid','true');
+    }
   }catch(e){
     $('fall-visual').hidden=true;$('fall-play').disabled=true;$('fall-step').textContent='Skriv inn gyldige mål for å vise figuren.';
     $('fall-error').textContent=e.message;

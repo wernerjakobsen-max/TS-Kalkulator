@@ -15,7 +15,7 @@ Fall: ny kode, ny tekst og ny utforming. Bruker grunnleggende formler for
 forhold, prosent, tangens/arctangens og Pytagoras. Ingen kode eller grafikk
 er hentet fra enebo.no under denne implementasjonen.
 
-Testversjonen registrerer ingen service worker, bruker ingen eksterne
+Den lagrede HTML-filen registrerer ingen service worker, bruker ingen eksterne
 ressurser og sender ingen inndata. Publisert hovedgren er ikke endret.
 Dette er en lokal testutgave, ikke en ferdig installérbar PWA.
 
@@ -28,3 +28,34 @@ Kontrollert: 37 801 verdier gjennom måleområdet, kontrollpunkter, leddlengder,
 vinkelgeometri, fallkonverteringer og ugyldige verdier. I nettleseren:
 798 → 170°, avvisning av 799, 2:50 → 4 %, avvisning av 90° fallvinkel,
 20 mm over 2 m → 1 %, animasjon start/stopp, 390 og 1100 px layout.
+
+OPPDATERINGER ETTER UTRULLING
+Målegrunnlaget gjelder tre tommestokker med 15 mm brede ledd.
+Nettutgaven bygges til testversjon/dist/ med versjonsnummer, service worker
+og version.json. Hele kalkulatoren er samlet i én HTML-fil per versjon.
+Nye versjoner lastes i bakgrunnen. Brukeren velger «Oppdater nå»;
+innskrevne felt og valgt kalkulator beholdes hvis nettleseren tillater øktlagring.
+Ingen varselabonnement eller persondata sendes. «Se etter oppdatering»
+kan brukes manuelt. Nettutgaven sjekker også ved gjenåpning og nettilkobling.
+En lagret enkeltfil må erstattes manuelt og har ingen nettoppdatering.
+
+Utgivelsesrutine:
+1. Gjør endringer på arbeidsgrenen; behold main urørt til godkjent utrulling.
+2. Øk VERSION i release.mjs hver gang noe skal publiseres, også ved rollback.
+3. Kjør node testversjon/check.mjs og node testversjon/check-update.mjs.
+4. Kjør node testversjon/build.mjs. Publiser ALLE tre filer i dist samlet.
+5. Prøv oppdatering fra forrige versjon, uten nett, og på mobil og PC.
+6. Ta vare på tidligere kildekode i Git. Tilbakerulling er en ny utgivelse
+   med tidligere funksjoner og et nytt versjonsnummer.
+
+Før første produksjonsutrulling: test migrering fra den gamle publiserte
+service workeren på samme URL. Den gamle utgaven har ikke vårt nye varsel,
+og kan kreve at alle gamle faner lukkes før første oppdatering tas i bruk.
+Testadressen oppdaterer ikke automatisk den gamle produksjonsadressen.
+Ikke lov et oppdateringsvarsel til gamle brukere ved første besøk før
+migreringen er prøvd. Videre oppdateringer bruker den nye varselmekanismen.
+
+Fall: prosent, grader og fallforhold krever ingen lengde. Lengde er valgfri
+ved kjent helning. Høydeforskjell + lengde krever begge målene. Grader +
+høydeforskjell beregner lengdene når høyden er lagt inn. Komma og punktum
+aksepteres. En feil i valgfri lengde fjerner ikke gyldige helningsverdier.

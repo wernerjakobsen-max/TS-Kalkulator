@@ -5,6 +5,9 @@ let last=0;
 for(let k=0;k<=37800;k++){const v=angle(420+k/100);assert.ok(v>=last&&v>=8&&v<=170);last=v;}
 for(const v of [419.9,798.1,NaN,Infinity])assert.equal(angle(v),null);
 assert.equal(parseNumber(' 677,5 '),677.5);
+for(const mode of ['percent','degrees']){
+  assert.deepEqual(slope(mode,parseNumber('2,5')),slope(mode,parseNumber('2.5')));
+}
 for(const s of ['','2abc','2,3.4','-1','1e2','Infinity'])assert.ok(Number.isNaN(parseNumber(s)));
 for(let t=8;t<=170;t+=.25){
   const {A,B,E,C}=geometry(t);

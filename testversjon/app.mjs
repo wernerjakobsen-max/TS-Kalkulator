@@ -62,8 +62,10 @@ let fallFrame=0,fallPlaying=false,fallCurrent=null;
 function stopFall(){
   cancelAnimationFrame(fallFrame);fallPlaying=false;
   $('fall-play').textContent='Vis sammenhengen';$('fall-play').setAttribute('aria-pressed','false');
-  $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
-  if(fallCurrent)drawFall(fallCurrent.result,fallCurrent.length);
+  if(fallCurrent){
+    $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
+    drawFall(fallCurrent.result,fallCurrent.length);
+  }
 }
 function drawFall(result,length){
   // One scale for both axes: small gradients stay small, steep slopes stay steep.
@@ -107,22 +109,42 @@ function renderFall(){
   $('single-label').textContent=['degrees','degrees-height'].includes(mode)?'Vinkel (°)':'Helning (%)';
   ['fall-a','ratio-a','ratio-b','height','length'].forEach(id=>$(id).removeAttribute('aria-invalid'));
   try{
-    let length=number('length')*Number($('length-unit').value);
-    if(!fromHeight&&(!Number.isFinite(length)||length<=0)){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null.');}
+    let length;
+    const hasLength=$('length').value.trim()!=='';
+    if(mode==='height')length=number('length')*Number($('length-unit').value);
     let a,b,result,h,along;
     if(mode==='height'){a=number('height')*Number($('height-unit').value);b=length;}
     else if(mode==='ratio'){a=number('ratio-a');b=number('ratio-b');}
     else a=number('fall-a');
-    if(fromHeight){({result,length,h,along}=slopeFromHeight(number('fall-a'),number('height')*Number($('height-unit').value)));}
-    else {result=slope(mode,a,b);h=result.r*length;along=Math.hypot(h,length);}
-    if(!Number.isFinite(h)||!Number.isFinite(along))throw Error('Tallene er for store.');
+    result=slope(fromHeight?'degrees':mode,a,b);
     $('percent').textContent=fmt(result.percent,3)+' %';$('degrees').textContent=fmt(result.degrees,3)+'°';
     $('ratio').textContent=result.ratio===null?'Flatt (0 : 1)':'1 : '+fmt(result.ratio,3);
+    ['height-result','horizontal-result','slope-length'].forEach(id=>$(id).textContent='–');
+    $('fall-error').textContent='';
+    $('fall-visual').hidden=true;$('fall-play').disabled=true;
+    $('fall-step').textContent='Legg eventuelt til lengde for å vise mål og illustrasjon.';
+    try {
+    if(fromHeight){
+      if($('height').value.trim()===''){$('fall-step').textContent='Legg til høydeforskjell for å beregne lengdene.';return;}
+      ({result,length,h,along}=slopeFromHeight(a,number('height')*Number($('height-unit').value)));
+    }
+    else {
+      if(!hasLength&&mode!=='height')return;
+      length=number('length')*Number($('length-unit').value);
+      if(!Number.isFinite(length)||length<=0){$('length').setAttribute('aria-invalid','true');throw Error('Skriv en horisontal lengde større enn null, eller la feltet stå tomt.');}
+      h=result.r*length;along=Math.hypot(h,length);
+    }
+    if(!Number.isFinite(h)||!Number.isFinite(along))throw Error('Tallene er for store.');
     $('height-result').textContent=fmt(h,2)+' mm';$('slope-length').textContent=fmt(along/1000,3)+' m';
     $('horizontal-result').textContent=fmt(length/1000,3)+' m';
     fallCurrent={result,length};drawFall(result,length);$('fall-visual').hidden=false;$('fall-play').disabled=false;
     $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
     $('fall-error').textContent='';
+    } catch(e) {
+      $('fall-error').textContent=e.message;
+      $('fall-step').textContent='Helningen er beregnet. Korriger målene for å vise illustrasjonen.';
+      if(fromHeight)$('height').setAttribute('aria-invalid','true');
+    }
   }catch(e){
     $('fall-visual').hidden=true;$('fall-play').disabled=true;$('fall-step').textContent='Skriv inn gyldige mål for å vise figuren.';
     $('fall-error').textContent=e.message;

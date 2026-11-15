@@ -1,6 +1,15 @@
 import fs from 'node:fs/promises';
+import {VERSION} from './release.mjs';
 const read=f=>fs.readFile(new URL(f,import.meta.url),'utf8');
 const [html,css,model,app]=await Promise.all(['index.html','style.css','model.mjs','app.mjs'].map(read));
 const standalone=html.replace('<link rel="stylesheet" href="style.css">',`<style>${css}</style>`).replace('<script type="module" src="app.mjs"></script>',()=>`<script type="module">\n${model.replaceAll('export ','')}\n${app.replace(/^import[^\n]*\n/,'')}\n</script>`);
-await fs.writeFile(new URL('../TS-Testversjon.html',import.meta.url),standalone);
+const stamp = text => text.replaceAll('__VERSION__', VERSION).replace('Testversjon · 15.11.2026', 'Testversjon · ' + VERSION);
+await fs.writeFile(new URL('../TS-Testversjon.html',import.meta.url),stamp(standalone));
+const updater = await read('update.mjs');
+const controls = '<aside aria-label="Oppdateringer"><strong>Versjon ' + VERSION + '</strong><p id="update-status" role="status">Ser etter oppdateringer …</p><button id="apply-update" hidden>Oppdater nå</button> <button id="check-update" class="quiet">Se etter oppdatering</button></aside>';
+const hosted = stamp(standalone).replace('</main>',controls+'</main>').replace('</body>',()=>`<script type="module">${stamp(updater)}</script></body>`);
+await fs.mkdir(new URL('./dist/',import.meta.url),{recursive:true});
+await fs.writeFile(new URL('./dist/index.html',import.meta.url),hosted);
+await fs.writeFile(new URL('./dist/sw.js',import.meta.url),stamp(await read('sw.js')));
+await fs.writeFile(new URL('./dist/version.json',import.meta.url),JSON.stringify({version:VERSION}));
 console.log('Laget TS-Testversjon.html – åpnes direkte uten server eller nett.');
