@@ -1,17 +1,17 @@
-import {angle,geometry,parseNumber,slope} from './model.mjs';
+import {angle,geometry,pose,parseNumber,slope} from './model.mjs';
 const $=id=>document.getElementById(id),fmt=(v,n=1)=>v.toLocaleString('nb-NO',{minimumFractionDigits:n,maximumFractionDigits:n});
 let playing=false,frame=0;
-function stop(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Spill animasjon';$('play').setAttribute('aria-pressed','false');}
-function draw(deg,mm){
-  const {A,B,E,C,reading}=geometry(deg),p=v=>`${v.x},${v.y}`;
+function stop(){playing=false;cancelAnimationFrame(frame);$('play').textContent='Vis måletrinn';$('play').setAttribute('aria-pressed','false');$('diagram').setAttribute('viewBox','-35 -235 470 295');renderTS();}
+function draw(deg,mm,shape=geometry(deg)){
+  const {A,B,E,C,reading}=shape,p=v=>`${v.x},${v.y}`;
   $('links').setAttribute('d',`M${p(A)} L${p(B)} L${p(E)}`);
   $('offset').setAttribute('d',`M${p(E)} L${p(C)}`);
   $('joints').innerHTML=[A,B].map(v=>`<circle cx="${v.x}" cy="${v.y}" r="4"/>`).join('');
   $('contact').setAttribute('cx',C.x);$('contact').setAttribute('cy',C.y);
   const a=Math.atan2(A.y-B.y,A.x-B.x),r=25,t=deg*Math.PI/180;
   $('arc').setAttribute('d',`M${B.x+r*Math.cos(a)},${B.y+r*Math.sin(a)} A${r},${r} 0 0 1 ${B.x+r*Math.cos(a+t)},${B.y+r*Math.sin(a+t)}`);
-  $('hinge-label').setAttribute('x',Math.max(0,B.x-22));$('hinge-label').setAttribute('y',-B.y-16);$('hinge-label').textContent='20 cm';
-  $('zero-label').setAttribute('x',Math.min(345,C.x+8));$('zero-label').setAttribute('y','-17');$('zero-label').textContent='Nullhjørne';
+  $('hinge-label').setAttribute('x',B.x-22);$('hinge-label').setAttribute('y',-B.y-16);$('hinge-label').textContent='200 mm';
+  $('zero-label').setAttribute('x',Math.min(320,C.x+8));$('zero-label').setAttribute('y',-C.y+22);$('zero-label').textContent='Nullhjørne';
   $('geometry-note').textContent=`Avlest ${fmt(mm)} mm → ${fmt(deg)}°. Modellskissen gir kontakt ved ${fmt(reading)} mm for denne vinkelen.`;
 }
 function renderTS(){
@@ -21,6 +21,7 @@ function renderTS(){
   $('angle').textContent=valid?`${fmt(deg)}°`:'–';
   if(!valid){$('sensitivity').textContent='';$('geometry-note').textContent='';return;}
   $('slider').value=mm;draw(deg,mm);
+  $('animation-step').textContent='Vinkelen måles i leddet ved 200 mm. Nullhjørnet berører kanten ved avlesningen.';
   const lo=Math.max(420,mm-1),hi=Math.min(798,mm+1);
   $('sensitivity').textContent=`Avlesningsfølsomhet: ${fmt(lo)}–${fmt(hi)} mm gir ${fmt(angle(lo))}–${fmt(angle(hi))}°. Dette viser virkningen av opptil ±1 mm, avgrenset til måleområdet.`;
 }
@@ -32,8 +33,20 @@ const motion=matchMedia('(prefers-reduced-motion: reduce)');
 $('play').addEventListener('click',()=>{
   if(playing){stop();return;}
   if(motion.matches){$('ts-error').textContent='Redusert bevegelse er aktivert. Bruk glidebryteren.';return;}
-  playing=true;const start=performance.now();$('play').textContent='Stopp animasjon';$('play').setAttribute('aria-pressed','true');
-  const tick=now=>{if(!playing)return;const t=Math.min(1,(now-start)/12000);$('reading').value=(420+378*t).toFixed(1);renderTS();if(t<1)frame=requestAnimationFrame(tick);else stop();};frame=requestAnimationFrame(tick);
+  const mm=parseNumber($('reading').value),target=angle(mm);if(target===null)return;
+  playing=true;const start=performance.now(),end=geometry(target),ease=t=>t*t*(3-2*t);
+  $('play').textContent='Stopp animasjon';$('play').setAttribute('aria-pressed','true');
+  $('diagram').setAttribute('viewBox','-435 -435 870 510');
+  const tick=now=>{
+    if(!playing)return;const seconds=(now-start)/1000;
+    let deg=180,beta=Math.PI;
+    if(seconds<1){$('animation-step').textContent='1. Legg tommestokken ned med alle ledd rett utover.';}
+    else if(seconds<5){deg=180+(target-180)*ease(Math.min(1,(seconds-1)/3));$('animation-step').textContent=`2. Bøy leddet ved 200 mm til ${fmt(target)}°. Dette er vinkelen vi måler.`;}
+    else {deg=target;beta=Math.PI+(end.beta-Math.PI)*ease(Math.min(1,(seconds-5)/4));$('animation-step').textContent='3. Behold vinkelen ved 200 mm. Bøy leddet ved 400 mm til nullhjørnet møter kanten. Les av der.';}
+    draw(deg,mm,pose(deg,beta)); 
+    $('geometry-note').textContent='Animasjonen viser fremgangsmåten for valgt vinkel. Les av først når nullhjørnet treffer kanten.';
+    if(seconds<10)frame=requestAnimationFrame(tick);else{stop();renderTS();}
+  };frame=requestAnimationFrame(tick);
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
 motion.addEventListener('change',()=>{if(motion.matches)stop();});
