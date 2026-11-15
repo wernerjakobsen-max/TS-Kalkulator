@@ -44,7 +44,7 @@ $('play').addEventListener('click',()=>{
   const tick=now=>{
     if(!playing)return;const seconds=(now-start)/1000;
     let deg=180,beta=Math.PI;
-    if(seconds<1){$('animation-step').textContent='1. Legg tommestokken ned med alle ledd rett utover.';}
+    if(seconds<1){$('animation-step').textContent='1. Brett ut tre–fire ledd fra nullenden og legg dem rett. Resten kan være sammenbrettet.';}
     else if(seconds<5){deg=180+(target-180)*ease(Math.min(1,(seconds-1)/3));$('animation-step').textContent=`2. Bøy leddet ved 200 mm til ${fmt(target)}°. Dette er vinkelen vi måler.`;}
     else {deg=target;beta=Math.PI+(end.beta-Math.PI)*ease(Math.min(1,(seconds-5)/4));$('animation-step').textContent='3. Behold vinkelen ved 200 mm. Bøy leddet ved 400 mm til nullhjørnet møter den øvre kanten. Les av der.';}
     draw(deg,mm,pose(deg,beta)); 
@@ -52,13 +52,53 @@ $('play').addEventListener('click',()=>{
     if(seconds<10)frame=requestAnimationFrame(tick);else{stop();renderTS();}
   };frame=requestAnimationFrame(tick);
 });
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-motion.addEventListener('change',()=>{if(motion.matches)stop();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();stopFall();}});
+motion.addEventListener('change',()=>{if(motion.matches){stop();stopFall();}});
 for(const name of ['ts','fall'])$('tab-'+name).addEventListener('click',()=>{
-  stop();for(const n of ['ts','fall']){$(n).hidden=n!==name;$('tab-'+n).setAttribute('aria-pressed',String(n===name));}
+  stop();stopFall();for(const n of ['ts','fall']){$(n).hidden=n!==name;$('tab-'+n).setAttribute('aria-pressed',String(n===name));}
 });
 const number=id=>parseNumber($(id).value);
+let fallFrame=0,fallPlaying=false,fallCurrent=null;
+function stopFall(){
+  cancelAnimationFrame(fallFrame);fallPlaying=false;
+  $('fall-play').textContent='Vis sammenhengen';$('fall-play').setAttribute('aria-pressed','false');
+  $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
+  if(fallCurrent)drawFall(fallCurrent.result,fallCurrent.length);
+}
+function drawFall(result,length){
+  // One scale for both axes: small gradients stay small, steep slopes stay steep.
+  const t=result.degrees*Math.PI/180,r=result.r;
+  const w=r<=170/310?310:170/r,h=w*r,x=65,y=220,ex=x+w,ey=y-h;
+  $('fall-area').setAttribute('d',`M${x} ${y} H${ex} V${ey} Z`);
+  $('fall-base').setAttribute('d',`M${x} ${y} H${ex}`);
+  $('fall-rise').setAttribute('d',`M${ex} ${y} V${ey}`);
+  $('fall-incline').setAttribute('d',`M${x} ${y} L${ex} ${ey}`);
+  $('fall-right').setAttribute('d',w>18&&h>18?`M${ex-12} ${y} v-12 h12`:'');
+  $('fall-arc').setAttribute('d',t>0?`M${x+36} ${y} A36 36 0 0 0 ${x+36*Math.cos(t)} ${y-36*Math.sin(t)}`:'');
+  $('fall-height-label').setAttribute('x',ex+14);$('fall-height-label').setAttribute('y',Math.min(y-12,ey+h/2));
+  $('fall-height-label').textContent=fmt(r*length,2)+' mm';
+  $('fall-angle-label').textContent=fmt(result.degrees,3)+'°';
+  $('fall-length-label').textContent='Horisontalt: '+fmt(length/1000,3)+' m';
+  $('fall-live-percent').textContent=fmt(result.percent,3)+' %';
+  $('fall-live-ratio').textContent=result.ratio===null?'0 : 1':'1 : '+fmt(result.ratio,3);
+  $('fall-svg-desc').textContent=`${fmt(length/1000,3)} m horisontal lengde og ${fmt(r*length,2)} mm høydeforskjell gir ${fmt(result.degrees,3)} grader, ${fmt(result.percent,3)} prosent og forhold ${$('fall-live-ratio').textContent}.`;
+}
+$('fall-play').addEventListener('click',()=>{
+  if(fallPlaying){stopFall();$('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';return;}
+  if(!fallCurrent)return;
+  if(motion.matches){$('fall-step').textContent='Redusert bevegelse er aktivert. Figuren viser den valgte helningen uten animasjon.';return;}
+  fallPlaying=true;const start=performance.now(),{result,length}=fallCurrent;
+  $('fall-play').textContent='Stopp animasjon';$('fall-play').setAttribute('aria-pressed','true');
+  const tick=now=>{
+    if(!fallPlaying)return;const s=(now-start)/1000,p=Math.max(0,Math.min(1,(s-1)/4)),e=p*p*(3-2*p);
+    drawFall(slope('degrees',result.degrees*e),length);
+    const step=s<1?'1. Start med den horisontale lengden.':s<5?'2. Øk høydeforskjellen. Vinkel, prosent og forhold følger samme helning.':'3. Prosent = høyde / horisontal lengde × 100. Forholdet viser høyde : lengde.';
+    if($('fall-step').textContent!==step)$('fall-step').textContent=step;
+    if(s<8)fallFrame=requestAnimationFrame(tick);else{stopFall();$('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';}
+  };fallFrame=requestAnimationFrame(tick);
+});
 function renderFall(){
+  stopFall();fallCurrent=null;
   const mode=$('fall-mode').value;
   $('single-fields').hidden=!['percent','degrees'].includes(mode);
   $('ratio-fields').hidden=mode!=='ratio';$('height-fields').hidden=mode!=='height';
@@ -76,8 +116,11 @@ function renderFall(){
     $('percent').textContent=fmt(result.percent,3)+' %';$('degrees').textContent=fmt(result.degrees,3)+'°';
     $('ratio').textContent=result.ratio===null?'Flatt (0 : 1)':'1 : '+fmt(result.ratio,3);
     $('height-result').textContent=fmt(h,2)+' mm';$('slope-length').textContent=fmt(along/1000,3)+' m';
+    fallCurrent={result,length};drawFall(result,length);$('fall-visual').hidden=false;$('fall-play').disabled=false;
+    $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
     $('fall-error').textContent='';
   }catch(e){
+    $('fall-visual').hidden=true;$('fall-play').disabled=true;$('fall-step').textContent='Skriv inn gyldige mål for å vise figuren.';
     $('fall-error').textContent=e.message;
     ['percent','degrees','ratio','height-result','slope-length'].forEach(id=>$(id).textContent='–');
     const ids=mode==='ratio'?['ratio-a','ratio-b']:mode==='height'?['height']:['fall-a'];
