@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {VERSION} from './release.mjs';
+import {VERSION,PUBLIC_VERSION} from './release.mjs';
 import {angle} from './model.mjs';
 const read=p=>fs.readFile(new URL(p,import.meta.url),'utf8');
 const measurements=JSON.parse(await read('measurements.json'));
@@ -17,9 +17,15 @@ assert.ok(testHtml.includes('noindex,nofollow'));
 assert.ok(!publicHtml.includes('noindex,nofollow'));
 assert.ok(publicHtml.includes('https://wernerjakobsen-max.github.io/TS-Kalkulator/'));
 for(const dir of ['dist/','../lansering/']){
+  const expectedVersion=dir==='dist/'?VERSION:PUBLIC_VERSION;
   const html=await read(dir+'index.html'),sw=await read(dir+'sw.js');
-  assert.ok(html.includes(VERSION)&&sw.includes(VERSION));
-  assert.equal(JSON.parse(await read(dir+'version.json')).version,VERSION);
+  assert.ok(html.includes(expectedVersion)&&sw.includes(expectedVersion));
+  assert.equal(JSON.parse(await read(dir+'version.json')).version,expectedVersion);
+  if(dir==='../lansering/'){
+    assert.ok(!html.includes(VERSION),'Public release must not contain a release-candidate number');
+    assert.ok(html.includes('Versjon '+PUBLIC_VERSION));
+    assert.ok(!html.includes('Testversjon · '+PUBLIC_VERSION));
+  }
   const manifest=JSON.parse(await read(dir+'manifest.webmanifest'));
   const origin='https://wernerjakobsen-max.github.io/TS-Kalkulator/';
   assert.equal(new URL(manifest.id,origin).href,origin+'min-v3-9-7d','Behold installert appidentitet');

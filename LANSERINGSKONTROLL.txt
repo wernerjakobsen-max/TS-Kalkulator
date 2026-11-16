@@ -1,48 +1,56 @@
-TS-Kalkulator – kontroll 16.11.2026
-Kandidat 5.0.0-rc.3. Privat test oppdateres; offentlig main er uendret.
+TS-Kalkulator – lanseringskontroll 16.11.2026
+Offentlig kandidat: 5.0.0. Privat testapp: 5.0.0-rc.6.
+Offentlig main er uendret. Arbeidsgrenen klargjøres for lansering.
 
 KONTROLLERT
 - 37 801 kurveverdier: stigende kurve, endepunkter og avgrensning.
-- Stive 200 mm ledd, vinkelen i 200 mm-leddet bevares under bøying ved 400 mm.
-- Nullhjørnet treffer øvre kant i den idealiserte geometrien.
+- Stive 200 mm ledd. Vinkelen ved 200 mm beholdes mens 400 mm-leddet bøyes.
+- Nullhjørnet treffer øvre kant i idealisert geometri.
+- Grunnlaget gjelder tommestokk med 15 mm brede ledd.
 - Seks fysiske kontroller 782–797 mm: største avvik 0,219 grader.
-  796=165,8 er en kontrollmåling; kurvepunktet 796=166 er beholdt.
+  796=165,8 er kontrollmåling; kurvepunktet 796=166 er beholdt.
   798=170,3 er avtalt foreløpig endepunkt, ikke uavhengig kontroll.
-- Fall: prosent, grader, forhold, høyde/lengde og grader/høyde.
-- Uavhengig 3–4–5-trekant, invers beregning og hele vinkelområdet under 90.
+- Forventet praktisk nøyaktighet ca. ±0,5 grader er opplyst, ingen garanti.
+- Egen fallberegning: prosent, grader, forhold, høyde/lengde og grader/høyde.
+- Kontroll med uavhengig 3–4–5-trekant, invers beregning og vinkelområdet under 90.
 - Komma/punktum, mm/cm/m, tomme felt, null, negative og ugyldige tall.
-- Nettleser: 35 grader og 3,2 m -> 4,570 m horisontalt, 5,579 m langs helningen.
-- Nettleser: 2,5 % uten lengde -> 1,432 grader og 1:40.
-- Nettleser: 2:50 og 10 m -> 4 % og 400 mm høydeforskjell.
-- Nettleser: 20 cm over 10 m -> 2 %. 45 grader uten lengde -> 100 %.
-- Ugyldige mål skjuler illustrasjon; dimensjonsresultater ryddes ved feil.
-- Oppdatering rc.2 -> rc.3 i lokal nettleser bevarte 486 mm -> 27 grader.
-- Worker: frivillig aktivering, offlinecache, feilet nedlasting og avgrenset opprydding.
-- Førstegangsinstallasjon viser ikke ventende oppdatering som en ny utgave.
-- Beholdt PWA-identitet og PNG-ikoner 192/512, separat privat/offentlig QR-lenke.
-- Mobilvisning: fjernede kontrollknapper og utvidbare forklaringer.
+- 35 grader + 3,2 m: 4,570 m horisontalt og 5,579 m langs helningen.
+- 2,5 % uten lengde: 1,432 grader og 1:40. 2:50 gir 4 %.
+- Ugyldige mål skjuler illustrasjonen og rydder dimensjonsresultater.
+- Seks språk ved 390 px: ingen horisontal overflyt; beregninger virker på alle.
+- Språk lagres lokalt; språkbytte og beregning virker offline.
+- Ingen uavhengig morsmålskontroll av oversettelsene er utført.
+- Oppdatering: frivillig aktivering, offlinecache, feilet nedlasting og avgrenset opprydding.
+- Beholdt PWA-identitet, PNG-ikoner 192/512, separat privat/offentlig QR-lenke.
 
-WERNER HAR BEKREFTET PÅ TELEFON (rc.2)
-Begge animasjoner, legg til på startskjerm, flymodus og QR-skanning: OK.
+BEKREFTET AV WERNER PÅ TELEFON
+- Begge animasjoner, installasjon på startskjerm, flymodus og QR-skanning: OK.
+- rc.6 kom inn med det samme appen ble åpnet (16.11.2026).
 
-KJØR VED ENDRINGER
+OVERGANG FRA GAMMEL APP – LOKAL NETTLESERTEST 16.11
+- Gammel kildekopi samsvarer med aktuell GitHub main for index.html, sw.js,
+  manifest.webmanifest, app.js og units.js (normalisert linjeskift).
+- Gammel UI 4.2.1 ble først installert og bekreftet med simulert nettfeil.
+- Kandidat 5.0.0 ble servert under samme adresse /TS-Kalkulator/ og worker-scope.
+- Åpent gammelt vindu beholdt 4.2.1. Lukking og gjenåpning ga 5.0.0 uten hard refresh.
+- Gammelt bokmerke ?v=4.2.1 åpnet 5.0.0 offline; 486,0 mm ga 27,0 grader.
+- Offentlig QR/dialog viste https://wernerjakobsen-max.github.io/TS-Kalkulator/.
+- Dette er en lokal migreringstest, ikke bekreftelse på produksjonsutrulling.
+- Ved første overgang: lukk alle gamle TS-faner/appvinduer og åpne igjen ved behov.
+
+KJØR VED RELEVANTE ENDRINGER
 node testversjon/build.mjs
 node testversjon/check.mjs
 node testversjon/check-update.mjs
 node testversjon/check-controls.mjs
 node testversjon/check-release.mjs
+node testversjon/check-languages.mjs
+Alle kontrollene bestått for rc.6; bygg-, release- og språkkontroll også kjørt for 5.0.0-pakken.
 
-FØR OFFENTLIG LANSERING
-- Se over rc.3 på telefon, særlig utvidbar veiledning.
-- Klargjør 5.0.0 fra lansering/ på arbeidsgrenen; ikke kopier testutgavens noindex.
+LANSERING
+- lansering/ inneholder den offentlige pakken 5.0.0.
+- Samme pakke legges på roten av arbeidsgrenen for konkret PR-gjennomgang.
 - Publisering til main krever Werners uttrykkelige bestilling.
-- Etter utrulling: kontroller offentlig side og QR uten innlogging, gamle
-  bokmerker, eksisterende installert app, oppdatering og offlineåpning.
-- Første overgang fra gammel produksjonsapp er lokalt migreringstestet;
-  virkelig produksjonsovergang kan først bekreftes etter utrulling.
-- Ved første overgang kan alle gamle TS-faner/appvinduer måtte lukkes og åpnes.
-- Tilbakerulling skal ha nytt versjonsnummer og worker.
-
-±0,5 grader er forventet praktisk nøyaktighet med forbehold, ikke en garanti.
-
-16.11 – rc.6 språk: alle seks språk kontrollert på 390 px uten horisontal overflyt. 486,0 og 486.0 gir 27 grader; 35 grader + 3,2 m gir 4,570 m horisontalt på alle språk. Forhold 2:50 gir 4 %, 20 mm / 1 m gir 2 %. Oversatt feil ved 90 grader. Lagret spansk beholdes ved offline gjenåpning; bytte til ukrainsk og beregning virker med lokal server avslått. Ingen konsollfeil i siste bygg. Test rc.5 → rc.6 og Node-kontroller utført. Språklig morsmålskontroll og produksjonsmigrering gjenstår.
+- Etter utrulling: sjekk offentlig side og QR uten innlogging, gammelt bokmerke,
+  eksisterende installert app, oppdatering og offlineåpning.
+- Tilbakerulling skal bruke nytt versjonsnummer og worker slik at rettelsen når brukerne.

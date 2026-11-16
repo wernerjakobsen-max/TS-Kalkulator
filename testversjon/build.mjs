@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import qrcode from './vendor/qrcode.mjs';
-import {VERSION} from './release.mjs';
+import {VERSION,PUBLIC_VERSION} from './release.mjs';
 const read=f=>fs.readFile(new URL(f,import.meta.url),'utf8');
 const [html,css,model,app]=await Promise.all(['index.html','style.css','model.mjs','app.mjs'].map(read));
 const dictionaries={...JSON.parse(await read('translations.json')),...JSON.parse(await read('dynamic-translations.json'))};
@@ -32,9 +32,9 @@ await fs.writeFile(new URL('./dist/icon.svg',import.meta.url),icon);
 await fs.writeFile(new URL('./dist/LICENCE.txt',import.meta.url),license);
 // Publiseringspakken er separat. Dette endrer ikke rotfilene som main publiserer.
 const publicUrl='https://wernerjakobsen-max.github.io/TS-Kalkulator/';
-const candidate=addActions(hostedBase,publicUrl,false).replace('<meta name="robots" content="noindex,nofollow">','<meta name="description" content="Beregn vinkel med tommestokk, fall, stigning, grader, prosent og fallforhold. Måleveiledning og animerte illustrasjoner."><link rel="canonical" href="'+publicUrl+'">');
+const candidate=addActions(hostedBase,publicUrl,false).replaceAll(VERSION,PUBLIC_VERSION).replace('Testversjon · '+PUBLIC_VERSION,'Versjon '+PUBLIC_VERSION).replace('<meta name="robots" content="noindex,nofollow">','<meta name="description" content="Beregn vinkel med tommestokk, fall, stigning, grader, prosent og fallforhold. Måleveiledning og animerte illustrasjoner."><link rel="canonical" href="'+publicUrl+'">');
 await fs.mkdir(new URL('../lansering/',import.meta.url),{recursive:true});
-for(const [name,body] of Object.entries({'index.html':candidate,'sw.js':stamp(await read('sw.js')),'version.json':JSON.stringify({version:VERSION}),'manifest.webmanifest':manifest,'icon.svg':icon,'robots.txt':'User-agent: *\nAllow: /\nSitemap: '+publicUrl+'sitemap.xml\n','sitemap.xml':'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>'+publicUrl+'</loc></url></urlset>'}))await fs.writeFile(new URL('../lansering/'+name,import.meta.url),body);
+for(const [name,body] of Object.entries({'index.html':candidate,'sw.js':(await read('sw.js')).replaceAll('__VERSION__',PUBLIC_VERSION),'version.json':JSON.stringify({version:PUBLIC_VERSION}),'manifest.webmanifest':manifest,'icon.svg':icon,'robots.txt':'User-agent: *\nAllow: /\nSitemap: '+publicUrl+'sitemap.xml\n','sitemap.xml':'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>'+publicUrl+'</loc></url></urlset>'}))await fs.writeFile(new URL('../lansering/'+name,import.meta.url),body);
 await fs.writeFile(new URL('../lansering/LICENCE.txt',import.meta.url),license);
 console.log('Laget TS-Testversjon.html – åpnes direkte uten server eller nett.');
 
