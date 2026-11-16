@@ -1,0 +1,12 @@
+{
+  "status": "Wording approved by the user; independent native-speaker review not performed.",
+  "languages": ["nb", "en", "pl", "uk", "de", "es"],
+  "measurementExplanation": {
+    "nb": "Vi måler den innvendige vinkelen i leddet 200 mm fra nullenden. Hold denne vinkelen uendret mens du bøyer leddet ved 400 mm, til hjørnet på nullenden berører den øvre kanten av den rette delen av tommestokken – kanten som er markert med grønt i animasjonen. Les av skalaen akkurat der hjørnet berører kanten.",
+    "en": "We measure the inside angle at the joint 200 mm from the zero end. Keep this angle unchanged while bending the joint at 400 mm until the corner at the zero end touches the upper edge of the straight section of the folding ruler—the edge highlighted in green in the animation. Read the scale exactly where the corner touches the edge.",
+    "pl": "Mierzymy kąt wewnętrzny w przegubie znajdującym się 200 mm od końca z oznaczeniem zero. Nie zmieniając tego kąta, zegnij przegub przy 400 mm, aż narożnik końca z oznaczeniem zero dotknie górnej krawędzi prostej części miary składanej — krawędzi zaznaczonej na zielono w animacji. Odczytaj wartość na skali dokładnie w miejscu styku narożnika z krawędzią.",
+    "uk": "Ми вимірюємо внутрішній кут у шарнірі на відстані 200 мм від нульового кінця складного метра. Не змінюючи цього кута, зігніть шарнір на позначці 400 мм, доки кут нульового кінця не торкнеться верхнього краю прямої частини метра — краю, виділеного зеленим кольором в анімації. Зчитайте значення на шкалі точно в місці дотику.",
+    "de": "Gemessen wird der Innenwinkel am Gelenk 200 mm vom Nullende entfernt. Diesen Winkel unverändert lassen und das Gelenk bei 400 mm so weit abwinkeln, bis die Ecke am Nullende die obere Kante des geraden Abschnitts des Gliedermaßstabs berührt — die in der Animation grün markierte Kante. Den Skalenwert genau an der Berührungsstelle ablesen.",
+    "es": "Medimos el ángulo interior en la articulación situada a 200 mm del extremo del cero. Mantén este ángulo sin cambios mientras doblas la articulación situada a 400 mm, hasta que la esquina del extremo del cero toque el borde superior del tramo recto del metro plegable: el borde marcado en verde en la animación. Lee la escala exactamente en el punto de contacto."
+  }
+}

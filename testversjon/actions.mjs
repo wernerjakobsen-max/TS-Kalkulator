@@ -1,8 +1,10 @@
+const tr=(key,...args)=>window.TSI18n?.t(key,...args)??key.replace(/\{(\d+)\}/g,(_,i)=>String(args[i]??''));
+const write=(el,render)=>window.TSI18n?window.TSI18n.write(el,render):(el.textContent=render());
 const shareUrl='__SHARE_URL__';
 const privatePreview='__PRIVATE_PREVIEW__'==='true';
 const install=document.getElementById('install-app');
 let installPrompt;
-function installed(){install.textContent='Åpnet som app';install.disabled=true;}
+function installed(){write(install,()=>tr('Åpnet som app'));install.disabled=true;}
 if(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)installed();
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;});
 window.addEventListener('appinstalled',()=>{installPrompt=null;installed();});
@@ -20,17 +22,17 @@ document.getElementById('share-app').addEventListener('click',()=>document.getEl
 document.getElementById('native-share').hidden=typeof navigator.share!=='function';
 document.getElementById('native-share').addEventListener('click',async()=>{
   try{await navigator.share({title:'TS-Kalkulator',url:shareUrl});}
-  catch(error){if(error.name!=='AbortError')document.getElementById('share-status').textContent='Bruk Kopier lenke eller marker adressen i feltet.';}
+  catch(error){if(error.name!=='AbortError')document.getElementById('share-status').textContent=tr('Bruk Kopier lenke eller marker adressen i feltet.');}
 });
 for(const button of document.querySelectorAll('[data-copy-link]'))button.addEventListener('click',async()=>{
   const status=button.parentElement.querySelector('[role="status"]');
-  try{await navigator.clipboard.writeText(shareUrl);status.textContent='Lenken er kopiert.';}
-  catch{status.textContent='Marker og kopier adressen i feltet.';}
+  try{await navigator.clipboard.writeText(shareUrl);write(status,()=>tr('Lenken er kopiert.'));}
+  catch{write(status,()=>tr('Marker og kopier adressen i feltet.'));}
 });
 
 document.getElementById('open-guide-photo').addEventListener('click',()=>document.getElementById('photo-dialog').showModal());
 document.getElementById('rotate-guide-photo').addEventListener('click',event=>{
  const rotated=document.getElementById('photo-stage').classList.toggle('is-rotated');
  event.currentTarget.setAttribute('aria-pressed',String(rotated));
- event.currentTarget.textContent=rotated?'Tilbake til høydeformat':'Roter 90°';
+ write(event.currentTarget,()=>rotated?tr('Tilbake til høydeformat'):tr('Roter 90°'));
 });

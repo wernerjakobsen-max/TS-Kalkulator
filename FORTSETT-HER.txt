@@ -56,3 +56,5 @@ Lanseringskandidat 5.0.0-rc.1: measurement.json (filnavn measurements.json) doku
 16.11.2026 – Gjeldende kandidat rc.3: kontrollknappene fjernet, veiledning/illustrasjonsdetaljer utvidbare. Kort 15 mm / ±0,5° fortsatt synlig. Werner har bekreftet animasjoner, startskjerm, flymodus og QR på rc.2. Se oppdatert LANSERINGSKONTROLL.txt. Main er urørt.
 
 16.11 – rc.4: foto fra gammel versjon under Slik måler du, rotert 90 grader i visningen. Trykk åpner stor visning med valg for høydeformat og originalbilde for zoom. Guide-photo.jpg følger nettutgave og offlinecache. Main uendret.
+
+16.11.2026 – rc.6: språkvalg Norsk / English / Polski / Українська / Deutsch / Español. Norsk er standard. Valget lagres lokalt hvis nettleseren tillater det. Alle språk er innebygd i HTML-bundelen og virker uten nett. Tekster i translations.json og dynamic-translations.json; i18n.js styrer språk og tallvisning. check-languages.mjs kontrollerer tekstdekning, variabler, lagring og pakking. Beregningsmodellen er uendret. Morsmålskontroll er ikke utført.

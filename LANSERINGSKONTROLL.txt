@@ -44,3 +44,5 @@ FØR OFFENTLIG LANSERING
 - Tilbakerulling skal ha nytt versjonsnummer og worker.
 
 ±0,5 grader er forventet praktisk nøyaktighet med forbehold, ikke en garanti.
+
+16.11 – rc.6 språk: alle seks språk kontrollert på 390 px uten horisontal overflyt. 486,0 og 486.0 gir 27 grader; 35 grader + 3,2 m gir 4,570 m horisontalt på alle språk. Forhold 2:50 gir 4 %, 20 mm / 1 m gir 2 %. Oversatt feil ved 90 grader. Lagret spansk beholdes ved offline gjenåpning; bytte til ukrainsk og beregning virker med lokal server avslått. Ingen konsollfeil i siste bygg. Test rc.5 → rc.6 og Node-kontroller utført. Språklig morsmålskontroll og produksjonsmigrering gjenstår.

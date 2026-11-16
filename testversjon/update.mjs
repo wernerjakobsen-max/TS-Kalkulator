@@ -1,3 +1,5 @@
+const tr=(key,...args)=>window.TSI18n?.t(key,...args)??key.replace(/\{(\d+)\}/g,(_,i)=>String(args[i]??''));
+const write=(el,render)=>window.TSI18n?window.TSI18n.write(el,render):(el.textContent=render());
 const currentVersion = '__VERSION__';
 const updateStatus = document.getElementById('update-status');
 const updateButton = document.getElementById('apply-update');
@@ -6,7 +8,7 @@ const stateKey = 'ts-update-inputs:' + location.pathname;
 let registration, requested = false, checking = false;
 function showWaiting() {
   if(!registration?.waiting || !navigator.serviceWorker.controller) return;
-  updateStatus.textContent = 'En ny versjon er klar. Oppdater når målingen er ferdig.';
+  write(updateStatus,()=>tr('En ny versjon er klar. Oppdater når målingen er ferdig.'));
   updateButton.hidden = false;
 }
 function saveInputs() {
@@ -43,21 +45,21 @@ async function checkUpdate() {
         const response = await fetch('./version.json', {cache:'no-store'});
         if(!response.ok) throw Error();
         const latest = await response.json();
-        updateStatus.textContent = latest.version === currentVersion
-          ? 'Du bruker versjon ' + currentVersion + '.'
-          : 'Laster ny versjon. Du kan fortsette målingen.';
+        write(updateStatus,()=>latest.version === currentVersion
+          ? tr('Du bruker versjon {0}.',currentVersion)
+          : tr('Laster ny versjon. Du kan fortsette målingen.'));
       }
     } else {
       const response = await fetch('./version.json', {cache:'no-store'});
       if(!response.ok) throw Error();
       const latest = await response.json();
       if(latest.version !== currentVersion) {
-        updateStatus.textContent = 'Ny versjon tilgjengelig. Last siden på nytt for å oppdatere.';
+        write(updateStatus,()=>tr('Ny versjon tilgjengelig. Last siden på nytt for å oppdatere.'));
         updateButton.hidden = false;
-      } else updateStatus.textContent = 'Du bruker versjon ' + currentVersion + '.';
+      } else write(updateStatus,()=>tr('Du bruker versjon {0}.',currentVersion));
     }
   } catch {
-    updateStatus.textContent = 'Kan ikke sjekke oppdateringer nå. Kalkulatoren kan fortsatt brukes.';
+    write(updateStatus,()=>tr('Kan ikke sjekke oppdateringer nå. Kalkulatoren kan fortsatt brukes.'));
   } finally { checking = false; checkButton.disabled = false; }
 }
 updateButton.addEventListener('click', () => {
@@ -65,7 +67,7 @@ updateButton.addEventListener('click', () => {
   if(registration?.waiting) {
     requested = true;
     updateButton.disabled = true;
-    updateStatus.textContent = 'Tar i bruk oppdateringen …';
+    write(updateStatus,()=>tr('Tar i bruk oppdateringen …'));
     registration.waiting.postMessage({type:'SKIP_WAITING'});
   } else location.reload();
 });
@@ -81,12 +83,12 @@ if('serviceWorker' in navigator) {
       const installing = registration.installing;
       installing?.addEventListener('statechange', () => {
         if(installing.state === 'installed') showWaiting();
-        if(installing.state === 'redundant') updateStatus.textContent = 'Oppdateringen ble ikke lastet. Prøv igjen senere.';
+        if(installing.state === 'redundant') write(updateStatus,()=>tr('Oppdateringen ble ikke lastet. Prøv igjen senere.'));
       });
     });
     showWaiting();
   } catch {
-    updateStatus.textContent = 'Automatisk lagring uten nett er utilgjengelig. Du kan fortsatt sjekke oppdateringer.';
+    write(updateStatus,()=>tr('Automatisk lagring uten nett er utilgjengelig. Du kan fortsatt sjekke oppdateringer.'));
   }
 }
 await checkUpdate();
