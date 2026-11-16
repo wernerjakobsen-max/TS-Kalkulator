@@ -31,7 +31,7 @@ function renderTS(){
 }
 $('ticks').setAttribute('d',Array.from({length:41},(_,i)=>`M${i*10},7.5 v-${i%10===0?11:5}`).join(' '));
 $('reading').addEventListener('input',()=>{stop();renderTS();});
-$('slider').addEventListener('input',()=>{stop();$('reading').value=$('slider').value;renderTS();});
+$('slider').addEventListener('input',()=>{const mm=$('slider').value;stop();$('reading').value=mm;renderTS();});
 document.querySelectorAll('[data-mm]').forEach(b=>b.addEventListener('click',()=>{stop();$('reading').value=b.dataset.mm;renderTS();}));
 const motion=matchMedia('(prefers-reduced-motion: reduce)');
 $('play').addEventListener('click',()=>{
