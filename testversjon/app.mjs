@@ -32,7 +32,6 @@ function renderTS(){
 $('ticks').setAttribute('d',Array.from({length:41},(_,i)=>`M${i*10},7.5 v-${i%10===0?11:5}`).join(' '));
 $('reading').addEventListener('input',()=>{stop();renderTS();});
 $('slider').addEventListener('input',()=>{const mm=$('slider').value;stop();$('reading').value=mm;renderTS();});
-document.querySelectorAll('[data-mm]').forEach(b=>b.addEventListener('click',()=>{stop();$('reading').value=b.dataset.mm;renderTS();}));
 const motion=matchMedia('(prefers-reduced-motion: reduce)');
 $('play').addEventListener('click',()=>{
   if(playing){stop();return;}
@@ -106,6 +105,8 @@ function renderFall(){
   $('single-fields').hidden=!['percent','degrees','degrees-height'].includes(mode);
   $('ratio-fields').hidden=mode!=='ratio';$('height-fields').hidden=mode!=='height'&&!fromHeight;
   $('length-fields').hidden=fromHeight;
+  $('length-label').textContent=mode==='height'?'Horisontal lengde':'Horisontal lengde (valgfritt)';
+  $('length-hint').textContent=mode==='height'?'Lengden er nødvendig for å beregne helningen fra høydeforskjellen.':'La feltet stå tomt for kun prosent, grader og fallforhold.';
   $('single-label').textContent=['degrees','degrees-height'].includes(mode)?'Vinkel (°)':'Helning (%)';
   ['fall-a','ratio-a','ratio-b','height','length'].forEach(id=>$(id).removeAttribute('aria-invalid'));
   try{
@@ -141,6 +142,7 @@ function renderFall(){
     $('fall-step').textContent='Valgt helning vises. Begge aksene har samme målestokk.';
     $('fall-error').textContent='';
     } catch(e) {
+      ['height-result','horizontal-result','slope-length'].forEach(id=>$(id).textContent='–');
       $('fall-error').textContent=e.message;
       $('fall-step').textContent='Helningen er beregnet. Korriger målene for å vise illustrasjonen.';
       if(fromHeight)$('height').setAttribute('aria-invalid','true');

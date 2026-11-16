@@ -5,7 +5,7 @@ const checkButton = document.getElementById('check-update');
 const stateKey = 'ts-update-inputs:' + location.pathname;
 let registration, requested = false, checking = false;
 function showWaiting() {
-  if(!registration?.waiting) return;
+  if(!registration?.waiting || !navigator.serviceWorker.controller) return;
   updateStatus.textContent = 'En ny versjon er klar. Oppdater når målingen er ferdig.';
   updateButton.hidden = false;
 }
@@ -37,8 +37,9 @@ async function checkUpdate() {
   try {
     if(registration) {
       await registration.update();
-      if(registration.waiting) showWaiting();
+      if(registration.waiting && navigator.serviceWorker.controller) showWaiting();
       else {
+        updateButton.hidden = true;
         const response = await fetch('./version.json', {cache:'no-store'});
         if(!response.ok) throw Error();
         const latest = await response.json();
