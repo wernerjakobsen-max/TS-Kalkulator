@@ -69,3 +69,5 @@ LANSERINGSKANDIDAT 5.0.0-rc.1: oppdatert manifest bevarer appidentiteten.
 Bygg lager separat publiseringspakke i lansering/. Testadressen bruker dist/
 med noindex. Kontroller hele pakken med node testversjon/check-release.mjs.
 Manuelle kontrollmålinger er samlet i measurements.json. Beregningskurven er uendret siden test.4.
+
+RC.4: Veiledningsbildet ligger i guide-photo.jpg og caches i nettutgaven. Ved bruk av TS-Testversjon.html direkte må testversjon/guide-photo.jpg følge med for å vise fotografiet uten nett. Beregninger og animasjoner er fortsatt innebygd i HTML-filen.

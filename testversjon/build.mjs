@@ -13,7 +13,7 @@ function addActions(page,url,privatePreview){
  const script=actions.replaceAll('__SHARE_URL__',url).replaceAll('__QR_IMAGE__',data).replaceAll('__PRIVATE_PREVIEW__',String(privatePreview));
  return page.replace('<script type="module" src="actions.mjs"></script>',()=>'<script type="module">'+script+'</script>');
 }
-await fs.writeFile(new URL('../TS-Testversjon.html',import.meta.url),addActions(stamp(standalone),privateUrl,true));
+await fs.writeFile(new URL('../TS-Testversjon.html',import.meta.url),addActions(stamp(standalone),privateUrl,true).replaceAll('guide-photo.jpg','testversjon/guide-photo.jpg'));
 const updater = await read('update.mjs');
 const manifest=await read('manifest.webmanifest'),icon=await read('icon.svg');
 const license=await read('LICENCE.txt');
@@ -39,3 +39,5 @@ for(const directory of ['./dist/','../lansering/']){
  for(const size of [192,512])await fs.copyFile(new URL('icon-'+size+'.png',import.meta.url),new URL(directory+'icon-'+size+'.png',import.meta.url));
  await fs.copyFile(new URL('vendor/NOTICE.txt',import.meta.url),new URL(directory+'QR-LICENCE.txt',import.meta.url));
 }
+
+for(const directory of ['./dist/','../lansering/'])await fs.copyFile(new URL('guide-photo.jpg',import.meta.url),new URL(directory+'guide-photo.jpg',import.meta.url));

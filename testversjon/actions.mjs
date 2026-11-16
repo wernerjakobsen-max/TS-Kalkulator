@@ -27,3 +27,10 @@ for(const button of document.querySelectorAll('[data-copy-link]'))button.addEven
   try{await navigator.clipboard.writeText(shareUrl);status.textContent='Lenken er kopiert.';}
   catch{status.textContent='Marker og kopier adressen i feltet.';}
 });
+
+document.getElementById('open-guide-photo').addEventListener('click',()=>document.getElementById('photo-dialog').showModal());
+document.getElementById('rotate-guide-photo').addEventListener('click',event=>{
+ const rotated=document.getElementById('photo-stage').classList.toggle('is-rotated');
+ event.currentTarget.setAttribute('aria-pressed',String(rotated));
+ event.currentTarget.textContent=rotated?'Tilbake til høydeformat':'Roter 90°';
+});

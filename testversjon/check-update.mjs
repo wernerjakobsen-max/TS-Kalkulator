@@ -28,6 +28,8 @@ handlers.fetch({request:{url:'https://example.test/TS/?v=4.2.1',mode:'navigate',
 assert.equal((await response).body,'complete app','Old installed start URL must open the new app');
 handlers.fetch({request:{url:'https://example.test/TS/icon.svg',mode:'cors',method:'GET'},respondWith:p=>response=p});
 assert.equal((await response).body,'./icon.svg');
+handlers.fetch({request:{url:'https://example.test/TS/guide-photo.jpg',mode:'cors',method:'GET'},respondWith:p=>response=p});
+assert.equal((await response).body,'./guide-photo.jpg','Guide photo must remain available offline');
 for(const path of ['version.json','sw.js','other.html']){
   handlers.fetch({request:{url:'https://example.test/TS/'+path,mode:'navigate',method:'GET'},respondWith:()=>assert.fail('Must bypass app navigation cache')});
 }

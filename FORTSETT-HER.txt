@@ -54,3 +54,5 @@ SENESTE KALIBRERING 15.11: tidligere 798 mm = 170° er erstattet med 170,3° ett
 Lanseringskandidat 5.0.0-rc.1: measurement.json (filnavn measurements.json) dokumenterer 796=165,8° og korrigert 797=168,3°. Kurven uendret. Publiseringspakke i lansering/; ikke lagt over produksjonsfilene. Ny kontroll: node testversjon/check-release.mjs.
 
 16.11.2026 – Gjeldende kandidat rc.3: kontrollknappene fjernet, veiledning/illustrasjonsdetaljer utvidbare. Kort 15 mm / ±0,5° fortsatt synlig. Werner har bekreftet animasjoner, startskjerm, flymodus og QR på rc.2. Se oppdatert LANSERINGSKONTROLL.txt. Main er urørt.
+
+16.11 – rc.4: foto fra gammel versjon under Slik måler du, rotert 90 grader i visningen. Trykk åpner stor visning med valg for høydeformat og originalbilde for zoom. Guide-photo.jpg følger nettutgave og offlinecache. Main uendret.

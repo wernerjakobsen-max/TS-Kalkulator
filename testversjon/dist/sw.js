@@ -1,4 +1,4 @@
-const VERSION = '5.0.0-rc.3';
+const VERSION = '5.0.0-rc.4';
 const PREFIX = 'ts-kalkulator-app-';
 const CACHE = PREFIX + VERSION;
 const HOME = new URL('./', self.location.href).href;
@@ -8,7 +8,7 @@ self.addEventListener('install', event => event.waitUntil((async () => {
   if (!response.ok || response.redirected || !response.headers.get('content-type')?.includes('text/html')) throw Error('Ufullstendig oppdatering');
   const cache = await caches.open(CACHE);
   await cache.put(HOME, response);
-  await cache.addAll(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png']);
+  await cache.addAll(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./guide-photo.jpg']);
 })()));
 self.addEventListener('message', event => {
   if(event.data?.type === 'SKIP_WAITING') self.skipWaiting();
@@ -24,7 +24,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   const resource = url.origin + url.pathname;
   const navigation = event.request.mode === 'navigate' && (resource === HOME || resource === HOME + 'index.html');
-  const asset = [HOME + 'manifest.webmanifest',HOME + 'icon.svg',HOME + 'icon-192.png',HOME + 'icon-512.png'].includes(resource);
+  const asset = [HOME + 'manifest.webmanifest',HOME + 'icon.svg',HOME + 'icon-192.png',HOME + 'icon-512.png',HOME + 'guide-photo.jpg'].includes(resource);
   if(event.request.method !== 'GET' || (!navigation && !asset)) return;
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
