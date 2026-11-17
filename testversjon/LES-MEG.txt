@@ -1,0 +1,75 @@
+TS Kalkulator – lokal testversjon 15.11.2026
+
+Åpne TS-Testversjon.html fra mappen over denne i en vanlig nettleser.
+Filen har all kode innebygd og trenger verken server eller nett.
+På mobil: overfør HTML-filen og åpne den i nettleseren. En filforhåndsvisning
+som ikke kjører JavaScript kan ikke brukes som kalkulator.
+
+Tommestokk: 420–798 mm, 8–170,3°. Monoton interpolasjon med nye kontrollpunkter
+430 mm / 11°, 486 mm / 27°, 798 mm / 170,3° (avtalt justering, usikkert endepunkt). Øvrige punkter kommer fra den eldre
+kurven. Forventet ±0,5° er et praktisk anslag, ikke dokumentert overalt.
+Illustrasjonen er en idealisert modell med stive ledd. Den oppgir sitt eget
+kontaktmål eksplisitt fordi det kan avvike litt fra den kalibrerte kurven.
+
+Fall: ny kode, ny tekst og ny utforming. Bruker grunnleggende formler for
+forhold, prosent, tangens/arctangens og Pytagoras. Ingen kode eller grafikk
+er hentet fra enebo.no under denne implementasjonen.
+
+Den lagrede HTML-filen registrerer ingen service worker, bruker ingen eksterne
+ressurser og sender ingen inndata. Publisert hovedgren er ikke endret.
+Dette er en lokal testutgave, ikke en ferdig installérbar PWA.
+
+Kildekode: filene i denne mappen.
+Kontroller: node testversjon/check.mjs
+Bygg enkeltfilen: node testversjon/build.mjs
+Valgfri lokal forhåndsvisning: node testversjon/serve.mjs
+
+Kontrollert: 37 801 verdier gjennom måleområdet, kontrollpunkter, leddlengder,
+vinkelgeometri, fallkonverteringer og ugyldige verdier. I nettleseren:
+798 → 170,3°, avvisning av 799, 2:50 → 4 %, avvisning av 90° fallvinkel,
+20 mm over 2 m → 1 %, animasjon start/stopp, 390 og 1100 px layout.
+
+OPPDATERINGER ETTER UTRULLING
+Målegrunnlaget gjelder tre tommestokker med 15 mm brede ledd.
+Nettutgaven bygges til testversjon/dist/ med manifest, ikon, versjonsnummer, service worker
+og version.json. Hele kalkulatoren er samlet i én HTML-fil per versjon.
+Nye versjoner lastes i bakgrunnen. Brukeren velger «Oppdater nå»;
+innskrevne felt og valgt kalkulator beholdes hvis nettleseren tillater øktlagring.
+Ingen varselabonnement eller persondata sendes. «Se etter oppdatering»
+kan brukes manuelt. Nettutgaven sjekker også ved gjenåpning og nettilkobling.
+En lagret enkeltfil må erstattes manuelt og har ingen nettoppdatering.
+
+Utgivelsesrutine:
+1. Gjør endringer på arbeidsgrenen; behold main urørt til godkjent utrulling.
+2. Øk VERSION i release.mjs hver gang noe skal publiseres, også ved rollback.
+3. Kjør check.mjs, check-update.mjs og check-release.mjs etter bygg.
+4. Kjør node testversjon/build.mjs. Publiser HELE innholdet i dist samlet.
+5. Prøv oppdatering fra forrige versjon, uten nett, og på mobil og PC.
+6. Ta vare på tidligere kildekode i Git. Tilbakerulling er en ny utgivelse
+   med tidligere funksjoner og et nytt versjonsnummer.
+
+Før første produksjonsutrulling: test migrering fra den gamle publiserte
+service workeren på samme URL. Den gamle utgaven har ikke vårt nye varsel,
+og kan kreve at alle gamle faner lukkes før første oppdatering tas i bruk.
+Testadressen oppdaterer ikke automatisk den gamle produksjonsadressen.
+Ikke lov et oppdateringsvarsel til gamle brukere ved første besøk før
+migreringen er prøvd. Videre oppdateringer bruker den nye varselmekanismen.
+
+Fall: prosent, grader og fallforhold krever ingen lengde. Lengde er valgfri
+ved kjent helning. Høydeforskjell + lengde krever begge målene. Grader +
+høydeforskjell beregner lengdene når høyden er lagt inn. Komma og punktum
+aksepteres. En feil i valgfri lengde fjerner ikke gyldige helningsverdier.
+Kalibrering 15.11: 798 mm justert fra 170° til 170,3° etter Werners avtale.
+Dette er en foreløpig kalibreringsverdi, ikke en presist bekreftet måling.
+Nye uavhengige kontroller på tre 15 mm tommestokker (ikke lagt inn som nye knutepunkter):
+782 mm=147,8°; 786 mm=151,9°; 792 mm=159,3°; 795 mm=164,3°; 796 mm=165,8°; 797 mm=168,3° (korrigert fra 168,5°).
+Første innsendte 1797 er tolket som 797 mm. Øvrige knutepunkter er uendret.
+
+LANSERINGSKANDIDAT 5.0.0-rc.1: oppdatert manifest bevarer appidentiteten.
+Bygg lager separat publiseringspakke i lansering/. Testadressen bruker dist/
+med noindex. Kontroller hele pakken med node testversjon/check-release.mjs.
+Manuelle kontrollmålinger er samlet i measurements.json. Beregningskurven er uendret siden test.4.
+
+RC.4: Veiledningsbildet ligger i guide-photo.jpg og caches i nettutgaven. Ved bruk av TS-Testversjon.html direkte må testversjon/guide-photo.jpg følge med for å vise fotografiet uten nett. Beregninger og animasjoner er fortsatt innebygd i HTML-filen.
+
+16.11.2026 – rc.6: språkvalg Norsk / English / Polski / Українська / Deutsch / Español. Norsk er standard. Valget lagres lokalt hvis nettleseren tillater det. Alle språk er innebygd i HTML-bundelen og virker uten nett. Tekster i translations.json og dynamic-translations.json; i18n.js styrer språk og tallvisning. check-languages.mjs kontrollerer tekstdekning, variabler, lagring og pakking. Beregningsmodellen er uendret. Morsmålskontroll er ikke utført.

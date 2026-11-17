@@ -1,0 +1,8 @@
+{
+  "date": "2026-11-15",
+  "linkWidthMm": 15,
+  "rulers": 3,
+  "notes": "Werners manuelle kontroller. Omtrent likt på tre tommestokker; et lite avvik ved måling fra motsatt ende. 797 korrigert fra 168,5 til 168,3 etter avtale; 796 oppgitt til 165,8 uten ytterligere fratrekk. Kontrollene endrer ikke knutepunktene.",
+  "checks": [[782,147.8],[786,151.9],[792,159.3],[795,164.3],[796,165.8],[797,168.3]],
+  "provisionalEndpoint": {"mm":798,"degrees":170.3,"notes":"Avtalt kalibreringsverdi, vanskelig å måle presist; ikke uavhengig kontrollpunkt."}
+}
