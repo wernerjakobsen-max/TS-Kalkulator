@@ -1,4 +1,7 @@
 import fs from 'node:fs/promises';
+import {statisticsHtml} from '../testversjon/statistics-content.mjs';
+import {PUBLIC_VERSION} from '../testversjon/release.mjs';
+const analytics=(await fs.readFile(new URL('../testversjon/analytics.mjs',import.meta.url),'utf8')).replaceAll('__VERSION__',PUBLIC_VERSION);
 const base='https://wernerjakobsen-max.github.io/TS-Kalkulator/';
 const pages=[
  {slug:'vinkel-med-tommestokk',title:'Måle vinkel med tommestokk – veiledning og kalkulator',description:'Slik måler du en veiledende vinkel med tommestokk: still inn 200 mm-leddet og før nullhjørnet til øvre kant. Se animasjonen i TS-Kalkulator.',body:`
@@ -25,7 +28,7 @@ const css=`:root{font-family:system-ui,sans-serif;color:#16343d;background:#f6f9
 const root=new URL('./dist/',import.meta.url);
 for(const p of pages){
  const dir=new URL(p.slug+'/',root);await fs.mkdir(dir,{recursive:true});
- await fs.writeFile(new URL('index.html',dir),`<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${p.title}</title><meta name="description" content="${p.description}"><link rel="canonical" href="${base+p.slug}/"><meta property="og:title" content="${p.title}"><meta property="og:description" content="${p.description}"><meta property="og:type" content="website"><meta property="og:url" content="${base+p.slug}/"><style>${css}</style></head><body><main><nav aria-label="Hovedmeny"><a href="../">TS-Kalkulator</a> · <a href="../vinkel-med-tommestokk/">Vinkel med tommestokk</a> · <a href="../fallkalkulator/">Fallkalkulator</a></nav>${p.body}<footer>TS-Kalkulator av Werner Jakobsen · <a href="../">Åpne kalkulatoren</a></footer></main></body></html>`);
+ await fs.writeFile(new URL('index.html',dir),`<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${p.title}</title><meta name="description" content="${p.description}"><link rel="canonical" href="${base+p.slug}/"><meta property="og:title" content="${p.title}"><meta property="og:description" content="${p.description}"><meta property="og:type" content="website"><meta property="og:url" content="${base+p.slug}/"><style>${css}</style></head><body><main><nav aria-label="Hovedmeny"><a href="../">TS-Kalkulator</a> · <a href="../vinkel-med-tommestokk/">Vinkel med tommestokk</a> · <a href="../fallkalkulator/">Fallkalkulator</a></nav>${p.body}<footer>TS-Kalkulator av Werner Jakobsen · <a href="../">Åpne kalkulatoren</a></footer>${statisticsHtml}</main><script type="module">${analytics}</script></body></html>`);
 }
 await fs.writeFile(new URL('sitemap.xml',root),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['',...pages.map(p=>p.slug+'/')].map(path=>`<url><loc>${base+path}</loc></url>`).join('')}</urlset>`);
 console.log('Klargjort to norske inngangssider og nettstedskart i seo/dist/. Kalkulator og publisert side er uendret.');
