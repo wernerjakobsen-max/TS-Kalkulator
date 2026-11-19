@@ -1,4 +1,4 @@
-const VERSION = '5.0.0';
+const VERSION = '5.0.1';
 const PREFIX = 'ts-kalkulator-app-';
 const CACHE = PREFIX + VERSION;
 const HOME = new URL('./', self.location.href).href;

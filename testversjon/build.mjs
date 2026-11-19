@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
 import qrcode from './vendor/qrcode.mjs';
 import {VERSION,PUBLIC_VERSION} from './release.mjs';
+import {statisticsHtml,statisticsTranslations} from './statistics-content.mjs';
 const read=f=>fs.readFile(new URL(f,import.meta.url),'utf8');
 const [html,css,model,app]=await Promise.all(['index.html','style.css','model.mjs','app.mjs'].map(read));
-const dictionaries={...JSON.parse(await read('translations.json')),...JSON.parse(await read('dynamic-translations.json'))};
+const dictionaries={...JSON.parse(await read('translations.json')),...JSON.parse(await read('dynamic-translations.json')),...statisticsTranslations};
 const i18n=(await read('i18n.js')).replace('/*__TRANSLATIONS__*/{}',()=>JSON.stringify(dictionaries));
 const localizedHtml=html.replace('<script src="i18n.js"></script>',()=>'<script>'+i18n+'</script>');
 const standalone=localizedHtml.replace('<link rel="stylesheet" href="style.css">',`<style>${css}</style>`).replace('<script type="module" src="app.mjs"></script>',()=>`<script type="module">\n${model.replaceAll('export ','')}\n${app.replace(/^import[^\n]*\n/gm,'')}\n</script>`);
@@ -32,9 +33,10 @@ await fs.writeFile(new URL('./dist/icon.svg',import.meta.url),icon);
 await fs.writeFile(new URL('./dist/LICENCE.txt',import.meta.url),license);
 // Publiseringspakken er separat. Dette endrer ikke rotfilene som main publiserer.
 const publicUrl='https://wernerjakobsen-max.github.io/TS-Kalkulator/';
-const candidate=addActions(hostedBase,publicUrl,false).replaceAll(VERSION,PUBLIC_VERSION).replace('Testversjon · '+PUBLIC_VERSION,'Versjon '+PUBLIC_VERSION).replace('<meta name="robots" content="noindex,nofollow">','<meta name="description" content="Beregn vinkel med tommestokk, fall, stigning, grader, prosent og fallforhold. Måleveiledning og animerte illustrasjoner."><link rel="canonical" href="'+publicUrl+'">');
+const analytics=(await read('analytics.mjs')).replaceAll('__VERSION__',PUBLIC_VERSION);
+const candidate=addActions(hostedBase,publicUrl,false).replaceAll(VERSION,PUBLIC_VERSION).replace('Testversjon · '+PUBLIC_VERSION,'Versjon '+PUBLIC_VERSION).replace('<meta name="robots" content="noindex,nofollow">','<meta name="description" content="Beregn vinkel med tommestokk, fall, stigning, grader, prosent og fallforhold. Måleveiledning og animerte illustrasjoner."><link rel="canonical" href="'+publicUrl+'">').replace('</main>',`<footer><a href="vinkel-med-tommestokk/">Vinkel med tommestokk</a> · <a href="fallkalkulator/">Fallkalkulator</a></footer>${statisticsHtml}</main>`).replace('</body>',()=>`<script type="module">${analytics}</script></body>`);
 await fs.mkdir(new URL('../lansering/',import.meta.url),{recursive:true});
-for(const [name,body] of Object.entries({'index.html':candidate,'sw.js':(await read('sw.js')).replaceAll('__VERSION__',PUBLIC_VERSION),'version.json':JSON.stringify({version:PUBLIC_VERSION}),'manifest.webmanifest':manifest,'icon.svg':icon,'robots.txt':'User-agent: *\nAllow: /\nSitemap: '+publicUrl+'sitemap.xml\n','sitemap.xml':'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>'+publicUrl+'</loc></url></urlset>'}))await fs.writeFile(new URL('../lansering/'+name,import.meta.url),body);
+for(const [name,body] of Object.entries({'index.html':candidate,'sw.js':(await read('sw.js')).replaceAll('__VERSION__',PUBLIC_VERSION),'version.json':JSON.stringify({version:PUBLIC_VERSION}),'manifest.webmanifest':manifest,'icon.svg':icon,'robots.txt':'User-agent: *\nAllow: /\nSitemap: '+publicUrl+'sitemap.xml\n'}))await fs.writeFile(new URL('../lansering/'+name,import.meta.url),body);
 await fs.writeFile(new URL('../lansering/LICENCE.txt',import.meta.url),license);
 console.log('Laget TS-Testversjon.html – åpnes direkte uten server eller nett.');
 
@@ -44,3 +46,11 @@ for(const directory of ['./dist/','../lansering/']){
 }
 
 for(const directory of ['./dist/','../lansering/'])await fs.copyFile(new URL('guide-photo.jpg',import.meta.url),new URL(directory+'guide-photo.jpg',import.meta.url));
+
+// Preserve the published guides and sitemap on every release; do not remove Google verification.
+await import('../seo/build.mjs');
+for(const slug of ['vinkel-med-tommestokk','fallkalkulator']){
+ await fs.mkdir(new URL('../lansering/'+slug+'/',import.meta.url),{recursive:true});
+ await fs.copyFile(new URL('../seo/dist/'+slug+'/index.html',import.meta.url),new URL('../lansering/'+slug+'/index.html',import.meta.url));
+}
+await fs.copyFile(new URL('../seo/dist/sitemap.xml',import.meta.url),new URL('../lansering/sitemap.xml',import.meta.url));
