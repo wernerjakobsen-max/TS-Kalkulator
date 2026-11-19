@@ -1,0 +1,34 @@
+TS-Kalkulator – synlighet etter kollegatest, 19.11.2026
+
+STATUS
+Werner har bekreftet at flere kolleger har installert og testet appen.
+5.0.0 er publisert. Automatisk bruksstatistikk er ikke aktivert.
+To norske inngangssider er klargjort i egen gren, uten endring av kalkulatoren.
+Bygg: node seo/build.mjs
+
+REKKEFØLGE
+1. Norske inngangssider: vinkel-med-tommestokk/ og fallkalkulator/.
+   Publiser disse med nettstedskart. Legg senere lenker fra appen til veiledningene
+   i en egen versjonert appoppdatering. Ikke endre service worker uten versjonsøkning.
+2. Google Search Console: Werner oppretter URL-prefiks-egenskapen
+   https://wernerjakobsen-max.github.io/TS-Kalkulator/
+   Velg HTML-fil som verifiseringsmetode og hent verifiseringsfilen.
+   Filen må publiseres på GitHub Pages før Werner trykker Bekreft.
+   Ingen passord skal deles. Send deretter inn sitemap.xml.
+3. Enkel bruksstatistikk: velg leverandør, konto og databehandling før kode legges inn.
+   Ønskede tall: åpninger, versjon, kilde/QR, støttede installasjoner og bekreftede
+   versjonsbytter. Ikke samle inn beregningsverdier. Begrensninger må vises i rapporter.
+   Search Console viser søk/visninger/klikk, ikke totale appinstallasjoner.
+4. Egne, statiske språkadresser og hreflang etter at norske sider er kontrollert.
+   Språkvelger på én adresse er ikke tilstrekkelig internasjonalt søkeoppsett.
+5. Kort demonstrasjonsvideo, deling i relevante fagmiljøer og vurdering av respons.
+   Betalt annonsering, domenekjøp og meldinger til andre er ikke utført.
+
+MÅLING
+Ingen historisk telling av installasjoner finnes. Ny statistikk kan bare vise
+hendelser registrert etter aktivering; offlinebruk og nettleserstøtte begrenser dekning.
+Nåværende QR-ark peker til hovedadressen og skiller ikke QR-besøk fra andre besøk.
+
+KILDER
+https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites
+https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap
